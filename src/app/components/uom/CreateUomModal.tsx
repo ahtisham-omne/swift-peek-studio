@@ -1340,7 +1340,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                           fontWeight: "var(--font-weight-normal)" as any,
                         }}
                       >
-                        Optional: define how 1 {symbol} converts to a unit in another category. Only one cross-category conversion is allowed.
+                        Define how {symbol || "UOM"} converts to a unit in another category. These conversions apply to all items using this unit.
                       </p>
 
                       {crossRows.length === 0 ? (
