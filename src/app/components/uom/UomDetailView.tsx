@@ -905,7 +905,7 @@ export function UomDetailView() {
                           <span style={{ fontSize: "var(--text-label)", color: "var(--text-muted)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.3" }}>
                             {conversionSection === "same"
                               ? `Only one same-category conversion is allowed. This applies to all units in the ${unit?.category || "this"} category.`
-                              : <>1{" "}<span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)" }}>{displaySymbol}</span>{" "}<span style={{ color: "var(--text-subtle)" }}>({displayName})</span>{" = "}</>
+                              : `Define how ${displaySymbol} converts to a unit in another category.`
                             }
                           </span>
                         </div>
@@ -937,7 +937,188 @@ export function UomDetailView() {
                         )}
                       </div>
 
-                      {/* Table */}
+                      {/* ── Prominent single conversion result ── */}
+                      {conversionSection === "same" && sameCatConversions.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.25 }}
+                          style={{
+                            marginBottom: 16,
+                            padding: "16px 20px",
+                            borderRadius: "var(--radius)",
+                            backgroundColor: "var(--primary-surface)",
+                            borderWidth: 1,
+                            borderStyle: "solid",
+                            borderColor: "var(--primary-border)",
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="inline-flex items-center justify-center shrink-0"
+                              style={{
+                                width: 36,
+                                height: 36,
+                                borderRadius: "var(--radius)",
+                                backgroundColor: "var(--primary)",
+                              }}
+                            >
+                              <ArrowRightLeft size={16} style={{ color: "var(--primary-foreground)" }} />
+                            </div>
+                            <div>
+                              <div style={{ fontSize: "var(--text-label)", color: "var(--primary)", fontWeight: "var(--font-weight-medium)" as any, marginBottom: 2, lineHeight: "1" }}>
+                                Defined Conversion
+                              </div>
+                              <div style={{ fontSize: 18, fontWeight: "var(--font-weight-semibold)" as any, color: "var(--primary-text-strong)", lineHeight: "1.3" }}>
+                                1{" "}
+                                <span style={{ fontWeight: "var(--font-weight-semibold)" as any }}>{displaySymbol}</span>
+                                <span style={{ color: "var(--primary)", fontWeight: "var(--font-weight-normal)" as any, margin: "0 8px" }}>=</span>
+                                {sameCatConversions[0].factor.toLocaleString(undefined, { maximumFractionDigits: 6 })}{" "}
+                                <span style={{ fontWeight: "var(--font-weight-semibold)" as any }}>{sameCatConversions[0].unitSymbol}</span>
+                                <span style={{ fontSize: 14, color: "var(--primary)", fontWeight: "var(--font-weight-normal)" as any, marginLeft: 6 }}>
+                                  ({sameCatConversions[0].unitName})
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+
+                      {conversionSection === "cross" && crossCatConversions.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.25 }}
+                          style={{
+                            marginBottom: 16,
+                            padding: "16px 20px",
+                            borderRadius: "var(--radius)",
+                            backgroundColor: "var(--primary-surface)",
+                            borderWidth: 1,
+                            borderStyle: "solid",
+                            borderColor: "var(--primary-border)",
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="inline-flex items-center justify-center shrink-0"
+                              style={{
+                                width: 36,
+                                height: 36,
+                                borderRadius: "var(--radius)",
+                                backgroundColor: "var(--primary)",
+                              }}
+                            >
+                              <ArrowRightLeft size={16} style={{ color: "var(--primary-foreground)" }} />
+                            </div>
+                            <div>
+                              <div style={{ fontSize: "var(--text-label)", color: "var(--primary)", fontWeight: "var(--font-weight-medium)" as any, marginBottom: 2, lineHeight: "1" }}>
+                                Defined Conversion
+                              </div>
+                              <div className="flex items-center gap-2" style={{ fontSize: 18, fontWeight: "var(--font-weight-semibold)" as any, color: "var(--primary-text-strong)", lineHeight: "1.3" }}>
+                                <span>
+                                  1{" "}{displaySymbol}
+                                  <span style={{ color: "var(--primary)", fontWeight: "var(--font-weight-normal)" as any, margin: "0 8px" }}>=</span>
+                                  {crossCatConversions[0].factor.toLocaleString(undefined, { maximumFractionDigits: 6 })}{" "}
+                                  {crossCatConversions[0].unitSymbol}
+                                  <span style={{ fontSize: 14, color: "var(--primary)", fontWeight: "var(--font-weight-normal)" as any, marginLeft: 6 }}>
+                                    ({crossCatConversions[0].unitName})
+                                  </span>
+                                </span>
+                                <CategoryBadge category={crossCatConversions[0].category!} />
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+
+                      {/* Table — Same category: show ALL units in category with derived factors */}
+                      {(() => {
+                        // For same-category: derive all category units from the base conversion
+                        let derivedRows: ConversionRow[] = [];
+                        if (conversionSection === "same" && sameCatConversions.length > 0) {
+                          const baseConv = sameCatConversions[0]; // e.g., 1 Box = 48 Each
+                          const categoryUnits = SAMPLE_UNITS.filter(
+                            (u) => u.category === displayCategory && u.id !== id
+                          );
+                          // Build a simple lookup: how many "Each" (base target) each unit equals
+                          // We'll use the base conversion's target as the pivot
+                          // Known standard conversions within common categories
+                          const KNOWN_RATIOS: Record<string, Record<string, number>> = {
+                            // Quantity: everything in terms of "ea" (Each)
+                            "Quantity": { "ea": 1, "pr": 2, "dz": 12, "gro": 144, "pc": 1, "box": 48, "plt": 960, "bndl": 24, "case": 24, "rm": 500 },
+                            // Length: everything in terms of "m" (Meter)
+                            "Length": { "m": 1, "cm": 0.01, "mm": 0.001, "km": 1000, "in": 0.0254, "ft": 0.3048, "yd": 0.9144, "mi": 1609.344, "\u00B5m": 0.000001, "nm": 0.000000001, "rod": 5.0292, "ch": 20.1168 },
+                            // Area: everything in terms of "m²"
+                            "Area": { "m\u00B2": 1, "ft\u00B2": 0.092903, "ha": 10000, "ac": 4046.86, "km\u00B2": 1000000, "in\u00B2": 0.00064516 },
+                            // Volume: everything in terms of "L"
+                            "Volume": { "L": 1, "mL": 0.001, "m\u00B3": 1000, "gal": 3.78541, "fl oz": 0.0295735, "ft\u00B3": 28.3168, "bbl": 158.987, "55GAL": 208.198, "tote": 1040.99, "qt": 0.946353 },
+                            // Mass: everything in terms of "kg"
+                            "Mass": { "kg": 1, "g": 0.001, "mg": 0.000001, "t": 1000, "lb": 0.453592, "oz": 0.0283495, "st": 6.35029, "ton": 907.185, "LT": 1016.05, "bale": 226.796 },
+                            // Time: everything in terms of "s"
+                            "Time": { "s": 1, "min": 60, "h": 3600, "d": 86400, "wk": 604800, "mo": 2629800, "yr": 31557600, "ms": 0.001 },
+                            // Temperature: no linear ratios, show base only
+                            "Temperature": { "\u00B0C": 1, "\u00B0F": 0.5556, "K": 1, "\u00B0R": 0.5556, "\u00B0De": 0.6667 },
+                            // Force: in terms of "N"
+                            "Force": { "N": 1, "kN": 1000, "lbf": 4.44822, "dyn": 0.00001 },
+                            // Pressure: in terms of "Pa"
+                            "Pressure": { "Pa": 1, "kPa": 1000, "bar": 100000, "psi": 6894.76, "atm": 101325, "Torr": 133.322 },
+                            // Energy: in terms of "J"
+                            "Energy": { "J": 1, "kJ": 1000, "cal": 4.184, "kcal": 4184, "Wh": 3600, "BTU": 1055.06 },
+                            // Power: in terms of "W"
+                            "Power": { "W": 1, "kW": 1000, "MW": 1000000, "hp": 745.7, "kVA": 1000 },
+                            // Electrical: in terms of base (show factor 1 for simplicity)
+                            "Electrical": { "A": 1, "V": 1, "\u2126": 1, "F": 1, "H": 1, "C": 1 },
+                            // Frequency: in terms of "Hz"
+                            "Frequency": { "Hz": 1, "kHz": 1000, "MHz": 1000000, "GHz": 1000000000, "rpm": 0.0166667 },
+                            // Other SI: no meaningful cross-conversions
+                            "Other SI": {},
+                          };
+                          const catRatios = KNOWN_RATIOS[displayCategory] || {};
+                          const baseTargetRatio = catRatios[baseConv.unitSymbol]; // how much base SI unit the target equals
+                          const currentUnitRatio = catRatios[displaySymbol]; // how much base SI unit current unit equals
+
+                          categoryUnits.forEach((u) => {
+                            const unitRatio = catRatios[u.symbol];
+                            if (unitRatio !== undefined && baseTargetRatio !== undefined && currentUnitRatio !== undefined && currentUnitRatio !== 0) {
+                              // factor = how many of u fit in 1 of current unit
+                              // 1 current = (currentUnitRatio / unitRatio) of u
+                              const factor = currentUnitRatio / unitRatio;
+                              derivedRows.push({
+                                factor: parseFloat(factor.toPrecision(8)),
+                                unitSymbol: u.symbol,
+                                unitName: u.name,
+                                type: u.type as "Standard" | "Custom",
+                              });
+                            } else {
+                              // Fallback: derive from the base conversion if possible
+                              derivedRows.push({
+                                factor: 0,
+                                unitSymbol: u.symbol,
+                                unitName: u.name,
+                                type: u.type as "Standard" | "Custom",
+                              });
+                            }
+                          });
+                          // Sort: defined conversion first, then by factor descending
+                          derivedRows.sort((a, b) => {
+                            if (a.unitSymbol === baseConv.unitSymbol) return -1;
+                            if (b.unitSymbol === baseConv.unitSymbol) return 1;
+                            return b.factor - a.factor;
+                          });
+                        }
+
+                        const displayRows = conversionSection === "same"
+                          ? (sameCatConversions.length > 0 ? derivedRows : [])
+                          : crossCatConversions;
+                        const totalRows = displayRows.length;
+                        const totalPages = Math.max(1, Math.ceil(totalRows / conversionPerPage));
+                        const safePage = Math.min(conversionPage, totalPages);
+                        const startIdx = (safePage - 1) * conversionPerPage;
+                        const pageRows = displayRows.slice(startIdx, startIdx + conversionPerPage);
+
+                        return (
+                          <>
                       <div
                         className="overflow-hidden flex-1"
                         style={{
@@ -949,13 +1130,28 @@ export function UomDetailView() {
                       >
                         <ConversionTableHeader
                           cols={conversionSection === "same"
-                            ? ["CONVERSION FACTOR", "UNITS"]
+                            ? ["CONVERSION FACTOR", "UNITS", "TYPE"]
                             : ["CONVERSION FACTOR", "UNITS", "CATEGORY"]}
                           template={conversionSection === "same"
-                            ? "1fr 1fr"
+                            ? "1fr 1fr minmax(80px, 120px)"
                             : "1fr 1fr minmax(100px, 140px)"}
                         />
-                        {pageRows.map((row, idx) => (
+                        {pageRows.length === 0 && !isAddingConversion && (
+                          <div
+                            className="flex items-center justify-center"
+                            style={{
+                              padding: "40px 20px",
+                              color: "var(--text-muted)",
+                              fontSize: "var(--text-label)",
+                              fontWeight: "var(--font-weight-normal)" as any,
+                            }}
+                          >
+                            No conversions defined yet. Click "Add Conversion" to get started.
+                          </div>
+                        )}
+                        {pageRows.map((row, idx) => {
+                          const isBaseConversion = conversionSection === "same" && sameCatConversions.length > 0 && row.unitSymbol === sameCatConversions[0].unitSymbol;
+                          return (
                           <motion.div
                             key={`conv-${startIdx + idx}`}
                             initial={{ opacity: 0, y: 4 }}
@@ -963,22 +1159,28 @@ export function UomDetailView() {
                             transition={{ delay: 0.03 * idx, duration: 0.2 }}
                             className="grid items-center transition-colors"
                             style={{
-                              gridTemplateColumns: conversionSection === "same" ? "1fr 1fr" : "1fr 1fr minmax(100px, 140px)",
+                              gridTemplateColumns: conversionSection === "same"
+                                ? "1fr 1fr minmax(80px, 120px)"
+                                : "1fr 1fr minmax(100px, 140px)",
                               borderColor: "var(--border-subtle)",
                               borderBottomWidth: idx < pageRows.length - 1 ? 1 : 0,
                               borderBottomStyle: "solid" as const,
-                              backgroundColor: "rgba(0,0,0,0)",
+                              backgroundColor: isBaseConversion ? "var(--primary-surface)" : "rgba(0,0,0,0)",
                               transition: "background-color 0.12s ease",
                             }}
-                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--surface-hover)"; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)"; }}
+                            onMouseEnter={(e) => { if (!isBaseConversion) e.currentTarget.style.backgroundColor = "var(--surface-hover)"; }}
+                            onMouseLeave={(e) => { if (!isBaseConversion) e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)"; }}
                           >
                             {/* Conversion Factor */}
                             <div style={{ padding: "12px 16px", fontSize: "var(--text-label)", lineHeight: "1.4", fontWeight: "var(--font-weight-normal)" as any, color: "var(--foreground)" }}>
-                              {row.factor.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+                              {row.factor === 0 ? (
+                                <span style={{ color: "var(--text-subtle)", fontStyle: "italic" }}>—</span>
+                              ) : (
+                                row.factor.toLocaleString(undefined, { maximumFractionDigits: 6 })
+                              )}
                             </div>
                             {/* Units — symbol (name) */}
-                            <div style={{ padding: "12px 16px", fontSize: "var(--text-label)", lineHeight: "1.4" }}>
+                            <div className="flex items-center gap-2" style={{ padding: "12px 16px", fontSize: "var(--text-label)", lineHeight: "1.4" }}>
                               <span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--text-strong)" }}>
                                 {row.unitSymbol}
                               </span>
@@ -986,15 +1188,37 @@ export function UomDetailView() {
                               <span style={{ color: "var(--text-subtle)", fontWeight: "var(--font-weight-normal)" as any }}>
                                 ({row.unitName})
                               </span>
+                              {isBaseConversion && (
+                                <span
+                                  style={{
+                                    fontSize: 10,
+                                    padding: "2px 6px",
+                                    borderRadius: 4,
+                                    backgroundColor: "var(--primary)",
+                                    color: "var(--primary-foreground)",
+                                    fontWeight: "var(--font-weight-medium)" as any,
+                                    lineHeight: "1",
+                                    marginLeft: 4,
+                                  }}
+                                >
+                                  Defined
+                                </span>
+                              )}
                             </div>
-                            {/* Category col for cross-category */}
+                            {/* Type col for same-category / Category col for cross-category */}
+                            {conversionSection === "same" && (
+                              <div style={{ padding: "12px 16px" }}>
+                                <TypeLabel type={(row.type || "Standard") as any} />
+                              </div>
+                            )}
                             {conversionSection === "cross" && (
                               <div style={{ padding: "12px 16px" }}>
                                 <CategoryBadge category={row.category!} />
                               </div>
                             )}
                           </motion.div>
-                        ))}
+                          );
+                        })}
 
                         {/* ── Inline add conversion row ── */}
                         <AnimatePresence>
@@ -1287,6 +1511,9 @@ export function UomDetailView() {
                           </PaginationBtn>
                         </div>
                       </div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 );
