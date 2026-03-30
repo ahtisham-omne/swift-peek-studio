@@ -204,15 +204,26 @@ export function UomDetailView() {
   /* ── Inline add conversion state ── */
   const [isAddingConversion, setIsAddingConversion] = useState(false);
   const [newConvFactor, setNewConvFactor] = useState("");
-  const [newConvSymbol, setNewConvSymbol] = useState("");
-  const [newConvName, setNewConvName] = useState("");
+  const [newConvUnitId, setNewConvUnitId] = useState("");
   const [newConvType, setNewConvType] = useState<"Standard" | "Custom">("Custom");
   const [newConvCategory, setNewConvCategory] = useState<UomCategory>("Mass");
 
+  /* Derive symbol/name from selected unit id */
+  const selectedNewConvUnit = SAMPLE_UNITS.find((u) => u.id === newConvUnitId);
+  const newConvSymbol = selectedNewConvUnit?.symbol ?? "";
+  const newConvName = selectedNewConvUnit?.name ?? "";
+
+  /* Same-category units for the dropdown (exclude the current unit and already-added conversions) */
+  const sameCatUnitOptions = SAMPLE_UNITS.filter(
+    (u) =>
+      u.category === displayCategory &&
+      u.id !== id &&
+      !sameCatConversions.some((c) => c.unitSymbol === u.symbol)
+  );
+
   const resetNewConvForm = useCallback(() => {
     setNewConvFactor("");
-    setNewConvSymbol("");
-    setNewConvName("");
+    setNewConvUnitId("");
     setNewConvType("Custom");
     setNewConvCategory("Mass");
     setIsAddingConversion(false);
@@ -220,26 +231,26 @@ export function UomDetailView() {
 
   const handleAddConversion = useCallback(() => {
     const factor = parseFloat(newConvFactor);
-    if (!factor || !newConvSymbol.trim() || !newConvName.trim()) {
-      showToast("error", "Please fill in all required fields");
+    if (!factor || !newConvSymbol || !newConvName) {
+      showToast("error", "Please select a unit and enter a factor");
       return;
     }
     const newRow: ConversionRow = {
       factor,
-      unitSymbol: newConvSymbol.trim(),
-      unitName: newConvName.trim(),
+      unitSymbol: newConvSymbol,
+      unitName: newConvName,
     };
     if (conversionSection === "same") {
-      newRow.type = newConvType;
+      newRow.type = selectedNewConvUnit?.type as "Standard" | "Custom" ?? newConvType;
       setSameCatConversions((prev) => [...prev, newRow]);
     } else {
       // Only one cross-category conversion allowed
       newRow.category = newConvCategory;
       setCrossCatConversions([newRow]);
     }
-    showToast("success", `Conversion to "${newConvName.trim()}" added`);
+    showToast("success", `Conversion to "${newConvName}" added`);
     resetNewConvForm();
-  }, [newConvFactor, newConvSymbol, newConvName, newConvType, newConvCategory, conversionSection, showToast, resetNewConvForm]);
+  }, [newConvFactor, newConvSymbol, newConvName, newConvType, newConvCategory, conversionSection, showToast, resetNewConvForm, selectedNewConvUnit]);
 
   /* ── Edit form state ── */
   const [editName, setEditName] = useState(displayName);
