@@ -19,4 +19,11 @@ export default defineConfig(({ mode }) => ({
     },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
   },
+  optimizeDeps: {
+    include: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "react-router"],
+    force: true,
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
+  },
 }));
