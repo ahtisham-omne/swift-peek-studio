@@ -204,15 +204,26 @@ export function UomDetailView() {
   /* ── Inline add conversion state ── */
   const [isAddingConversion, setIsAddingConversion] = useState(false);
   const [newConvFactor, setNewConvFactor] = useState("");
-  const [newConvSymbol, setNewConvSymbol] = useState("");
-  const [newConvName, setNewConvName] = useState("");
+  const [newConvUnitId, setNewConvUnitId] = useState("");
   const [newConvType, setNewConvType] = useState<"Standard" | "Custom">("Custom");
   const [newConvCategory, setNewConvCategory] = useState<UomCategory>("Mass");
 
+  /* Derive symbol/name from selected unit id */
+  const selectedNewConvUnit = SAMPLE_UNITS.find((u) => u.id === newConvUnitId);
+  const newConvSymbol = selectedNewConvUnit?.symbol ?? "";
+  const newConvName = selectedNewConvUnit?.name ?? "";
+
+  /* Same-category units for the dropdown (exclude the current unit and already-added conversions) */
+  const sameCatUnitOptions = SAMPLE_UNITS.filter(
+    (u) =>
+      u.category === displayCategory &&
+      u.id !== id &&
+      !sameCatConversions.some((c) => c.unitSymbol === u.symbol)
+  );
+
   const resetNewConvForm = useCallback(() => {
     setNewConvFactor("");
-    setNewConvSymbol("");
-    setNewConvName("");
+    setNewConvUnitId("");
     setNewConvType("Custom");
     setNewConvCategory("Mass");
     setIsAddingConversion(false);
@@ -220,26 +231,26 @@ export function UomDetailView() {
 
   const handleAddConversion = useCallback(() => {
     const factor = parseFloat(newConvFactor);
-    if (!factor || !newConvSymbol.trim() || !newConvName.trim()) {
-      showToast("error", "Please fill in all required fields");
+    if (!factor || !newConvSymbol || !newConvName) {
+      showToast("error", "Please select a unit and enter a factor");
       return;
     }
     const newRow: ConversionRow = {
       factor,
-      unitSymbol: newConvSymbol.trim(),
-      unitName: newConvName.trim(),
+      unitSymbol: newConvSymbol,
+      unitName: newConvName,
     };
     if (conversionSection === "same") {
-      newRow.type = newConvType;
+      newRow.type = selectedNewConvUnit?.type as "Standard" | "Custom" ?? newConvType;
       setSameCatConversions((prev) => [...prev, newRow]);
     } else {
       // Only one cross-category conversion allowed
       newRow.category = newConvCategory;
       setCrossCatConversions([newRow]);
     }
-    showToast("success", `Conversion to "${newConvName.trim()}" added`);
+    showToast("success", `Conversion to "${newConvName}" added`);
     resetNewConvForm();
-  }, [newConvFactor, newConvSymbol, newConvName, newConvType, newConvCategory, conversionSection, showToast, resetNewConvForm]);
+  }, [newConvFactor, newConvSymbol, newConvName, newConvType, newConvCategory, conversionSection, showToast, resetNewConvForm, selectedNewConvUnit]);
 
   /* ── Edit form state ── */
   const [editName, setEditName] = useState(displayName);
@@ -1034,10 +1045,10 @@ export function UomDetailView() {
                                 <input
                                   type="number"
                                   step="any"
-                                  placeholder={!newConvSymbol.trim() ? "Select unit first" : "Factor"}
+                                  placeholder={!newConvUnitId ? "Select unit first" : "Factor"}
                                   value={newConvFactor}
                                   onChange={(e) => setNewConvFactor(e.target.value)}
-                                  disabled={!newConvSymbol.trim()}
+                                  disabled={!newConvUnitId}
                                   className="w-full outline-none border-0"
                                   style={{
                                     height: "var(--input-height)",
@@ -1051,8 +1062,8 @@ export function UomDetailView() {
                                     borderColor: "var(--border)",
                                     borderRadius: "var(--radius-sm)",
                                     lineHeight: "1",
-                                    opacity: !newConvSymbol.trim() ? 0.5 : 1,
-                                    cursor: !newConvSymbol.trim() ? "not-allowed" : undefined,
+                                    opacity: !newConvUnitId ? 0.5 : 1,
+                                    cursor: !newConvUnitId ? "not-allowed" : undefined,
                                   }}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") handleAddConversion();
@@ -1060,58 +1071,43 @@ export function UomDetailView() {
                                   }}
                                 />
                               </div>
-                              {/* Symbol + Name inputs */}
+                              {/* Unit select dropdown */}
                               <div className="flex items-center" style={{ padding: "8px 12px", gap: 8 }}>
-                                <input
-                                  type="text"
-                                  placeholder="Symbol"
-                                  value={newConvSymbol}
-                                  onChange={(e) => setNewConvSymbol(e.target.value)}
-                                  className="outline-none border-0"
+                                <select
+                                  value={newConvUnitId}
+                                  onChange={(e) => setNewConvUnitId(e.target.value)}
+                                  autoFocus
+                                  className="flex-1 min-w-0 outline-none cursor-pointer border-0"
                                   style={{
-                                    width: 70,
                                     height: "var(--input-height)",
                                     padding: "0 10px",
                                     fontSize: "var(--text-label)",
                                     fontWeight: "var(--font-weight-normal)" as any,
-                                    color: "var(--foreground)",
+                                    color: newConvUnitId ? "var(--foreground)" : "var(--text-subtle)",
                                     backgroundColor: "var(--card)",
                                     borderWidth: 1,
                                     borderStyle: "solid",
                                     borderColor: "var(--border)",
                                     borderRadius: "var(--radius-sm)",
                                     lineHeight: "1",
-                                    flexShrink: 0,
+                                    appearance: "none",
+                                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "right 10px center",
+                                    paddingRight: 28,
                                   }}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") handleAddConversion();
                                     if (e.key === "Escape") resetNewConvForm();
                                   }}
-                                />
-                                <input
-                                  type="text"
-                                  placeholder="Unit name"
-                                  value={newConvName}
-                                  onChange={(e) => setNewConvName(e.target.value)}
-                                  className="flex-1 min-w-0 outline-none border-0"
-                                  style={{
-                                    height: "var(--input-height)",
-                                    padding: "0 10px",
-                                    fontSize: "var(--text-label)",
-                                    fontWeight: "var(--font-weight-normal)" as any,
-                                    color: "var(--foreground)",
-                                    backgroundColor: "var(--card)",
-                                    borderWidth: 1,
-                                    borderStyle: "solid",
-                                    borderColor: "var(--border)",
-                                    borderRadius: "var(--radius-sm)",
-                                    lineHeight: "1",
-                                  }}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") handleAddConversion();
-                                    if (e.key === "Escape") resetNewConvForm();
-                                  }}
-                                />
+                                >
+                                  <option value="" disabled>Select Unit</option>
+                                  {sameCatUnitOptions.map((u) => (
+                                    <option key={u.id} value={u.id}>
+                                      {u.symbol} ({u.name})
+                                    </option>
+                                  ))}
+                                </select>
                                 {/* Confirm / Cancel buttons — visible in same-category since no 3rd col */}
                                 {conversionSection === "same" && (
                                   <div className="flex items-center shrink-0" style={{ gap: 4 }}>
