@@ -648,15 +648,6 @@ export function UomDetailView() {
                 )}
               </span>
 
-              <MetaDot />
-
-              {/* Fractional quantities */}
-              <span style={{ color: "var(--text-muted)" }}>
-                Fractional quantities:{" "}
-                <span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--text-strong)" }}>
-                  Allowed
-                </span>
-              </span>
             </div>
           </div>
 
