@@ -58,17 +58,6 @@ interface ConversionRow {
 
 const SAME_CATEGORY_CONVERSIONS: ConversionRow[] = [
   { factor: 48, unitSymbol: "ea", unitName: "Each", type: "Standard" },
-  { factor: 24, unitSymbol: "Pair", unitName: "Pair", type: "Standard" },
-  { factor: 4, unitSymbol: "dz", unitName: "Dozen", type: "Standard" },
-  { factor: 2, unitSymbol: "grs", unitName: "Gross", type: "Standard" },
-  { factor: 0.5, unitSymbol: "ctn", unitName: "Carton", type: "Custom" },
-  { factor: 0.25, unitSymbol: "plt", unitName: "Pallet", type: "Custom" },
-  { factor: 96, unitSymbol: "hea", unitName: "Half Each", type: "Custom" },
-  { factor: 192, unitSymbol: "qea", unitName: "Quarter Each", type: "Standard" },
-  { factor: 12, unitSymbol: "4pk", unitName: "4-Pack", type: "Custom" },
-  { factor: 6, unitSymbol: "8pk", unitName: "8-Pack", type: "Custom" },
-  { factor: 1, unitSymbol: "cs", unitName: "Case", type: "Standard" },
-  { factor: 0.1, unitSymbol: "skd", unitName: "Skid", type: "Custom" },
 ];
 
 const CROSS_CATEGORY_CONVERSIONS: ConversionRow[] = [
@@ -914,18 +903,13 @@ export function UomDetailView() {
                             </span>
                           </div>
                           <span style={{ fontSize: "var(--text-label)", color: "var(--text-muted)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.3" }}>
-                            1{" "}
-                            <span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)" }}>
-                              {displaySymbol}
-                            </span>
-                            {" "}
-                            <span style={{ color: "var(--text-subtle)" }}>
-                              ({displayName})
-                            </span>
-                            {" = "}
+                            {conversionSection === "same"
+                              ? `Only one same-category conversion is allowed. This applies to all units in the ${unit?.category || "this"} category.`
+                              : <>1{" "}<span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)" }}>{displaySymbol}</span>{" "}<span style={{ color: "var(--text-subtle)" }}>({displayName})</span>{" = "}</>
+                            }
                           </span>
                         </div>
-                        {!isAddingConversion && !(conversionSection === "cross" && crossCatConversions.length >= 1) && (
+                        {!isAddingConversion && !(conversionSection === "same" && sameCatConversions.length >= 1) && !(conversionSection === "cross" && crossCatConversions.length >= 1) && (
                           <motion.button
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
