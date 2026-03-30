@@ -1,0 +1,611 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  /* The global font family for the application */
+  --font-family: 'Inter', sans-serif;
+  /* The default background color for the application. */
+  --background: rgba(255, 255, 255, 1);
+  /* The default color for elements or text that appears on top of the background. */
+  --foreground: rgba(0, 0, 0, 1);
+  /* The background color for cards, modals, and other containers. */
+  --card: rgba(255, 255, 255, 1);
+  /* The default color for text or elements that appear on top of cards, modals and other background containers. */
+  --card-foreground: rgba(0, 0, 0, 1);
+  /* The background color for dropdowns and tooltips. */
+  --popover: rgba(255, 255, 255, 1);
+  /* The default color for text or elements that appear on top of dropdowns and tooltips. */
+  --popover-foreground: rgba(0, 0, 0, 1);
+  /* The primary color used for buttons, links, and other interactive elements. */
+  --primary: rgba(10, 119, 255, 1);
+  /* The default color for text or elements that appear on top of primary colored elements. */
+  --primary-foreground: rgba(255, 255, 255, 1);
+  /* The secondary color used for secondary(but NOT-DESTRUCTIVE) buttons and interactive elements. */
+  --secondary: rgba(247, 247, 248, 1);
+  /* The default color for text or elements that appear on top of secondary colored elements. */
+  --secondary-foreground: rgba(0, 0, 0, 1);
+  /* The muted color used for less prominent elements, such as disabled buttons or disabled text. */
+  --muted: rgba(247, 247, 248, 1);
+  /* The default color for text or elements that appear on top of muted colored elements. */
+  --muted-foreground: rgba(229, 229, 231, 1);
+  /* The accent color used for highlights, links, and other interactive elements. */
+  --accent: rgba(39, 185, 115, 1);
+  /* The default color for text or elements that appear on top of accent colored elements. */
+  --accent-foreground: rgba(255, 255, 255, 1);
+  /* The color used for background in destructive actions, such as delete buttons or error messages. */
+  --destructive: rgba(255, 69, 58, 1);
+  /* The default color for text or elements that appear on top of destructive colored elements. */
+  --destructive-foreground: rgba(255, 255, 255, 1);
+  /* The default border color for elements such as inputs, buttons, and other containers. */
+  --border: rgba(234, 235, 240, 1);
+  /* The default background color for input fields once the text has been filled. Should be either transparent or match the input-background. */
+  --input: rgba(255, 255, 255, 1);
+  /* The default background color for input fields, text areas, and other input elements. */
+  --input-background: rgba(255, 255, 255, 1);
+  /* The color for focus rings, outlines, and other focus indicators. */
+  --ring: rgba(10, 119, 255, 1);
+  /* Shadow for small elevations, such as cards or modals. */
+  --elevation-sm: 0px 2px 8px 0px rgba(0, 0, 0, 0.16);
+  /* The color for chart elements, such as a bar or line in a chart. */
+  --chart-1: rgba(10, 119, 255, 1);
+  /* The color for another chart element, such as a bar or line in a chart. */
+  --chart-2: rgba(39, 185, 115, 1);
+  /* The color for another chart element, such as a bar or line in a chart. */
+  --chart-3: rgba(239, 162, 47, 1);
+  /* The color for another chart element, such as a bar or line in a chart. */
+  --chart-4: rgba(87, 78, 250, 1);
+  /* The color for another chart element, such as a bar or line in a chart. */
+  --chart-5: rgba(255, 69, 58, 1);
+  /* The default border radius for elements such as buttons, tooltip, and other containers. */
+  --radius: 10px;
+  /* The background color for sidebars, navigation menus, and other persistent elements. */
+  --sidebar: rgba(255, 255, 255, 1);
+  /* The default color for text or elements that appear on top of sidebars, navigation menus, and other persistent elements. */
+  --sidebar-foreground: rgba(0, 0, 0, 1);
+  /* The primary color used for buttons, links, and other interactive elements in sidebars and navigation menus. */
+  --sidebar-primary: rgba(10, 119, 255, 1);
+  /* The default color for text or elements that appear on top of primary colored elements in sidebars and navigation menus. */
+  --sidebar-primary-foreground: rgba(255, 255, 255, 1);
+  /* The accent color used for highlights, links, and other interactive elements in sidebars and navigation menus. */
+  --sidebar-accent: rgba(39, 185, 115, 1);
+  /* The default color for text or elements that appear on top of accent colored elements in sidebars and navigation menus. */
+  --sidebar-accent-foreground: rgba(255, 255, 255, 1);
+  /* The default border color for elements in sidebars and navigation menus. */
+  --sidebar-border: rgba(234, 235, 240, 1);
+  /* The default color for focus rings, outlines, and other focus indicators in sidebars and navigation menus. */
+  --sidebar-ring: rgba(10, 119, 255, 1);
+  /* Typography variables */
+  --text-h1: 40px;
+  --text-h2: 28px;
+  --text-h3: 24px;
+  --text-h4: 20px;
+  --text-base: 16px;
+  --text-label: 14px;
+  /* The default font weight for semi-bold text. */
+  --font-weight-semibold: 400;
+  /* The default font weight for medium text. */
+  --font-weight-medium: 400;
+  /* The default font weight for normal text. */
+  --font-weight-normal: 400;
+
+  /* ═══════════════════════════════════════════════
+     Extended UI Palette — Text Hierarchy
+     Semantic text colors for all UI text levels.
+     ═══════════════════════════════════════════════ */
+  /* Near-black body text for table cells, names (gray-700) */
+  --text-strong: rgba(55, 65, 81, 1);
+  /* Default body text for labels, secondary info (gray-600) */
+  --text-default: rgba(75, 85, 99, 1);
+  /* Muted text for descriptions, helper text (gray-500) */
+  --text-muted: rgba(107, 114, 128, 1);
+  /* Secondary base text for table secondary columns (gray-550) */
+  --text-base-second: rgba(90, 100, 116, 1);
+  /* Subtle text for placeholders, disabled states, captions (gray-400) */
+  --text-subtle: rgba(156, 163, 175, 1);
+  /* Very light text for disabled dividers, empty states (gray-300) */
+  --text-disabled: rgba(209, 213, 219, 1);
+
+  /* ═══════════════════════════════════════════════
+     Extended UI Palette — Surfaces & Backgrounds
+     ═══════════════════════════════════════════════ */
+  /* Slightly raised surface for badges, keyboard hints (gray-100) */
+  --surface-raised: rgba(243, 244, 246, 1);
+  /* Row hover state background */
+  --surface-hover: rgba(239, 246, 255, 1);
+
+  /* ═══════════════════════════════════════════════
+     Extended UI Palette — Border Variants
+     ═══════════════════════════════════════════════ */
+  /* Subtle divider between table rows (gray-100) */
+  --border-subtle: rgba(243, 244, 246, 1);
+  /* Stronger border for inputs and interactive elements (gray-300) */
+  --border-strong: rgba(209, 213, 219, 1);
+
+  /* ═══════════════════════════════════════════════
+     Extended UI Palette — Primary Shades
+     For active states, selected filters, badges.
+     ═══════════════════════════════════════════════ */
+  /* Light primary background for active filters, hover (blue-50) */
+  --primary-surface: rgba(239, 246, 255, 1);
+  /* Stronger primary bg for count badges (blue-100) */
+  --primary-surface-strong: rgba(219, 234, 254, 1);
+  /* Lighter primary border for active elements (blue-200) */
+  --primary-border: rgba(191, 219, 254, 1);
+  /* Primary border on hover (blue-300) */
+  --primary-border-hover: rgba(147, 197, 253, 1);
+  /* Primary icon color (blue-400) */
+  --primary-icon: rgba(96, 165, 250, 1);
+  /* Soft primary for icon badges (blue-500) */
+  --primary-soft: rgba(59, 130, 246, 1);
+  /* Strong primary text on primary surfaces (blue-700) */
+  --primary-text-strong: rgba(29, 78, 216, 1);
+
+  /* ═══════════════════════════════════════════════
+     Extended UI Palette — Accent (Success/Green) Shades
+     ═══════════════════════════════════════════════ */
+  /* Light accent bg for success banners (green-50) */
+  --accent-surface: rgba(240, 253, 244, 1);
+  /* Accent border (emerald-200) */
+  --accent-border: rgba(167, 243, 208, 1);
+  /* Strong accent text for "In Use", success labels (green-700) */
+  --accent-text-strong: rgba(21, 128, 61, 1);
+
+  /* ═══════════════════════════════════════════════
+     Extended UI Palette — Destructive Shades
+     ═══════════════════════════════════════════════ */
+  /* Light destructive bg for hover state */
+  --destructive-surface: rgba(254, 242, 242, 1);
+  /* Destructive border for outlined destructive buttons (red-200) */
+  --destructive-border: rgba(254, 202, 202, 1);
+
+  /* ════════════════════════════════════��══════════
+     Extended UI Palette — Utility Colors
+     ═══════════════════════════════════════════════ */
+  /* Search highlight background (yellow-200) */
+  --highlight-bg: rgba(254, 240, 138, 1);
+  /* Warning/chart-3 surface for badge backgrounds */
+  --chart-3-surface: rgba(239, 162, 47, 0.12);
+  /* Tooltip / dark popover background (gray-800) */
+  --tooltip-bg: rgba(31, 41, 55, 1);
+
+  /* ═══════════════════════════════════════════════
+     Scrollbar Tokens
+     ═══════════════════════════════════════════════ */
+  /* Scrollbar track background */
+  --scrollbar-track: transparent;
+  /* Scrollbar thumb resting color */
+  --scrollbar-thumb: rgba(209, 213, 219, 0.5);
+  /* Scrollbar thumb hover color */
+  --scrollbar-thumb-hover: rgba(156, 163, 175, 0.7);
+  /* Scrollbar thumb active/pressed color */
+  --scrollbar-thumb-active: rgba(107, 114, 128, 0.8);
+  /* Scrollbar width — thin */
+  --scrollbar-width: 6px;
+  /* Scrollbar thumb radius */
+  --scrollbar-radius: 100px;
+
+  /* ═══════════════════════════════════════════════
+     Elevation / Box-Shadow Scale
+     Tokenised shadows so all UI pulls from one place.
+     ══════════════════════════════════════════════ */
+  /* Barely-there rest shadow for cards */
+  --elevation-xs: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  /* Subtle button / pill shadow */
+  --elevation-pill: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  /* Small card shadow (already defined above as --elevation-sm) */
+  /* --elevation-sm: 0px 2px 8px 0px rgba(0, 0, 0, 0.16); */
+  /* Dropdown / popover shadow */
+  --elevation-md: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+  /* Floating bar / heavy panel */
+  --elevation-lg: 0 8px 32px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.12);
+  /* Modal / dialog shadow */
+  --elevation-xl: 0 20px 60px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* Tooltip shadow */
+  --elevation-tooltip: 0 4px 12px rgba(0, 0, 0, 0.2);
+  /* Context menu item shadow */
+  --elevation-menu: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  /* Dropdown upward variant */
+  --elevation-md-up: 0 -4px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+  /* Subtle button press / input focus glow */
+  --elevation-btn: 0 1px 2px rgba(0, 0, 0, 0.08);
+  /* Light button shadow */
+  --elevation-btn-light: 0 1px 2px rgba(0, 0, 0, 0.04);
+  /* Column drag shadow */
+  --elevation-drag: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--primary-surface);
+
+  /* ═══════════════════════════════════════════════
+     Overlay / Backdrop
+     ═══════════════════════════════════════════════ */
+  /* Standard modal backdrop */
+  --overlay-backdrop: rgba(0, 0, 0, 0.30);
+  /* Heavy overlay — image lightbox */
+  --overlay-heavy: rgba(0, 0, 0, 0.60);
+
+  /* ═══════════════════════════════════════════════
+     Primary-Bar Contextual Colors
+     For elements rendered ON the primary-colored bar.
+     ═══════════════════════════════════════════════ */
+  /* Default text on primary surface */
+  --bar-text: rgba(255, 255, 255, 0.85);
+  /* Muted text / icon on primary surface */
+  --bar-text-muted: rgba(255, 255, 255, 0.7);
+  /* Hover bg for buttons on primary bar */
+  --bar-hover: rgba(255, 255, 255, 0.12);
+  /* Stronger hover bg (destructive context) */
+  --bar-hover-strong: rgba(255, 255, 255, 0.15);
+  /* Divider line on primary bar */
+  --bar-divider: rgba(255, 255, 255, 0.18);
+  /* Subtle divider on primary bar */
+  --bar-divider-subtle: rgba(255, 255, 255, 0.25);
+
+  /* ═══════════════════════════════════════════════
+     Focus Ring
+     ═══════════════════════════════════════════════ */
+  /* Primary input focus ring glow */
+  --ring-primary-glow: 0 0 0 2px rgba(10, 119, 255, 0.12);
+  /* Primary blue glow for drag handles */
+  --ring-primary-soft: 0 0 6px rgba(10, 119, 255, 0.3);
+
+  /* ═══════════════════════════════════════════════
+     Layout — Container & Sidebar
+     Centralized layout sizing tokens.
+     ═══════════════════════════════════════════════ */
+  /* Maximum content width for page containers */
+  --container-max-width: 1440px;
+  /* Standard height for all form inputs, selects, dropdowns */
+  --input-height: 40px;
+  /* Right sidebar width on detail pages (lg breakpoint) */
+  --sidebar-width: 280px;
+  /* Right sidebar width on 2xl+ screens */
+  --sidebar-width-2xl: 300px;
+}
+
+.dark {
+  --background: rgba(23, 23, 23, 1);
+  --foreground: rgba(255, 255, 255, 1);
+  --card: rgba(23, 23, 23, 1);
+  --card-foreground: rgba(255, 255, 255, 1);
+  --popover: rgba(23, 23, 23, 1);
+  --popover-foreground: rgba(255, 255, 255, 1);
+  --primary: rgba(10, 119, 255, 1);
+  --primary-foreground: rgba(255, 255, 255, 1);
+  --secondary: rgba(39, 39, 42, 1);
+  --secondary-foreground: rgba(255, 255, 255, 1);
+  --muted: rgba(39, 39, 42, 1);
+  --muted-foreground: rgba(161, 161, 170, 1);
+  --accent: rgba(39, 185, 115, 1);
+  --accent-foreground: rgba(255, 255, 255, 1);
+  --destructive: rgba(255, 69, 58, 1);
+  --destructive-foreground: rgba(255, 255, 255, 1);
+  --border: rgba(39, 39, 42, 1);
+  --input: rgba(39, 39, 42, 1);
+  --ring: rgba(10, 119, 255, 1);
+  --chart-1: rgba(10, 119, 255, 1);
+  --chart-2: rgba(39, 185, 115, 1);
+  --chart-3: rgba(239, 162, 47, 1);
+  --chart-4: rgba(87, 78, 250, 1);
+  --chart-5: rgba(255, 69, 58, 1);
+  --sidebar: rgba(23, 23, 23, 1);
+  --sidebar-foreground: rgba(255, 255, 255, 1);
+  --sidebar-primary: rgba(10, 119, 255, 1);
+  --sidebar-primary-foreground: rgba(255, 255, 255, 1);
+  --sidebar-accent: rgba(39, 185, 115, 1);
+  --sidebar-accent-foreground: rgba(255, 255, 255, 1);
+  --sidebar-border: rgba(39, 39, 42, 1);
+  --sidebar-ring: rgba(10, 119, 255, 1);
+
+  /* Extended palette — dark mode overrides */
+  --text-strong: rgba(228, 228, 231, 1);
+  --text-default: rgba(161, 161, 170, 1);
+  --text-muted: rgba(113, 113, 122, 1);
+  --text-base-second: rgba(140, 140, 150, 1);
+  --text-subtle: rgba(82, 82, 91, 1);
+  --text-disabled: rgba(63, 63, 70, 1);
+
+  --surface-raised: rgba(39, 39, 42, 1);
+  --surface-hover: rgba(30, 41, 59, 1);
+
+  --border-subtle: rgba(39, 39, 42, 1);
+  --border-strong: rgba(63, 63, 70, 1);
+
+  --primary-surface: rgba(23, 37, 84, 1);
+  --primary-surface-strong: rgba(30, 58, 138, 1);
+  --primary-border: rgba(29, 78, 216, 1);
+  --primary-border-hover: rgba(59, 130, 246, 1);
+  --primary-icon: rgba(96, 165, 250, 1);
+  --primary-soft: rgba(59, 130, 246, 1);
+  --primary-text-strong: rgba(147, 197, 253, 1);
+
+  --accent-surface: rgba(20, 51, 35, 1);
+  --accent-border: rgba(21, 128, 61, 1);
+  --accent-text-strong: rgba(74, 222, 128, 1);
+
+  --destructive-surface: rgba(69, 10, 10, 1);
+  --destructive-border: rgba(153, 27, 27, 1);
+
+  --highlight-bg: rgba(133, 77, 14, 1);
+  --chart-3-surface: rgba(239, 162, 47, 0.12);
+  --tooltip-bg: rgba(244, 244, 245, 1);
+
+  /* Scrollbar — dark mode overrides */
+  --scrollbar-thumb: rgba(63, 63, 70, 0.6);
+  --scrollbar-thumb-hover: rgba(82, 82, 91, 0.8);
+  --scrollbar-thumb-active: rgba(113, 113, 122, 0.9);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --box-shadow-elevation-sm: var(--elevation-sm);
+
+  /* Extended palette — Tailwind utility bridges */
+  --color-text-strong: var(--text-strong);
+  --color-text-default: var(--text-default);
+  --color-text-muted: var(--text-muted);
+  --color-text-base-second: var(--text-base-second);
+  --color-text-subtle: var(--text-subtle);
+  --color-text-disabled: var(--text-disabled);
+
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-primary-surface: var(--primary-surface);
+  --color-primary-surface-strong: var(--primary-surface-strong);
+  --color-primary-border: var(--primary-border);
+  --color-primary-border-hover: var(--primary-border-hover);
+  --color-primary-icon: var(--primary-icon);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-text-strong: var(--primary-text-strong);
+
+  --color-accent-surface: var(--accent-surface);
+  --color-accent-border: var(--accent-border);
+  --color-accent-text-strong: var(--accent-text-strong);
+
+  --color-destructive-surface: var(--destructive-surface);
+  --color-destructive-border: var(--destructive-border);
+
+  --color-highlight-bg: var(--highlight-bg);
+  --color-chart-3-surface: var(--chart-3-surface);
+  --color-tooltip-bg: var(--tooltip-bg);
+
+  /* Elevation — Tailwind utility bridges */
+  --box-shadow-elevation-xs: var(--elevation-xs);
+  --box-shadow-elevation-pill: var(--elevation-pill);
+  --box-shadow-elevation-md: var(--elevation-md);
+  --box-shadow-elevation-lg: var(--elevation-lg);
+  --box-shadow-elevation-xl: var(--elevation-xl);
+  --box-shadow-elevation-tooltip: var(--elevation-tooltip);
+  --box-shadow-elevation-menu: var(--elevation-menu);
+  --box-shadow-elevation-md-up: var(--elevation-md-up);
+  --box-shadow-elevation-btn: var(--elevation-btn);
+  --box-shadow-elevation-btn-light: var(--elevation-btn-light);
+  --box-shadow-elevation-drag: var(--elevation-drag);
+
+  /* Overlay — Tailwind utility bridges */
+  --color-overlay-backdrop: var(--overlay-backdrop);
+  --color-overlay-heavy: var(--overlay-heavy);
+
+  /* Bar contextual — Tailwind utility bridges */
+  --color-bar-text: var(--bar-text);
+  --color-bar-text-muted: var(--bar-text-muted);
+  --color-bar-hover: var(--bar-hover);
+  --color-bar-hover-strong: var(--bar-hover-strong);
+  --color-bar-divider: var(--bar-divider);
+  --color-bar-divider-subtle: var(--bar-divider-subtle);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    font-family: var(--font-family) !important;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-family);
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-h1);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.5;
+      font-family: var(--font-family);
+    }
+
+    h2 {
+      font-size: var(--text-h2);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.5;
+      font-family: var(--font-family);
+    }
+
+    h3 {
+      font-size: var(--text-h3);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.5;
+      font-family: var(--font-family);
+    }
+
+    h4 {
+      font-size: var(--text-h4);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.5;
+      font-family: var(--font-family);
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+      font-family: var(--font-family);
+    }
+
+    label {
+      font-size: var(--text-label);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+      font-family: var(--font-family);
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+      font-family: var(--font-family);
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+      font-family: var(--font-family);
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+}
+
+/* Hide scrollbar for horizontal-scroll tab/filter bars on mobile */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ═══════════════════════════════════════════════
+   Global Custom Scrollbar System
+   Thin, auto-hiding scrollbars that match the UI.
+   All colors sourced from --scrollbar-* tokens.
+   ═══════════════════════════════════════════════ */
+
+/* ── Firefox: native thin scrollbar ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* ── WebKit (Chrome, Safari, Edge): full custom ── */
+
+/* Base track — transparent by default, inset from edge */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: var(--scrollbar-radius);
+}
+
+/* Thumb — pill-shaped, semi-transparent at rest */
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--scrollbar-radius);
+  border: 1px solid transparent;
+  background-clip: content-box;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border-radius: var(--scrollbar-radius);
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--scrollbar-thumb-active);
+  border-radius: var(--scrollbar-radius);
+  border: 0;
+}
+
+/* Hide the corner piece where h/v scrollbars meet */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ── Overlay scrollbar: show only on hover ──
+   Elements with this class fade the scrollbar in on hover.
+   Use on main content areas, sidebars, panels. */
+.scrollbar-overlay {
+  overflow: auto;
+}
+.scrollbar-overlay::-webkit-scrollbar-thumb {
+  background: transparent;
+  transition: background 0.3s ease;
+}
+.scrollbar-overlay:hover::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+}
+.scrollbar-overlay:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ── Gutter-stable: prevent layout shift ── */
+.scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
+/* ═══════════════════════════════════════════════
+   Toast slide-in animation
+   ═══════════════════════════════════════════════ */
+@keyframes uomToastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
