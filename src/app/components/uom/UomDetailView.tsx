@@ -233,8 +233,9 @@ export function UomDetailView() {
       newRow.type = newConvType;
       setSameCatConversions((prev) => [...prev, newRow]);
     } else {
+      // Only one cross-category conversion allowed
       newRow.category = newConvCategory;
-      setCrossCatConversions((prev) => [...prev, newRow]);
+      setCrossCatConversions([newRow]);
     }
     showToast("success", `Conversion to "${newConvName.trim()}" added`);
     resetNewConvForm();
