@@ -1026,10 +1026,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                           maxWidth: 540,
                         }}
                       >
-                        Defining conversion factors here would apply universally to all
-                        items. However, for item-specific unit of{" "}
-                        {category.toLowerCase()} definitions, you can define it at the
-                        item level.
+                        Define how 1 {unitName || "UOM"} converts to other {category} units. These conversions apply to all items using this unit.
                       </p>
 
                       {/* Convert from / Convert to */}
