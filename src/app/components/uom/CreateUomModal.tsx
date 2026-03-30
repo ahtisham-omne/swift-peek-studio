@@ -1089,13 +1089,16 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                               }}
                               onKeyDown={(e) => { if (e.key === "-" || e.key === "e") e.preventDefault(); }}
                               min="0"
-                              placeholder="0"
+                              placeholder={!convertTarget ? "Select unit first" : "0"}
+                              disabled={!convertTarget}
                               className="outline-none transition-shadow"
                               style={{
                                 ...INPUT_STYLE,
                                 fontSize: 13,
                                 lineHeight: "1",
                                 width: 72,
+                                opacity: !convertTarget ? 0.5 : 1,
+                                cursor: !convertTarget ? "not-allowed" : undefined,
                               }}
                               {...inputFocusHandlers}
                             />
