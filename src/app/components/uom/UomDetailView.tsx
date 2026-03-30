@@ -1071,58 +1071,43 @@ export function UomDetailView() {
                                   }}
                                 />
                               </div>
-                              {/* Symbol + Name inputs */}
+                              {/* Unit select dropdown */}
                               <div className="flex items-center" style={{ padding: "8px 12px", gap: 8 }}>
-                                <input
-                                  type="text"
-                                  placeholder="Symbol"
-                                  value={newConvSymbol}
-                                  onChange={(e) => setNewConvSymbol(e.target.value)}
-                                  className="outline-none border-0"
+                                <select
+                                  value={newConvUnitId}
+                                  onChange={(e) => setNewConvUnitId(e.target.value)}
+                                  autoFocus
+                                  className="flex-1 min-w-0 outline-none cursor-pointer border-0"
                                   style={{
-                                    width: 70,
                                     height: "var(--input-height)",
                                     padding: "0 10px",
                                     fontSize: "var(--text-label)",
                                     fontWeight: "var(--font-weight-normal)" as any,
-                                    color: "var(--foreground)",
+                                    color: newConvUnitId ? "var(--foreground)" : "var(--text-subtle)",
                                     backgroundColor: "var(--card)",
                                     borderWidth: 1,
                                     borderStyle: "solid",
                                     borderColor: "var(--border)",
                                     borderRadius: "var(--radius-sm)",
                                     lineHeight: "1",
-                                    flexShrink: 0,
+                                    appearance: "none",
+                                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "right 10px center",
+                                    paddingRight: 28,
                                   }}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") handleAddConversion();
                                     if (e.key === "Escape") resetNewConvForm();
                                   }}
-                                />
-                                <input
-                                  type="text"
-                                  placeholder="Unit name"
-                                  value={newConvName}
-                                  onChange={(e) => setNewConvName(e.target.value)}
-                                  className="flex-1 min-w-0 outline-none border-0"
-                                  style={{
-                                    height: "var(--input-height)",
-                                    padding: "0 10px",
-                                    fontSize: "var(--text-label)",
-                                    fontWeight: "var(--font-weight-normal)" as any,
-                                    color: "var(--foreground)",
-                                    backgroundColor: "var(--card)",
-                                    borderWidth: 1,
-                                    borderStyle: "solid",
-                                    borderColor: "var(--border)",
-                                    borderRadius: "var(--radius-sm)",
-                                    lineHeight: "1",
-                                  }}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") handleAddConversion();
-                                    if (e.key === "Escape") resetNewConvForm();
-                                  }}
-                                />
+                                >
+                                  <option value="" disabled>Select Unit</option>
+                                  {sameCatUnitOptions.map((u) => (
+                                    <option key={u.id} value={u.id}>
+                                      {u.symbol} ({u.name})
+                                    </option>
+                                  ))}
+                                </select>
                                 {/* Confirm / Cancel buttons — visible in same-category since no 3rd col */}
                                 {conversionSection === "same" && (
                                   <div className="flex items-center shrink-0" style={{ gap: 4 }}>
