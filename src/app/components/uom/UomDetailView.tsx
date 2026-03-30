@@ -903,15 +903,10 @@ export function UomDetailView() {
                             </span>
                           </div>
                           <span style={{ fontSize: "var(--text-label)", color: "var(--text-muted)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.3" }}>
-                            1{" "}
-                            <span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)" }}>
-                              {displaySymbol}
-                            </span>
-                            {" "}
-                            <span style={{ color: "var(--text-subtle)" }}>
-                              ({displayName})
-                            </span>
-                            {" = "}
+                            {conversionSection === "same"
+                              ? `Only one same-category conversion is allowed. This applies to all units in the ${unit?.category || "this"} category.`
+                              : <>1{" "}<span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)" }}>{displaySymbol}</span>{" "}<span style={{ color: "var(--text-subtle)" }}>({displayName})</span>{" = "}</>
+                            }
                           </span>
                         </div>
                         {!isAddingConversion && !(conversionSection === "same" && sameCatConversions.length >= 1) && !(conversionSection === "cross" && crossCatConversions.length >= 1) && (
