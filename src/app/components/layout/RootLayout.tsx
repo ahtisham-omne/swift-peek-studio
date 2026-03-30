@@ -7,7 +7,7 @@
  */
 
 import React, { useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
 
