@@ -1080,28 +1080,6 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                             Convert to
                           </div>
                           <div className="flex items-center" style={{ gap: 8 }}>
-                            <input
-                              type="number"
-                              value={convertFactor}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                if (val === "" || Number(val) >= 0) setConvertFactor(val);
-                              }}
-                              onKeyDown={(e) => { if (e.key === "-" || e.key === "e") e.preventDefault(); }}
-                              min="0"
-                              placeholder={!convertTarget ? "Select unit first" : "0"}
-                              disabled={!convertTarget}
-                              className="outline-none transition-shadow"
-                              style={{
-                                ...INPUT_STYLE,
-                                fontSize: 13,
-                                lineHeight: "1",
-                                width: 72,
-                                opacity: !convertTarget ? 0.5 : 1,
-                                cursor: !convertTarget ? "not-allowed" : undefined,
-                              }}
-                              {...inputFocusHandlers}
-                            />
                             <select
                               value={convertTarget}
                               onChange={(e) => setConvertTarget(e.target.value)}
@@ -1127,6 +1105,28 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                                 </option>
                               ))}
                             </select>
+                            <input
+                              type="number"
+                              value={convertFactor}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                if (val === "" || Number(val) >= 0) setConvertFactor(val);
+                              }}
+                              onKeyDown={(e) => { if (e.key === "-" || e.key === "e") e.preventDefault(); }}
+                              min="0"
+                              placeholder="0"
+                              disabled={!convertTarget}
+                              className="outline-none transition-shadow"
+                              style={{
+                                ...INPUT_STYLE,
+                                fontSize: 13,
+                                lineHeight: "1",
+                                width: 72,
+                                opacity: !convertTarget ? 0.5 : 1,
+                                cursor: !convertTarget ? "not-allowed" : undefined,
+                              }}
+                              {...inputFocusHandlers}
+                            />
                           </div>
                         </div>
                       </div>
