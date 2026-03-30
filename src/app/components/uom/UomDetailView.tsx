@@ -1040,37 +1040,6 @@ export function UomDetailView() {
                                 backgroundColor: "var(--primary-surface)",
                               }}
                             >
-                              {/* Factor input */}
-                              <div style={{ padding: "8px 12px" }}>
-                                <input
-                                  type="number"
-                                  step="any"
-                                  placeholder={!newConvUnitId ? "Select unit first" : "Factor"}
-                                  value={newConvFactor}
-                                  onChange={(e) => setNewConvFactor(e.target.value)}
-                                  disabled={!newConvUnitId}
-                                  className="w-full outline-none border-0"
-                                  style={{
-                                    height: "var(--input-height)",
-                                    padding: "0 10px",
-                                    fontSize: "var(--text-label)",
-                                    fontWeight: "var(--font-weight-normal)" as any,
-                                    color: "var(--foreground)",
-                                    backgroundColor: "var(--card)",
-                                    borderWidth: 1,
-                                    borderStyle: "solid",
-                                    borderColor: "var(--border)",
-                                    borderRadius: "var(--radius-sm)",
-                                    lineHeight: "1",
-                                    opacity: !newConvUnitId ? 0.5 : 1,
-                                    cursor: !newConvUnitId ? "not-allowed" : undefined,
-                                  }}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") handleAddConversion();
-                                    if (e.key === "Escape") resetNewConvForm();
-                                  }}
-                                />
-                              </div>
                               {/* Unit select dropdown */}
                               <div className="flex items-center" style={{ padding: "8px 12px", gap: 8 }}>
                                 <select
@@ -1097,7 +1066,6 @@ export function UomDetailView() {
                                     paddingRight: 28,
                                   }}
                                   onKeyDown={(e) => {
-                                    if (e.key === "Enter") handleAddConversion();
                                     if (e.key === "Escape") resetNewConvForm();
                                   }}
                                 >
@@ -1108,6 +1076,37 @@ export function UomDetailView() {
                                     </option>
                                   ))}
                                 </select>
+                              </div>
+                              {/* Factor input */}
+                              <div className="flex items-center" style={{ padding: "8px 12px", gap: 8 }}>
+                                <input
+                                  type="number"
+                                  step="any"
+                                  placeholder="0"
+                                  value={newConvFactor}
+                                  onChange={(e) => setNewConvFactor(e.target.value)}
+                                  disabled={!newConvUnitId}
+                                  className="w-full outline-none border-0"
+                                  style={{
+                                    height: "var(--input-height)",
+                                    padding: "0 10px",
+                                    fontSize: "var(--text-label)",
+                                    fontWeight: "var(--font-weight-normal)" as any,
+                                    color: "var(--foreground)",
+                                    backgroundColor: "var(--card)",
+                                    borderWidth: 1,
+                                    borderStyle: "solid",
+                                    borderColor: "var(--border)",
+                                    borderRadius: "var(--radius-sm)",
+                                    lineHeight: "1",
+                                    opacity: !newConvUnitId ? 0.5 : 1,
+                                    cursor: !newConvUnitId ? "not-allowed" : undefined,
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") handleAddConversion();
+                                    if (e.key === "Escape") resetNewConvForm();
+                                  }}
+                                />
                                 {/* Confirm / Cancel buttons — visible in same-category since no 3rd col */}
                                 {conversionSection === "same" && (
                                   <div className="flex items-center shrink-0" style={{ gap: 4 }}>
