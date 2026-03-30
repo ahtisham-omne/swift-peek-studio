@@ -983,7 +983,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                     <ConversionSubTab
                       label="Cross Category"
                       isActive={conversionTab === "cross"}
-                      badge={crossRows.length > 0 ? String(crossRows.length) : "Optional"}
+                      badge={crossRows.length > 0 ? "1" : "Optional"}
                       onClick={() => setConversionTab("cross")}
                     />
                   </div>
