@@ -914,7 +914,7 @@ export function UomDetailView() {
                             {" = "}
                           </span>
                         </div>
-                        {!isAddingConversion && !(conversionSection === "cross" && crossCatConversions.length >= 1) && (
+                        {!isAddingConversion && !(conversionSection === "same" && sameCatConversions.length >= 1) && !(conversionSection === "cross" && crossCatConversions.length >= 1) && (
                           <motion.button
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
