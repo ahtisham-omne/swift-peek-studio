@@ -143,7 +143,7 @@ export interface UomUnit {
   name: string;
   symbol: string;
   category: UomCategory;
-  description?: string;
+  description: string;
   type: UomType;
   inUse: boolean;
   inUseCount?: number;

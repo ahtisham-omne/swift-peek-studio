@@ -27,6 +27,7 @@ import {
   CalendarDays,
   X,
   Check,
+  FileText,
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════
