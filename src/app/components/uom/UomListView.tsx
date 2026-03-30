@@ -949,7 +949,7 @@ export function UomListView({
                   showLabel="Prev"
                   iconPosition="left"
                 >
-                  
+                  ‹
                 </PageBtn>
 
                 {/* Page numbers */}
