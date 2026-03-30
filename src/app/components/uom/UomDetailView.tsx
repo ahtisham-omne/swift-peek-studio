@@ -204,9 +204,14 @@ export function UomDetailView() {
   const displayDescription = localDescription ?? unit?.description ?? "Legacy bundle grouping unit";
   const isCustom = displayType === "Custom";
 
-  /* ── Conversion state ── */
-  const [sameCatConversions, setSameCatConversions] = useState<ConversionRow[]>(SAME_CATEGORY_CONVERSIONS);
-  const [crossCatConversions, setCrossCatConversions] = useState<ConversionRow[]>(CROSS_CATEGORY_CONVERSIONS);
+  /* ── Conversion state — initialized per unit's category ── */
+  const initialSame = SAMPLE_SAME_CONVERSIONS[displayCategory];
+  const initialCross = SAMPLE_CROSS_CONVERSIONS[displayCategory] || SAMPLE_CROSS_CONVERSIONS["default"];
+  // Ensure sample conversion isn't the same unit as the one being viewed
+  const safeSame = initialSame && initialSame.unitSymbol !== displaySymbol ? [initialSame] : [];
+  const safeCross = initialCross && initialCross.category !== displayCategory ? [initialCross] : [];
+  const [sameCatConversions, setSameCatConversions] = useState<ConversionRow[]>(safeSame);
+  const [crossCatConversions, setCrossCatConversions] = useState<ConversionRow[]>(safeCross);
 
   /* ── Inline add conversion state ── */
   const [isAddingConversion, setIsAddingConversion] = useState(false);
