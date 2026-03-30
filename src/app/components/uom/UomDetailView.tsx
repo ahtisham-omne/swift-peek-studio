@@ -56,13 +56,31 @@ interface ConversionRow {
   category?: UomCategory;
 }
 
-const SAME_CATEGORY_CONVERSIONS: ConversionRow[] = [
-  { factor: 48, unitSymbol: "ea", unitName: "Each", type: "Standard" },
-];
+// Sample conversions are derived per-unit category below in the component
+const SAMPLE_SAME_CONVERSIONS: Record<string, ConversionRow> = {
+  "Quantity": { factor: 48, unitSymbol: "ea", unitName: "Each", type: "Standard" },
+  "Length": { factor: 100, unitSymbol: "cm", unitName: "Centimeter", type: "Standard" },
+  "Mass": { factor: 500, unitSymbol: "lb", unitName: "Pound", type: "Standard" },
+  "Volume": { factor: 1000, unitSymbol: "mL", unitName: "Milliliter", type: "Standard" },
+  "Area": { factor: 10.7639, unitSymbol: "ft\u00B2", unitName: "Square Foot", type: "Standard" },
+  "Time": { factor: 60, unitSymbol: "min", unitName: "Minute", type: "Standard" },
+  "Temperature": { factor: 1, unitSymbol: "\u00B0F", unitName: "Degree Fahrenheit", type: "Standard" },
+  "Force": { factor: 1000, unitSymbol: "N", unitName: "Newton", type: "Standard" },
+  "Pressure": { factor: 1000, unitSymbol: "Pa", unitName: "Pascal", type: "Standard" },
+  "Energy": { factor: 1000, unitSymbol: "J", unitName: "Joule", type: "Standard" },
+  "Power": { factor: 1000, unitSymbol: "W", unitName: "Watt", type: "Standard" },
+  "Electrical": { factor: 1, unitSymbol: "V", unitName: "Volt", type: "Standard" },
+  "Frequency": { factor: 1000, unitSymbol: "Hz", unitName: "Hertz", type: "Standard" },
+  "Other SI": { factor: 1, unitSymbol: "mol", unitName: "Mole", type: "Standard" },
+};
 
-const CROSS_CATEGORY_CONVERSIONS: ConversionRow[] = [
-  { factor: 120, unitSymbol: "lb", unitName: "Pound", category: "Mass" },
-];
+const SAMPLE_CROSS_CONVERSIONS: Record<string, ConversionRow> = {
+  "Quantity": { factor: 120, unitSymbol: "lb", unitName: "Pound", category: "Mass" },
+  "Length": { factor: 3.28084, unitSymbol: "ft\u00B2", unitName: "Square Foot", category: "Area" },
+  "Mass": { factor: 0.5, unitSymbol: "L", unitName: "Liter", category: "Volume" },
+  "Volume": { factor: 1, unitSymbol: "kg", unitName: "Kilogram", category: "Mass" },
+  "default": { factor: 1, unitSymbol: "ea", unitName: "Each", category: "Quantity" },
+};
 
 interface WhereUsedItem {
   sku: string;
