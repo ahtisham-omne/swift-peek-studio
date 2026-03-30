@@ -983,7 +983,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                     <ConversionSubTab
                       label="Cross Category"
                       isActive={conversionTab === "cross"}
-                      badge={crossRows.length > 0 ? String(crossRows.length) : "Optional"}
+                      badge={crossRows.length > 0 ? "1" : "Optional"}
                       onClick={() => setConversionTab("cross")}
                     />
                   </div>
@@ -1340,7 +1340,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                           fontWeight: "var(--font-weight-normal)" as any,
                         }}
                       >
-                        Optional: define how 1 {symbol} converts to units in other categories.
+                        Optional: define how 1 {symbol} converts to a unit in another category. Only one cross-category conversion is allowed.
                       </p>
 
                       {crossRows.length === 0 ? (
@@ -1462,22 +1462,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                             </div>
                           ))}
 
-                          <button
-                            type="button"
-                            onClick={addCrossRow}
-                            className="inline-flex items-center gap-[4px] cursor-pointer transition-colors hover:opacity-80 bg-transparent border-none"
-                            style={{
-                              padding: 0,
-                              marginTop: 4,
-                              fontSize: "var(--text-label)",
-                              lineHeight: "1",
-                              fontWeight: "var(--font-weight-medium)" as any,
-                              color: "var(--primary)",
-                              fontFamily: "var(--font-family)",
-                            }}
-                          >
-                            <span>+</span> Add Conversion
-                          </button>
+                          {/* Only one cross-category conversion allowed — no add button after first row */}
                         </div>
                       )}
                     </div>
