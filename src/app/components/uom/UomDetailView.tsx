@@ -1034,10 +1034,10 @@ export function UomDetailView() {
                                 <input
                                   type="number"
                                   step="any"
-                                  placeholder="Factor"
+                                  placeholder={!newConvSymbol.trim() ? "Select unit first" : "Factor"}
                                   value={newConvFactor}
                                   onChange={(e) => setNewConvFactor(e.target.value)}
-                                  autoFocus
+                                  disabled={!newConvSymbol.trim()}
                                   className="w-full outline-none border-0"
                                   style={{
                                     height: "var(--input-height)",
@@ -1051,6 +1051,8 @@ export function UomDetailView() {
                                     borderColor: "var(--border)",
                                     borderRadius: "var(--radius-sm)",
                                     lineHeight: "1",
+                                    opacity: !newConvSymbol.trim() ? 0.5 : 1,
+                                    cursor: !newConvSymbol.trim() ? "not-allowed" : undefined,
                                   }}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") handleAddConversion();
