@@ -73,16 +73,6 @@ const SAME_CATEGORY_CONVERSIONS: ConversionRow[] = [
 
 const CROSS_CATEGORY_CONVERSIONS: ConversionRow[] = [
   { factor: 120, unitSymbol: "lb", unitName: "Pound", category: "Mass" },
-  { factor: 54.431, unitSymbol: "kg", unitName: "Kilogram", category: "Mass" },
-  { factor: 1905.088, unitSymbol: "oz", unitName: "Ounce", category: "Mass" },
-  { factor: 0.06, unitSymbol: "ton", unitName: "Short Ton", category: "Mass" },
-  { factor: 0.0544, unitSymbol: "t", unitName: "Metric Tonne", category: "Mass" },
-  { factor: 3.5, unitSymbol: "ft³", unitName: "Cubic Feet", category: "Volume" },
-  { factor: 0.0991, unitSymbol: "m³", unitName: "Cubic Meter", category: "Volume" },
-  { factor: 26.18, unitSymbol: "gal", unitName: "Gallon (US)", category: "Volume" },
-  { factor: 99.11, unitSymbol: "L", unitName: "Liter", category: "Volume" },
-  { factor: 6, unitSymbol: "ft", unitName: "Linear Feet", category: "Length" },
-  { factor: 1.8288, unitSymbol: "m", unitName: "Meter", category: "Length" },
 ];
 
 interface WhereUsedItem {

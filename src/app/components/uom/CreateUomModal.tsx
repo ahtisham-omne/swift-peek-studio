@@ -1462,22 +1462,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                             </div>
                           ))}
 
-                          <button
-                            type="button"
-                            onClick={addCrossRow}
-                            className="inline-flex items-center gap-[4px] cursor-pointer transition-colors hover:opacity-80 bg-transparent border-none"
-                            style={{
-                              padding: 0,
-                              marginTop: 4,
-                              fontSize: "var(--text-label)",
-                              lineHeight: "1",
-                              fontWeight: "var(--font-weight-medium)" as any,
-                              color: "var(--primary)",
-                              fontFamily: "var(--font-family)",
-                            }}
-                          >
-                            <span>+</span> Add Conversion
-                          </button>
+                          {/* Only one cross-category conversion allowed — no add button after first row */}
                         </div>
                       )}
                     </div>
