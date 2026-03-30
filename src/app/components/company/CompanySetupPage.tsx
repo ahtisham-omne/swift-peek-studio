@@ -114,7 +114,7 @@ const SECTIONS: Section[] = [
     title: "Item & Inventory",
     cards: [
       {
-        title: "Unit Conversions Table",
+        title: "Units of Measures",
         description: "Customize & manage units and their conversions",
         icon: null,
         customIcon: true,
