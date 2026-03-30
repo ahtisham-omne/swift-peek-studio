@@ -15,7 +15,7 @@
 
 import React, { useState, useCallback, useRef } from "react";
 import ReactDOM from "react-dom";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { CategoryBadge, UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { TypeLabel } from "./TypeLabel";

@@ -8,7 +8,7 @@
  */
 
 import React, { useState, useRef, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Package,
   Handshake,

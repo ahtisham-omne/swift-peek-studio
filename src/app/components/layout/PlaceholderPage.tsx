@@ -3,7 +3,7 @@
  * Uses design-system CSS variables for all styling.
  */
 
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 import { Construction } from "lucide-react";
 
 const ROUTE_LABELS: Record<string, string> = {

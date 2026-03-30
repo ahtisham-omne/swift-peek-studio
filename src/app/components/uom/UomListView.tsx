@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useCallback, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { UOM_ICONS } from "./design-tokens";
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { FilterPill } from "./FilterPill";
