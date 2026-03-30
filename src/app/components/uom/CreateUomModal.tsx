@@ -1026,7 +1026,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                           maxWidth: 540,
                         }}
                       >
-                        Define how 1 {unitName || "UOM"} converts to other {category} units. These conversions apply to all items using this unit.
+                        Define how {unitName || "UOM"} converts to other {category} units. These conversions apply to all items using this unit.
                       </p>
 
                       {/* Convert from / Convert to */}
