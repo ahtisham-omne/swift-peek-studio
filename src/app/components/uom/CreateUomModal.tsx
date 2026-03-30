@@ -1403,30 +1403,6 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                               >
                                 1 {symbol} =
                               </span>
-                              <input
-                                type="number"
-                                value={row.factor}
-                                onChange={(e) => {
-                                  const val = e.target.value;
-                                  if (val === "" || Number(val) >= 0) {
-                                    updateCrossRow(row.id, { factor: val });
-                                  }
-                                }}
-                                onKeyDown={(e) => { if (e.key === "-" || e.key === "e") e.preventDefault(); }}
-                                min="0"
-                                placeholder={!row.targetUnitId ? "Select unit first" : "0"}
-                                disabled={!row.targetUnitId}
-                                className="outline-none transition-shadow shrink-0"
-                                style={{
-                                  ...INPUT_STYLE,
-                                  fontSize: 13,
-                                  lineHeight: "1",
-                                  width: 80,
-                                  opacity: !row.targetUnitId ? 0.5 : 1,
-                                  cursor: !row.targetUnitId ? "not-allowed" : undefined,
-                                }}
-                                {...inputFocusHandlers}
-                              />
                               <select
                                 value={row.targetUnitId}
                                 onChange={(e) =>
@@ -1454,6 +1430,30 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
                                   </option>
                                 ))}
                               </select>
+                              <input
+                                type="number"
+                                value={row.factor}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (val === "" || Number(val) >= 0) {
+                                    updateCrossRow(row.id, { factor: val });
+                                  }
+                                }}
+                                onKeyDown={(e) => { if (e.key === "-" || e.key === "e") e.preventDefault(); }}
+                                min="0"
+                                placeholder="0"
+                                disabled={!row.targetUnitId}
+                                className="outline-none transition-shadow shrink-0"
+                                style={{
+                                  ...INPUT_STYLE,
+                                  fontSize: 13,
+                                  lineHeight: "1",
+                                  width: 80,
+                                  opacity: !row.targetUnitId ? 0.5 : 1,
+                                  cursor: !row.targetUnitId ? "not-allowed" : undefined,
+                                }}
+                                {...inputFocusHandlers}
+                              />
                               <button
                                 type="button"
                                 onClick={() => removeCrossRow(row.id)}
