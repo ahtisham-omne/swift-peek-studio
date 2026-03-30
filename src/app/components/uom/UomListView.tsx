@@ -1501,7 +1501,7 @@ function ModuleHeader({
                 lineHeight: 1.4,
               }}
             >
-              Organize units of measure and conversions — from standard to custom — all in one place.
+              Manage standard and custom units of measure and their conversions.
             </p>
           </div>
         </div>

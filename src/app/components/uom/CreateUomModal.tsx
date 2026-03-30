@@ -761,7 +761,7 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
             >
               {isEditMode
                 ? "Update the unit details."
-                : "Define a new unit with conversions across categories."}
+                : "Create a custom unit of measure and define its conversions."}
             </p>
           </div>
 
