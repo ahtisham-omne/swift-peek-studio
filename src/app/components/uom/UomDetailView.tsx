@@ -24,6 +24,7 @@ import { useToast } from "./Toast";
 import { CreateUomModal } from "./CreateUomModal";
 import {
   Copy,
+  Pencil,
   Archive,
   ChevronDown,
   ChevronLeft,
