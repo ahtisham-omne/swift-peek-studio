@@ -218,6 +218,7 @@ export function UomDetailView() {
   const displayType = unit?.type ?? "Custom";
   const displayDescription = localDescription ?? unit?.description ?? "Legacy bundle grouping unit";
   const isCustom = displayType === "Custom";
+  const isInUse = unit?.inUse ?? false;
 
   /* ── Conversion state — initialized per unit's category ── */
   const initialSame = SAMPLE_SAME_CONVERSIONS[displayCategory];
@@ -285,11 +286,15 @@ export function UomDetailView() {
   const [editDescription, setEditDescription] = useState(displayDescription);
 
   const handleEditStart = useCallback(() => {
+    if (isInUse) {
+      showToast("info", "This UOM can’t be edited while it is in use. Remove active references to make changes.");
+      return;
+    }
     setEditName(displayName);
     setEditSymbol(displaySymbol);
     setEditDescription(displayDescription);
     setIsEditing(true);
-  }, [displayName, displaySymbol, displayDescription]);
+  }, [displayName, displaySymbol, displayDescription, isInUse, showToast]);
 
   const handleEditSave = useCallback(() => {
     setLocalName(editName.trim() || displayName);
@@ -579,20 +584,29 @@ export function UomDetailView() {
                       whileHover={{ filter: "brightness(1.06)" }}
                       whileTap={{ scale: 0.96 }}
                       type="button"
-                      onClick={() => setEditModalOpen(true)}
-                      className="inline-flex items-center gap-[5px] cursor-pointer border-none"
+                      onClick={() => {
+                        if (isInUse) {
+                          showToast("info", "This UOM can’t be edited while it is in use. Remove active references to make changes.");
+                          return;
+                        }
+                        setEditModalOpen(true);
+                      }}
+                      className="inline-flex items-center gap-[5px] border-none"
+                      disabled={isInUse}
+                      aria-disabled={isInUse ? "true" : undefined}
                       style={{
                         padding: "8px 20px",
                         borderRadius: "var(--radius)",
-                        backgroundColor: "var(--primary)",
-                        color: "var(--primary-foreground)",
+                        backgroundColor: isInUse ? "var(--surface-raised)" : "var(--primary)",
+                        color: isInUse ? "var(--text-muted)" : "var(--primary-foreground)",
                         fontSize: "var(--text-label)",
                         fontWeight: "var(--font-weight-medium)" as any,
                         lineHeight: "1",
                         marginLeft: 2,
+                        cursor: isInUse ? "not-allowed" : "pointer",
                       }}
                     >
-                      <Pencil size={12} /> Edit Unit
+                      <Pencil size={12} /> {isInUse ? "Editing Locked" : "Edit Unit"}
                     </motion.button>
                   )}
                 </>
@@ -609,6 +623,25 @@ export function UomDetailView() {
               padding: "10px 20px",
             }}
           >
+            {isInUse && (
+              <div
+                style={{
+                  marginBottom: 10,
+                  padding: "10px 12px",
+                  borderRadius: "var(--radius)",
+                  backgroundColor: "var(--warning-surface)",
+                  borderWidth: 1,
+                  borderStyle: "solid",
+                  borderColor: "var(--warning-border)",
+                  color: "var(--warning)",
+                  fontSize: "var(--text-label)",
+                  fontWeight: "var(--font-weight-medium)" as any,
+                  lineHeight: "1.45",
+                }}
+              >
+                This UOM is in active use, so editing is locked to protect existing items and transactions.
+              </div>
+            )}
             <div
               className="flex items-center flex-wrap"
               style={{
@@ -2106,7 +2139,7 @@ export function UomDetailView() {
     <CreateUomModal
       open={editModalOpen}
       onClose={() => setEditModalOpen(false)}
-      editUnit={unit ? {
+        editUnit={!isInUse && unit ? {
         ...unit,
         name: displayName,
         symbol: displaySymbol,
