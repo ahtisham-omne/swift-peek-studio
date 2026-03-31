@@ -869,6 +869,10 @@ export function UomListView({
                           showToast("success", `"${u.name}" duplicated`);
                         }}
                         onEdit={(u) => {
+                          if (u.inUse) {
+                            showToast("info", `"${u.name}" can’t be edited while it is in use. Remove active references to make changes.`);
+                            return;
+                          }
                           setEditUnit(u);
                           setEditModalOpen(true);
                         }}

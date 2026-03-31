@@ -790,29 +790,35 @@ export function TableRow({
                   {/* Edit */}
                   <button
                     type="button"
-                    className="flex items-center gap-2.5 w-full cursor-pointer border-none bg-transparent transition-colors"
+                    className="flex items-center gap-2.5 w-full border-none bg-transparent transition-colors"
+                    disabled={unit.inUse}
+                    aria-disabled={unit.inUse ? "true" : undefined}
                     style={{
                       padding: "8px 14px",
-                      color: "var(--text-base-second)",
+                      color: unit.inUse ? "var(--text-muted)" : "var(--text-base-second)",
                       fontSize: "var(--text-label)",
                       fontWeight: "var(--font-weight-normal)" as any,
                       lineHeight: "20px",
+                      cursor: unit.inUse ? "not-allowed" : "pointer",
                     }}
                     onMouseEnter={(e) => {
+                      if (unit.inUse) return;
                       e.currentTarget.style.backgroundColor = "var(--surface-hover)";
                       e.currentTarget.style.color = "var(--text-strong)";
                     }}
                     onMouseLeave={(e) => {
+                      if (unit.inUse) return;
                       e.currentTarget.style.backgroundColor = "transparent";
                       e.currentTarget.style.color = "var(--text-base-second)";
                     }}
                     onClick={() => {
                       setActionsOpen(false);
+                      if (unit.inUse) return;
                       onEdit?.(unit);
                     }}
                   >
                     <FilePenLine size={15} style={{ flexShrink: 0 }} />
-                    <span>Edit Unit</span>
+                    <span>{unit.inUse ? "Editing Locked" : "Edit Unit"}</span>
                   </button>
 
                   {/* Duplicate */}
