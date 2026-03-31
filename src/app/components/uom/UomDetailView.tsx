@@ -626,17 +626,17 @@ export function UomDetailView() {
             {isInUse && (
               <div
                 style={{
-                  marginBottom: 10,
-                  padding: "10px 12px",
+                  marginBottom: 8,
+                  padding: "8px 10px",
                   borderRadius: "var(--radius)",
                   backgroundColor: "var(--warning-surface)",
                   borderWidth: 1,
                   borderStyle: "solid",
                   borderColor: "var(--warning-border)",
                   color: "var(--warning)",
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-medium)" as any,
-                  lineHeight: "1.45",
+                  fontSize: 12,
+                  fontWeight: "var(--font-weight-normal)" as any,
+                  lineHeight: "1.35",
                 }}
               >
                 This UOM is in active use, so editing is locked to protect existing items and transactions.
