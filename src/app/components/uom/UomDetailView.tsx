@@ -579,34 +579,26 @@ export function UomDetailView() {
                     </motion.button>
                   ))}
 
-                  {isCustom && (
+                  {isCustom && !isInUse && (
                     <motion.button
                       whileHover={{ filter: "brightness(1.06)" }}
                       whileTap={{ scale: 0.96 }}
                       type="button"
-                      onClick={() => {
-                        if (isInUse) {
-                          showToast("info", "This UOM can’t be edited while it is in use. Remove active references to make changes.");
-                          return;
-                        }
-                        setEditModalOpen(true);
-                      }}
+                      onClick={() => setEditModalOpen(true)}
                       className="inline-flex items-center gap-[5px] border-none"
-                      disabled={isInUse}
-                      aria-disabled={isInUse ? "true" : undefined}
                       style={{
                         padding: "8px 20px",
                         borderRadius: "var(--radius)",
-                        backgroundColor: isInUse ? "var(--surface-raised)" : "var(--primary)",
-                        color: isInUse ? "var(--text-muted)" : "var(--primary-foreground)",
+                        backgroundColor: "var(--primary)",
+                        color: "var(--primary-foreground)",
                         fontSize: "var(--text-label)",
                         fontWeight: "var(--font-weight-medium)" as any,
                         lineHeight: "1",
                         marginLeft: 2,
-                        cursor: isInUse ? "not-allowed" : "pointer",
+                        cursor: "pointer",
                       }}
                     >
-                      <Pencil size={12} /> {isInUse ? "Editing Locked" : "Edit Unit"}
+                      Edit Unit
                     </motion.button>
                   )}
                 </>
