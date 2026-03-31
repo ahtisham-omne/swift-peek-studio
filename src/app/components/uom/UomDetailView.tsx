@@ -2156,7 +2156,7 @@ export function UomDetailView() {
             exit={{ opacity: 0, scale: 0.97, y: 8 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
             style={{
-              width: 440,
+              width: 560,
               maxWidth: "calc(100vw - 40px)",
               backgroundColor: "var(--background)",
               borderRadius: "var(--radius-lg)",
@@ -2305,17 +2305,14 @@ export function UomDetailView() {
                 >
                   Active references
                 </div>
-                <div className="mt-3 flex flex-col gap-3">
+                <div className="mt-3 flex flex-col gap-2">
                   {ARCHIVE_BLOCKING_REFERENCES.map((group) => (
                     <div
                       key={group.label}
+                      className="flex flex-wrap items-start gap-x-2 gap-y-1"
                       style={{
-                        borderWidth: 1,
-                        borderStyle: "solid",
-                        borderColor: "var(--border)",
-                        borderRadius: "var(--radius)",
-                        backgroundColor: "var(--card)",
-                        padding: "12px 14px",
+                        fontSize: "var(--text-label)",
+                        lineHeight: "1.6",
                       }}
                     >
                       <div
@@ -2326,21 +2323,17 @@ export function UomDetailView() {
                           lineHeight: "1.4",
                         }}
                       >
-                        {group.label}
+                        {group.label}:
                       </div>
-                      <ul
+                      <div
                         style={{
-                          margin: "8px 0 0 0",
-                          paddingLeft: 18,
                           color: "var(--text-subtle)",
                           fontSize: "var(--text-label)",
                           lineHeight: "1.6",
                         }}
                       >
-                        {group.entries.map((entry) => (
-                          <li key={entry}>{entry}</li>
-                        ))}
-                      </ul>
+                        {group.entries.join(", ")}
+                      </div>
                     </div>
                   ))}
                 </div>
