@@ -61,12 +61,14 @@ export function applyAdvancedFilters(
 ): UomUnit[] {
   let result = units;
 
+  const isUnitInUse = (unit: UomUnit) => Boolean(unit.inUse || (unit.inUseCount ?? 0) > 0);
+
   if (f.types.length > 0) {
     result = result.filter((u) => f.types.includes(u.type));
   }
   if (f.statuses.length > 0) {
     result = result.filter((u) => {
-      const status = u.inUse ? "In Use" : "Unused";
+      const status = isUnitInUse(u) ? "In Use" : "Unused";
       return f.statuses.includes(status);
     });
   }
@@ -123,6 +125,10 @@ export function UomFiltersModal({
   filteredCount,
 }: UomFiltersModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const isUnitInUse = useCallback(
+    (unit: UomUnit) => Boolean(unit.inUse || (unit.inUseCount ?? 0) > 0),
+    []
+  );
 
   // Close on Escape
   useEffect(() => {
@@ -141,9 +147,7 @@ export function UomFiltersModal({
 
   // Compute bounds for range hints
   const inUseCountBounds = useMemo(() => {
-    const counts = units
-      .filter((u) => u.inUse)
-      .map((u) => u.inUseCount ?? 0);
+    const counts = units.map((u) => u.inUseCount ?? 0);
     if (counts.length === 0) return { min: 0, max: 0 };
     return { min: Math.min(...counts), max: Math.max(...counts) };
   }, [units]);
@@ -167,11 +171,11 @@ export function UomFiltersModal({
   const statusCounts = useMemo(() => {
     const map: Record<string, number> = { "In Use": 0, Unused: 0 };
     for (const u of units) {
-      if (u.inUse) map["In Use"]++;
+      if (isUnitInUse(u)) map["In Use"]++;
       else map["Unused"]++;
     }
     return map;
-  }, [units]);
+  }, [isUnitInUse, units]);
 
   const update = useCallback(
     (patch: Partial<UomAdvancedFilters>) => {
@@ -311,7 +315,7 @@ export function UomFiltersModal({
           <Divider />
 
           {/* Section: Status */}
-          <FilterSection title="Status" subtitle="Filter by usage status">
+          <FilterSection title="Status" subtitle="In use means linked to items, BOMs, purchase orders, or vendors">
             <div className="flex flex-wrap gap-2">
               <Pill
                 label="In Use"
@@ -334,7 +338,7 @@ export function UomFiltersModal({
 
           {/* Section: Category */}
           <FilterSection title="Category" subtitle="Filter by measurement category">
-            <PillSection
+            <CategorySelectMenu
               items={UOM_CATEGORIES.map((cat) => ({
                 value: cat,
                 label: cat,
@@ -342,14 +346,14 @@ export function UomFiltersModal({
               }))}
               selected={filters.categories}
               onToggle={(val) => toggleArrayValue("categories", val)}
-              threshold={8}
+              onClear={() => update({ categories: [] })}
             />
           </FilterSection>
 
           <Divider />
 
           {/* Section: In-Use Count Range */}
-          <FilterSection title="In-Use Count" subtitle="Filter by number of references">
+          <FilterSection title="Usage Count" subtitle="Filter by number of items, BOMs, purchase orders, or vendor records using this unit">
             <div className="flex items-center gap-3">
               <div className="flex-1">
                 <label
@@ -577,6 +581,131 @@ export function UomFiltersModal({
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function CategorySelectMenu({
+  items,
+  selected,
+  onToggle,
+  onClear,
+}: {
+  items: { value: string; label: string; count: number }[];
+  selected: string[];
+  onToggle: (value: string) => void;
+  onClear: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const selectedLabel =
+    selected.length === 0
+      ? "All categories"
+      : selected.length === 1
+        ? selected[0]
+        : `${selected.length} categories selected`;
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className="w-full cursor-pointer"
+        style={{
+          height: "var(--input-height)",
+          padding: "0 12px",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid var(--border)",
+          backgroundColor: "var(--input-background)",
+          color: "var(--foreground)",
+          fontSize: "var(--text-label)",
+          fontWeight: "var(--font-weight-normal)" as any,
+        }}
+      >
+        <span className="flex items-center justify-between gap-3">
+          <span style={{ color: selected.length === 0 ? "var(--text-muted)" : "var(--foreground)" }}>
+            {selectedLabel}
+          </span>
+          <ChevronDown
+            size={16}
+            style={{
+              color: "var(--text-subtle)",
+              transition: "transform 150ms",
+              transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          />
+        </span>
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 8px)",
+            left: 0,
+            right: 0,
+            zIndex: 10,
+            borderRadius: "var(--radius-sm)",
+            border: "1px solid var(--border)",
+            backgroundColor: "var(--card)",
+            boxShadow: "var(--elevation-lg)",
+            overflow: "hidden",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              onClear();
+              setOpen(false);
+            }}
+            className="w-full cursor-pointer text-left"
+            style={{
+              border: "none",
+              borderBottom: "1px solid var(--border-subtle)",
+              backgroundColor: "transparent",
+              padding: "10px 12px",
+              color: "var(--primary)",
+              fontSize: "var(--text-label)",
+              fontWeight: "var(--font-weight-medium)" as any,
+            }}
+          >
+            Clear category filter
+          </button>
+
+          <div style={{ maxHeight: 240, overflowY: "auto" }}>
+            {items.map((item) => {
+              const isSelected = selected.includes(item.value);
+
+              return (
+                <button
+                  key={item.value}
+                  type="button"
+                  onClick={() => onToggle(item.value)}
+                  className="w-full cursor-pointer text-left"
+                  style={{
+                    border: "none",
+                    borderBottom: "1px solid var(--border-subtle)",
+                    backgroundColor: isSelected ? "var(--primary-surface)" : "transparent",
+                    padding: "10px 12px",
+                    color: isSelected ? "var(--primary-text-strong)" : "var(--foreground)",
+                    fontSize: "var(--text-label)",
+                    fontWeight: isSelected
+                      ? ("var(--font-weight-medium)" as any)
+                      : ("var(--font-weight-normal)" as any),
+                  }}
+                >
+                  <span className="flex items-center justify-between gap-3">
+                    <span>{item.label}</span>
+                    <span style={{ color: isSelected ? "var(--primary)" : "var(--text-muted)" }}>
+                      {item.count}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
