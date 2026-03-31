@@ -53,6 +53,21 @@ import {
   applyAdvancedFilters,
 } from "./UomFiltersModal";
 
+const ARCHIVE_BLOCKING_REFERENCES = [
+  {
+    label: "Items",
+    entries: ["STL-FLAT-48", "CAB-REEL-12", "BALE-500"],
+  },
+  {
+    label: "Purchase orders",
+    entries: ["PO-10428", "PO-10431", "PO-10444", "PO-10452"],
+  },
+  {
+    label: "BOMs",
+    entries: ["BOM-882", "BOM-901", "BOM-944"],
+  },
+];
+
 /* ═══════════════════════════════════════════════
    Filter state types
    ═══════════════════════════════════════════════ */
@@ -1184,8 +1199,8 @@ export function UomListView({
             ? `Archive ${count} unit${count > 1 ? "s" : ""}?`
             : `Archive ${unitName}?`;
           const usageSummary = isBulk
-            ? `These ${count} units are referenced across multiple transactions`
-            : `This unit is currently used in 12 items, 4 purchase orders, and 3 BOMs`;
+            ? `Archiving is unavailable until the active references for these ${count} units are removed`
+            : "Archiving is unavailable until the active references for this unit are removed";
 
           return (
             <>
@@ -1283,13 +1298,13 @@ export function UomListView({
                       }}
                     >
                       {isBulk
-                        ? "These units are currently referenced in multiple transactions and records. Archiving will:"
-                        : "This unit is currently referenced in multiple transactions and records. Archiving it will:"}
+                        ? "These units can’t be archived while they are associated with active transactions and records."
+                        : "This unit can’t be archived while it is associated with active transactions and records."}
                     </p>
                   </div>
                 </div>
 
-                {/* Impact list */}
+                {/* Blocking explanation */}
                 <div style={{ padding: "16px 24px 0 78px" }}>
                   <ul
                     style={{
@@ -1302,9 +1317,9 @@ export function UomListView({
                     }}
                   >
                     {[
-                      "Remove from active selection lists",
-                      "Existing transactions will retain historical data",
-                      "You can restore from the archived list anytime",
+                      "Remove or complete the active references listed below before archiving",
+                      "Historical records stay intact after the unit is no longer actively referenced",
+                      "Once associations are cleared, archiving will become available again",
                     ].map((text) => (
                       <li
                         key={text}
@@ -1360,6 +1375,58 @@ export function UomListView({
                   </div>
                 </div>
 
+                <div style={{ padding: "16px 24px 0 24px" }}>
+                  <div
+                    style={{
+                      fontSize: "var(--text-label)",
+                      fontWeight: "var(--font-weight-medium)" as any,
+                      color: "var(--foreground)",
+                      lineHeight: "1.4",
+                    }}
+                  >
+                    Active references
+                  </div>
+                  <div className="mt-3 flex flex-col gap-3">
+                    {ARCHIVE_BLOCKING_REFERENCES.map((group) => (
+                      <div
+                        key={group.label}
+                        style={{
+                          borderWidth: 1,
+                          borderStyle: "solid",
+                          borderColor: "var(--border)",
+                          borderRadius: "var(--radius)",
+                          backgroundColor: "var(--card)",
+                          padding: "12px 14px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: "var(--text-label)",
+                            fontWeight: "var(--font-weight-medium)" as any,
+                            color: "var(--foreground)",
+                            lineHeight: "1.4",
+                          }}
+                        >
+                          {group.label}
+                        </div>
+                        <ul
+                          style={{
+                            margin: "8px 0 0 0",
+                            paddingLeft: 18,
+                            color: "var(--text-subtle)",
+                            fontSize: "var(--text-label)",
+                            lineHeight: "1.6",
+                          }}
+                        >
+                          {group.entries.map((entry) => (
+                            <li key={entry}>{entry}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Actions */}
                 <div
                   className="flex items-center justify-end gap-[10px]"
@@ -1391,39 +1458,28 @@ export function UomListView({
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      setArchiveModalOpen(false);
-                      if (isBulk) {
-                        const bulkCount = archiveTarget.ids.size;
-                        showToast(
-                          "success",
-                          `${bulkCount} unit${bulkCount > 1 ? "s" : ""} archived successfully`
-                        );
-                        setSelectedRows(new Set());
-                      } else {
-                        showToast(
-                          "success",
-                          `"${archiveTarget.unit.name}" archived successfully`
-                        );
-                      }
-                      setArchiveTarget(null);
-                    }}
-                    className="cursor-pointer border-none"
+                    disabled
+                    aria-disabled="true"
+                    className="border-none"
                     style={{
                       padding: "8px 18px",
                       borderRadius: "var(--radius-md)",
                       fontSize: "var(--text-label)",
                       fontWeight: "var(--font-weight-medium)" as any,
                       lineHeight: "1",
-                      backgroundColor: "var(--destructive)",
-                      color: "var(--destructive-foreground)",
+                      backgroundColor: "var(--surface-raised)",
+                      color: "var(--text-muted)",
+                      borderWidth: 1,
+                      borderStyle: "solid",
+                      borderColor: "var(--border)",
                       fontFamily: "var(--font-family)",
                       transition: "all 0.12s",
+                      cursor: "not-allowed",
                     }}
                   >
                     <span className="flex items-center gap-[6px]">
                       <Archive size={13} />
-                      {isBulk ? `Archive ${count} Unit${count > 1 ? "s" : ""}` : "Archive Unit"}
+                      {isBulk ? `Cannot Archive ${count} Unit${count > 1 ? "s" : ""}` : "Cannot Archive"}
                     </span>
                   </button>
                 </div>

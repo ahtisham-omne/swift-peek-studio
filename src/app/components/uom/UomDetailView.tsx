@@ -44,6 +44,21 @@ import {
   Building2,
 } from "lucide-react";
 
+const ARCHIVE_BLOCKING_REFERENCES = [
+  {
+    label: "Items",
+    entries: ["STL-FLAT-48", "CAB-REEL-12", "BALE-500"],
+  },
+  {
+    label: "Purchase orders",
+    entries: ["PO-10428", "PO-10431", "PO-10444", "PO-10452"],
+  },
+  {
+    label: "BOMs",
+    entries: ["BOM-882", "BOM-901", "BOM-944"],
+  },
+];
+
 /* ═════════════════════════════════════════���═════
    Static detail data
    ═══════════════════════════════════════════════ */
@@ -2199,12 +2214,12 @@ export function UomDetailView() {
                     fontFamily: "var(--font-family)",
                   }}
                 >
-                  This unit is currently referenced in multiple transactions and records. Archiving it will:
+                  This unit can’t be archived while it is associated with active transactions and records.
                 </p>
               </div>
             </div>
 
-            {/* Impact list */}
+            {/* Blocking explanation */}
             <div style={{ padding: "16px 24px 0 78px" }}>
               <ul
                 style={{
@@ -2217,9 +2232,9 @@ export function UomDetailView() {
                 }}
               >
                 {[
-                  "Remove this unit from active selection lists",
-                  "Existing transactions will retain historical data",
-                  "You can restore this unit from the archived list",
+                  "Remove or complete the active references listed below before archiving this unit",
+                  "Historical records stay intact after the unit is no longer actively referenced",
+                  "Once associations are cleared, archiving will become available again",
                 ].map((text) => (
                   <li
                     key={text}
@@ -2271,7 +2286,59 @@ export function UomDetailView() {
                 }}
               >
                 <AlertTriangle size={13} strokeWidth={2} />
-                Currently used in 12 items, 4 purchase orders, and 3 BOMs
+                Archiving is unavailable until these active references are removed
+              </div>
+            </div>
+
+            <div style={{ padding: "16px 24px 0 24px" }}>
+              <div
+                style={{
+                  fontSize: "var(--text-label)",
+                  fontWeight: "var(--font-weight-medium)" as any,
+                  color: "var(--foreground)",
+                  lineHeight: "1.4",
+                }}
+              >
+                Active references
+              </div>
+              <div className="mt-3 flex flex-col gap-3">
+                {ARCHIVE_BLOCKING_REFERENCES.map((group) => (
+                  <div
+                    key={group.label}
+                    style={{
+                      borderWidth: 1,
+                      borderStyle: "solid",
+                      borderColor: "var(--border)",
+                      borderRadius: "var(--radius)",
+                      backgroundColor: "var(--card)",
+                      padding: "12px 14px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "var(--text-label)",
+                        fontWeight: "var(--font-weight-medium)" as any,
+                        color: "var(--foreground)",
+                        lineHeight: "1.4",
+                      }}
+                    >
+                      {group.label}
+                    </div>
+                    <ul
+                      style={{
+                        margin: "8px 0 0 0",
+                        paddingLeft: 18,
+                        color: "var(--text-subtle)",
+                        fontSize: "var(--text-label)",
+                        lineHeight: "1.6",
+                      }}
+                    >
+                      {group.entries.map((entry) => (
+                        <li key={entry}>{entry}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -2304,20 +2371,26 @@ export function UomDetailView() {
               <button
                 type="button"
                 onClick={handleArchiveConfirm}
-                className="cursor-pointer border-none"
+                disabled
+                aria-disabled="true"
+                className="border-none"
                 style={{
                   padding: "8px 18px",
                   borderRadius: "var(--radius-md)",
                   fontSize: "var(--text-label)",
                   fontWeight: "var(--font-weight-medium)" as any,
                   lineHeight: "1",
-                  backgroundColor: "var(--destructive)",
-                  color: "var(--destructive-foreground)",
+                  backgroundColor: "var(--surface-raised)",
+                  color: "var(--text-muted)",
+                  borderWidth: 1,
+                  borderStyle: "solid",
+                  borderColor: "var(--border)",
                   fontFamily: "var(--font-family)",
                   transition: "all 0.12s",
+                  cursor: "not-allowed",
                 }}
               >
-                Archive Unit
+                Cannot Archive
               </button>
             </div>
           </motion.div>
