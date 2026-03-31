@@ -167,12 +167,13 @@ export function UomListView({
   const tableScrollRef = useRef<HTMLDivElement | null>(null);
 
   const allUnits = SAMPLE_UNITS;
+  const isUnitInUse = useCallback((unit: UomUnit) => Boolean(unit.inUse || (unit.inUseCount ?? 0) > 0), []);
   const totalCount = allUnits.length;
 
   const standardCount = allUnits.filter((u) => u.type === "Standard").length;
   const customCount = allUnits.filter((u) => u.type === "Custom").length;
-  const inUseCount = allUnits.filter((u) => u.inUse).length;
-  const unusedCount = allUnits.filter((u) => !u.inUse).length;
+  const inUseCount = allUnits.filter((u) => isUnitInUse(u)).length;
+  const unusedCount = allUnits.filter((u) => !isUnitInUse(u)).length;
 
   const categoryCounts = useMemo(() => {
     const counts = {} as Record<UomCategory, number>;
@@ -198,7 +199,7 @@ export function UomListView({
       result = result.filter((u) => u.type === filters.type);
     }
     if (filters.inUse !== null) {
-      result = result.filter((u) => u.inUse === filters.inUse);
+      result = result.filter((u) => isUnitInUse(u) === filters.inUse);
     }
     if (filters.categories.size > 0) {
       result = result.filter((u) => filters.categories.has(u.category));
