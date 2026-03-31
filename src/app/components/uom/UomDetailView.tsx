@@ -2164,20 +2164,114 @@ export function UomDetailView() {
               borderStyle: "solid",
               borderColor: "var(--border)",
               boxShadow: "0 20px 60px -12px rgba(0,0,0,0.18)",
+              maxHeight: "calc(100vh - 40px)",
+              display: "flex",
+              flexDirection: "column",
               overflow: "hidden",
               pointerEvents: "auto",
             }}
           >
-            {/* Header */}
-            <div
-              className="flex items-start gap-[14px]"
-              style={{ padding: "24px 24px 0 24px" }}
-            >
+            <div style={{ overflowY: "auto", flex: 1, paddingBottom: 8 }}>
+              {/* Header */}
               <div
-                className="flex items-center justify-center shrink-0"
+                className="flex items-start gap-[14px]"
+                style={{ padding: "24px 24px 0 24px" }}
+              >
+                <div
+                  className="flex items-center justify-center shrink-0"
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "var(--radius)",
+                    backgroundColor: "var(--destructive-surface)",
+                    borderWidth: 1,
+                    borderStyle: "solid",
+                    borderColor: "var(--destructive-border)",
+                  }}
+                >
+                  <AlertTriangle
+                    size={18}
+                    strokeWidth={2}
+                    style={{ color: "var(--destructive)" }}
+                  />
+                </div>
+                <div className="flex-1" style={{ minWidth: 0 }}>
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "var(--text-base)",
+                      fontWeight: "var(--font-weight-medium)" as any,
+                      color: "var(--foreground)",
+                      lineHeight: "1.3",
+                      fontFamily: "var(--font-family)",
+                    }}
+                  >
+                    Archive "{displayName}"?
+                  </h3>
+                  <p
+                    style={{
+                      margin: "8px 0 0 0",
+                      fontSize: "var(--text-label)",
+                      fontWeight: "var(--font-weight-normal)" as any,
+                      color: "var(--text-muted)",
+                      lineHeight: "1.5",
+                      fontFamily: "var(--font-family)",
+                    }}
+                  >
+                    This unit can’t be archived while it is associated with active transactions and records.
+                  </p>
+                </div>
+              </div>
+
+              {/* Blocking explanation */}
+              <div style={{ padding: "16px 24px 0 78px" }}>
+                <ul
+                  style={{
+                    margin: 0,
+                    padding: 0,
+                    listStyle: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                  }}
+                >
+                  {[
+                    "Remove or complete the active references listed below before archiving this unit",
+                    "Historical records stay intact after the unit is no longer actively referenced",
+                    "Once associations are cleared, archiving will become available again",
+                  ].map((text) => (
+                    <li
+                      key={text}
+                      className="flex items-start gap-[8px]"
+                      style={{
+                        fontSize: "var(--text-label)",
+                        fontWeight: "var(--font-weight-normal)" as any,
+                        color: "var(--text-subtle)",
+                        lineHeight: "1.45",
+                        fontFamily: "var(--font-family)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: 5,
+                          height: 5,
+                          borderRadius: "50%",
+                          backgroundColor: "var(--text-muted)",
+                          marginTop: 5,
+                          flexShrink: 0,
+                        }}
+                      />
+                      {text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Usage summary */}
+              <div
                 style={{
-                  width: 40,
-                  height: 40,
+                  margin: "16px 24px 0 24px",
+                  padding: "12px 14px",
                   borderRadius: "var(--radius)",
                   backgroundColor: "var(--destructive-surface)",
                   borderWidth: 1,
@@ -2185,167 +2279,82 @@ export function UomDetailView() {
                   borderColor: "var(--destructive-border)",
                 }}
               >
-                <AlertTriangle
-                  size={18}
-                  strokeWidth={2}
-                  style={{ color: "var(--destructive)" }}
-                />
-              </div>
-              <div className="flex-1" style={{ minWidth: 0 }}>
-                <h3
+                <div
+                  className="flex items-center gap-[8px]"
                   style={{
-                    margin: 0,
-                    fontSize: "var(--text-base)",
+                    fontSize: "var(--text-label)",
+                    fontWeight: "var(--font-weight-medium)" as any,
+                    color: "var(--destructive)",
+                    lineHeight: "1",
+                    fontFamily: "var(--font-family)",
+                  }}
+                >
+                  <AlertTriangle size={13} strokeWidth={2} />
+                  Archiving is unavailable until these active references are removed
+                </div>
+              </div>
+
+              <div style={{ padding: "16px 24px 0 24px" }}>
+                <div
+                  style={{
+                    fontSize: "var(--text-label)",
                     fontWeight: "var(--font-weight-medium)" as any,
                     color: "var(--foreground)",
-                    lineHeight: "1.3",
-                    fontFamily: "var(--font-family)",
+                    lineHeight: "1.4",
                   }}
                 >
-                  Archive "{displayName}"?
-                </h3>
-                <p
-                  style={{
-                    margin: "8px 0 0 0",
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-muted)",
-                    lineHeight: "1.5",
-                    fontFamily: "var(--font-family)",
-                  }}
-                >
-                  This unit can’t be archived while it is associated with active transactions and records.
-                </p>
-              </div>
-            </div>
-
-            {/* Blocking explanation */}
-            <div style={{ padding: "16px 24px 0 78px" }}>
-              <ul
-                style={{
-                  margin: 0,
-                  padding: 0,
-                  listStyle: "none",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                }}
-              >
-                {[
-                  "Remove or complete the active references listed below before archiving this unit",
-                  "Historical records stay intact after the unit is no longer actively referenced",
-                  "Once associations are cleared, archiving will become available again",
-                ].map((text) => (
-                  <li
-                    key={text}
-                    className="flex items-start gap-[8px]"
-                    style={{
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                      color: "var(--text-subtle)",
-                      lineHeight: "1.45",
-                      fontFamily: "var(--font-family)",
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 5,
-                        height: 5,
-                        borderRadius: "50%",
-                        backgroundColor: "var(--text-muted)",
-                        marginTop: 5,
-                        flexShrink: 0,
-                      }}
-                    />
-                    {text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Usage summary */}
-            <div
-              style={{
-                margin: "16px 24px 0 24px",
-                padding: "12px 14px",
-                borderRadius: "var(--radius)",
-                backgroundColor: "var(--destructive-surface)",
-                borderWidth: 1,
-                borderStyle: "solid",
-                borderColor: "var(--destructive-border)",
-              }}
-            >
-              <div
-                className="flex items-center gap-[8px]"
-                style={{
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-medium)" as any,
-                  color: "var(--destructive)",
-                  lineHeight: "1",
-                  fontFamily: "var(--font-family)",
-                }}
-              >
-                <AlertTriangle size={13} strokeWidth={2} />
-                Archiving is unavailable until these active references are removed
-              </div>
-            </div>
-
-            <div style={{ padding: "16px 24px 0 24px" }}>
-              <div
-                style={{
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-medium)" as any,
-                  color: "var(--foreground)",
-                  lineHeight: "1.4",
-                }}
-              >
-                Active references
-              </div>
-              <div className="mt-3 flex flex-col gap-3">
-                {ARCHIVE_BLOCKING_REFERENCES.map((group) => (
-                  <div
-                    key={group.label}
-                    style={{
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--border)",
-                      borderRadius: "var(--radius)",
-                      backgroundColor: "var(--card)",
-                      padding: "12px 14px",
-                    }}
-                  >
+                  Active references
+                </div>
+                <div className="mt-3 flex flex-col gap-3">
+                  {ARCHIVE_BLOCKING_REFERENCES.map((group) => (
                     <div
+                      key={group.label}
                       style={{
-                        fontSize: "var(--text-label)",
-                        fontWeight: "var(--font-weight-medium)" as any,
-                        color: "var(--foreground)",
-                        lineHeight: "1.4",
+                        borderWidth: 1,
+                        borderStyle: "solid",
+                        borderColor: "var(--border)",
+                        borderRadius: "var(--radius)",
+                        backgroundColor: "var(--card)",
+                        padding: "12px 14px",
                       }}
                     >
-                      {group.label}
+                      <div
+                        style={{
+                          fontSize: "var(--text-label)",
+                          fontWeight: "var(--font-weight-medium)" as any,
+                          color: "var(--foreground)",
+                          lineHeight: "1.4",
+                        }}
+                      >
+                        {group.label}
+                      </div>
+                      <ul
+                        style={{
+                          margin: "8px 0 0 0",
+                          paddingLeft: 18,
+                          color: "var(--text-subtle)",
+                          fontSize: "var(--text-label)",
+                          lineHeight: "1.6",
+                        }}
+                      >
+                        {group.entries.map((entry) => (
+                          <li key={entry}>{entry}</li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul
-                      style={{
-                        margin: "8px 0 0 0",
-                        paddingLeft: 18,
-                        color: "var(--text-subtle)",
-                        fontSize: "var(--text-label)",
-                        lineHeight: "1.6",
-                      }}
-                    >
-                      {group.entries.map((entry) => (
-                        <li key={entry}>{entry}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Actions */}
             <div
               className="flex items-center justify-end gap-[10px]"
-              style={{ padding: "20px 24px" }}
+              style={{
+                padding: "16px 24px 20px",
+                borderTop: "1px solid var(--border-subtle)",
+                flexShrink: 0,
+              }}
             >
               <button
                 type="button"
