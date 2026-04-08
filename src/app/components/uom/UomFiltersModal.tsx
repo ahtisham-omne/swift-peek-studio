@@ -269,7 +269,7 @@ export function UomFiltersModal({
             >
               Filters
             </span>
-            {countActiveUomFilters(filters) > 0 && (
+            {countActiveUomFilters(draft) > 0 && (
               <span
                 className="inline-flex items-center justify-center"
                 style={{
@@ -284,7 +284,7 @@ export function UomFiltersModal({
                   lineHeight: 1,
                 }}
               >
-                {countActiveUomFilters(filters)}
+                {countActiveUomFilters(draft)}
               </span>
             )}
           </div>
