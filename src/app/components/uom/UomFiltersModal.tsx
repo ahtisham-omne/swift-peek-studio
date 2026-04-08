@@ -130,6 +130,20 @@ export function UomFiltersModal({
     []
   );
 
+  // Draft state — only applied when user clicks "Show units"
+  const [draft, setDraft] = useState<UomAdvancedFilters>({ ...filters });
+
+  // Sync draft when modal opens
+  useEffect(() => {
+    if (open) setDraft({ ...filters });
+  }, [open]);
+
+  // Preview count based on draft filters
+  const draftFilteredCount = useMemo(
+    () => applyAdvancedFilters(units, draft).length,
+    [units, draft]
+  );
+
   // Close on Escape
   useEffect(() => {
     if (!open) return;
@@ -177,25 +191,34 @@ export function UomFiltersModal({
     return map;
   }, [isUnitInUse, units]);
 
+  // Update draft (not parent) on every interaction
   const update = useCallback(
     (patch: Partial<UomAdvancedFilters>) => {
-      onFiltersChange({ ...filters, ...patch });
+      setDraft((prev) => ({ ...prev, ...patch }));
     },
-    [filters, onFiltersChange]
+    []
   );
 
   const toggleArrayValue = useCallback(
     (key: keyof UomAdvancedFilters, value: string) => {
-      const arr = filters[key] as string[];
-      const next = arr.includes(value)
-        ? arr.filter((v) => v !== value)
-        : [...arr, value];
-      update({ [key]: next });
+      setDraft((prev) => {
+        const arr = prev[key] as string[];
+        const next = arr.includes(value)
+          ? arr.filter((v) => v !== value)
+          : [...arr, value];
+        return { ...prev, [key]: next };
+      });
     },
-    [filters, update]
+    []
   );
 
-  const clearAll = () => onFiltersChange({ ...DEFAULT_UOM_FILTERS });
+  const clearAll = () => setDraft({ ...DEFAULT_UOM_FILTERS });
+
+  // Apply draft to parent and close
+  const applyAndClose = () => {
+    onFiltersChange({ ...draft });
+    onOpenChange(false);
+  };
 
   if (!open) return null;
 
@@ -246,7 +269,7 @@ export function UomFiltersModal({
             >
               Filters
             </span>
-            {countActiveUomFilters(filters) > 0 && (
+            {countActiveUomFilters(draft) > 0 && (
               <span
                 className="inline-flex items-center justify-center"
                 style={{
@@ -261,7 +284,7 @@ export function UomFiltersModal({
                   lineHeight: 1,
                 }}
               >
-                {countActiveUomFilters(filters)}
+                {countActiveUomFilters(draft)}
               </span>
             )}
           </div>
@@ -300,7 +323,7 @@ export function UomFiltersModal({
           <FilterSection title="Unit Type" subtitle="Filter by standard or custom units">
             <SegmentedControl
               options={["Standard", "Custom"]}
-              selected={filters.types}
+              selected={draft.types}
               counts={typeCounts}
               onToggle={(val) => {
                 if (val === "__clear__") {
@@ -320,14 +343,14 @@ export function UomFiltersModal({
               <Pill
                 label="In Use"
                 count={statusCounts["In Use"]}
-                selected={filters.statuses.includes("In Use")}
+                selected={draft.statuses.includes("In Use")}
                 dotColor="var(--accent)"
                 onClick={() => toggleArrayValue("statuses", "In Use")}
               />
               <Pill
                 label="Unused"
                 count={statusCounts["Unused"]}
-                selected={filters.statuses.includes("Unused")}
+                selected={draft.statuses.includes("Unused")}
                 dotColor="var(--text-disabled)"
                 onClick={() => toggleArrayValue("statuses", "Unused")}
               />
@@ -344,7 +367,7 @@ export function UomFiltersModal({
                 label: cat,
                 count: categoryCounts[cat] ?? 0,
               }))}
-              selected={filters.categories}
+              selected={draft.categories}
               onToggle={(val) => toggleArrayValue("categories", val)}
               onClear={() => update({ categories: [] })}
             />
@@ -370,7 +393,7 @@ export function UomFiltersModal({
                 <input
                   type="number"
                   placeholder={String(inUseCountBounds.min)}
-                  value={filters.inUseCountMin}
+                  value={draft.inUseCountMin}
                   onChange={(e) => update({ inUseCountMin: e.target.value })}
                   className="outline-none w-full"
                   style={{
@@ -411,7 +434,7 @@ export function UomFiltersModal({
                 <input
                   type="number"
                   placeholder={String(inUseCountBounds.max)}
-                  value={filters.inUseCountMax}
+                  value={draft.inUseCountMax}
                   onChange={(e) => update({ inUseCountMax: e.target.value })}
                   className="outline-none w-full"
                   style={{
@@ -457,7 +480,7 @@ export function UomFiltersModal({
                   <input
                     type="text"
                     placeholder="e.g. Kilogram, Meter..."
-                    value={filters.name}
+                    value={draft.name}
                     onChange={(e) => update({ name: e.target.value })}
                     className="outline-none w-full"
                     style={{
@@ -496,7 +519,7 @@ export function UomFiltersModal({
                   <input
                     type="text"
                     placeholder="e.g. kg, m, L..."
-                    value={filters.symbol}
+                    value={draft.symbol}
                     onChange={(e) => update({ symbol: e.target.value })}
                     className="outline-none w-full"
                     style={{
@@ -557,7 +580,7 @@ export function UomFiltersModal({
           </button>
           <button
             type="button"
-            onClick={() => onOpenChange(false)}
+            onClick={applyAndClose}
             className="cursor-pointer"
             style={{
               padding: "8px 20px",
@@ -577,7 +600,7 @@ export function UomFiltersModal({
               e.currentTarget.style.opacity = "1";
             }}
           >
-            Show {filteredCount} unit{filteredCount !== 1 ? "s" : ""}
+            Show {draftFilteredCount} unit{draftFilteredCount !== 1 ? "s" : ""}
           </button>
         </div>
       </div>
