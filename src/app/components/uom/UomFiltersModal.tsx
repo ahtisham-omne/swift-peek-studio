@@ -323,7 +323,7 @@ export function UomFiltersModal({
           <FilterSection title="Unit Type" subtitle="Filter by standard or custom units">
             <SegmentedControl
               options={["Standard", "Custom"]}
-              selected={filters.types}
+              selected={draft.types}
               counts={typeCounts}
               onToggle={(val) => {
                 if (val === "__clear__") {
@@ -343,14 +343,14 @@ export function UomFiltersModal({
               <Pill
                 label="In Use"
                 count={statusCounts["In Use"]}
-                selected={filters.statuses.includes("In Use")}
+                selected={draft.statuses.includes("In Use")}
                 dotColor="var(--accent)"
                 onClick={() => toggleArrayValue("statuses", "In Use")}
               />
               <Pill
                 label="Unused"
                 count={statusCounts["Unused"]}
-                selected={filters.statuses.includes("Unused")}
+                selected={draft.statuses.includes("Unused")}
                 dotColor="var(--text-disabled)"
                 onClick={() => toggleArrayValue("statuses", "Unused")}
               />
@@ -367,7 +367,7 @@ export function UomFiltersModal({
                 label: cat,
                 count: categoryCounts[cat] ?? 0,
               }))}
-              selected={filters.categories}
+              selected={draft.categories}
               onToggle={(val) => toggleArrayValue("categories", val)}
               onClear={() => update({ categories: [] })}
             />
@@ -393,7 +393,7 @@ export function UomFiltersModal({
                 <input
                   type="number"
                   placeholder={String(inUseCountBounds.min)}
-                  value={filters.inUseCountMin}
+                  value={draft.inUseCountMin}
                   onChange={(e) => update({ inUseCountMin: e.target.value })}
                   className="outline-none w-full"
                   style={{
@@ -434,7 +434,7 @@ export function UomFiltersModal({
                 <input
                   type="number"
                   placeholder={String(inUseCountBounds.max)}
-                  value={filters.inUseCountMax}
+                  value={draft.inUseCountMax}
                   onChange={(e) => update({ inUseCountMax: e.target.value })}
                   className="outline-none w-full"
                   style={{
@@ -480,7 +480,7 @@ export function UomFiltersModal({
                   <input
                     type="text"
                     placeholder="e.g. Kilogram, Meter..."
-                    value={filters.name}
+                    value={draft.name}
                     onChange={(e) => update({ name: e.target.value })}
                     className="outline-none w-full"
                     style={{
@@ -519,7 +519,7 @@ export function UomFiltersModal({
                   <input
                     type="text"
                     placeholder="e.g. kg, m, L..."
-                    value={filters.symbol}
+                    value={draft.symbol}
                     onChange={(e) => update({ symbol: e.target.value })}
                     className="outline-none w-full"
                     style={{
@@ -580,7 +580,7 @@ export function UomFiltersModal({
           </button>
           <button
             type="button"
-            onClick={() => onOpenChange(false)}
+            onClick={applyAndClose}
             className="cursor-pointer"
             style={{
               padding: "8px 20px",
@@ -600,7 +600,7 @@ export function UomFiltersModal({
               e.currentTarget.style.opacity = "1";
             }}
           >
-            Show {filteredCount} unit{filteredCount !== 1 ? "s" : ""}
+            Show {draftFilteredCount} unit{draftFilteredCount !== 1 ? "s" : ""}
           </button>
         </div>
       </div>
