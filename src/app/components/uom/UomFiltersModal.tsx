@@ -130,6 +130,20 @@ export function UomFiltersModal({
     []
   );
 
+  // Draft state — only applied when user clicks "Show units"
+  const [draft, setDraft] = useState<UomAdvancedFilters>({ ...filters });
+
+  // Sync draft when modal opens
+  useEffect(() => {
+    if (open) setDraft({ ...filters });
+  }, [open]);
+
+  // Preview count based on draft filters
+  const draftFilteredCount = useMemo(
+    () => applyAdvancedFilters(units, draft).length,
+    [units, draft]
+  );
+
   // Close on Escape
   useEffect(() => {
     if (!open) return;
@@ -177,25 +191,34 @@ export function UomFiltersModal({
     return map;
   }, [isUnitInUse, units]);
 
+  // Update draft (not parent) on every interaction
   const update = useCallback(
     (patch: Partial<UomAdvancedFilters>) => {
-      onFiltersChange({ ...filters, ...patch });
+      setDraft((prev) => ({ ...prev, ...patch }));
     },
-    [filters, onFiltersChange]
+    []
   );
 
   const toggleArrayValue = useCallback(
     (key: keyof UomAdvancedFilters, value: string) => {
-      const arr = filters[key] as string[];
-      const next = arr.includes(value)
-        ? arr.filter((v) => v !== value)
-        : [...arr, value];
-      update({ [key]: next });
+      setDraft((prev) => {
+        const arr = prev[key] as string[];
+        const next = arr.includes(value)
+          ? arr.filter((v) => v !== value)
+          : [...arr, value];
+        return { ...prev, [key]: next };
+      });
     },
-    [filters, update]
+    []
   );
 
-  const clearAll = () => onFiltersChange({ ...DEFAULT_UOM_FILTERS });
+  const clearAll = () => setDraft({ ...DEFAULT_UOM_FILTERS });
+
+  // Apply draft to parent and close
+  const applyAndClose = () => {
+    onFiltersChange({ ...draft });
+    onOpenChange(false);
+  };
 
   if (!open) return null;
 
