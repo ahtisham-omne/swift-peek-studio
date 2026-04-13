@@ -952,12 +952,12 @@ export function UomListView({
                     setPage(1);
                   }}
                 >
-                  <SelectTrigger className="h-8 w-[74px] bg-white text-sm shadow-none">
+                  <SelectTrigger className="w-[70px] h-8">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="20">20</SelectItem>
                     <SelectItem value="50">50</SelectItem>
                     <SelectItem value="100">100</SelectItem>
                   </SelectContent>
@@ -978,7 +978,7 @@ export function UomListView({
                   size="sm"
                   disabled={safePage <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="h-8 px-2 gap-1"
+                  className="h-8 gap-1 text-sm text-muted-foreground"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   Prev
@@ -995,7 +995,7 @@ export function UomListView({
                       variant={safePage === pg ? "default" : "ghost"}
                       size="sm"
                       onClick={() => setPage(pg as number)}
-                      className={`h-8 w-8 p-0 ${
+                      className={`h-8 w-8 p-0 text-sm ${
                         safePage === pg
                           ? "bg-primary text-primary-foreground"
                           : "text-muted-foreground"
@@ -1011,7 +1011,7 @@ export function UomListView({
                   size="sm"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="h-8 px-2 gap-1"
+                  className="h-8 gap-1 text-sm text-muted-foreground"
                 >
                   Next
                   <ChevronRight className="w-3.5 h-3.5" />
