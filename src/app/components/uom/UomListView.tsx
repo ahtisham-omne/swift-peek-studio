@@ -5,7 +5,7 @@
  * All colors use CSS custom properties from theme.css.
  */
 
-import React, { useState, useMemo, useCallback, useRef } from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -79,6 +79,19 @@ import {
   countActiveUomFilters,
   applyAdvancedFilters,
 } from "./UomFiltersModal";
+import {
+  UomKpiInsightsPanel,
+  ALL_UOM_KPI_DEFINITIONS,
+  DEFAULT_UOM_ACTIVE_KPIS,
+  computeUomKpiValue,
+} from "./UomKpiInsightsPanel";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Check } from "lucide-react";
 
 const ARCHIVE_BLOCKING_REFERENCES = [
   {
