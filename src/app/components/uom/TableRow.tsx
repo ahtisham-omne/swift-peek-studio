@@ -345,7 +345,7 @@ export function TableHeaderRow({
               padding: 0,
               textAlign: "center",
             }}
-            className="border-b border-r border-border bg-muted/30"
+            className="border-b border-border bg-muted/30"
           >
             <button
               type="button"
