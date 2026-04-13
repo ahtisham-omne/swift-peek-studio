@@ -787,31 +787,8 @@ export function UomDetailView() {
       <div className="flex-1">
         <div className="mx-auto px-4 lg:px-6 xl:px-8 pt-4 pb-8 w-full" style={{ maxWidth: 1440 }}>
 
-        {/* Two-column layout */}
-        <div
-          className="flex flex-col lg:flex-row"
-          style={{
-            paddingTop: 16,
-            gap: 16,
-            alignItems: "flex-start",
-          }}
-        >
-          {/* ── LEFT PANEL ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08, duration: 0.3 }}
-            className="flex-1 min-w-0"
-            style={{
-              backgroundColor: "var(--card)",
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: "var(--border)",
-              borderRadius: "var(--radius-lg)",
-              overflow: "hidden",
-              boxShadow: "var(--elevation-xs)",
-            }}
-          >
+          {/* Content area */}
+          <div className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-sm">
             <div style={{ padding: activeTab === "conversions" ? 0 : 20 }}>
               {/* ──── CONVERSIONS TAB ──── */}
               {activeTab === "conversions" && (() => {
