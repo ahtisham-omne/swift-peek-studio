@@ -38,23 +38,8 @@ const CATEGORY_ICON_MAP: Record<string, React.ReactNode> = {
   "Other SI": <Atom size={16} />,
 };
 
-/* ── Category background colors for icon tile ── */
-const CATEGORY_BG: Record<string, string> = {
-  Length: "#EDF4FF",
-  Area: "#F0FDF4",
-  Volume: "#FFF7ED",
-  Mass: "#FEF2F2",
-  Quantity: "#F5F3FF",
-  Time: "#FFFBEB",
-  Temperature: "#FFF1F2",
-  Force: "#F0F9FF",
-  Pressure: "#F8FAFC",
-  Energy: "#FEFCE8",
-  Power: "#FDF4FF",
-  Electrical: "#ECFDF5",
-  Frequency: "#EFF6FF",
-  "Other SI": "#F1F5F9",
-};
+/* ── Consistent icon tile background ── */
+const ICON_BG = "#EDF4FF";
 
 interface UomCardGridProps {
   units: UomUnit[];
@@ -100,7 +85,6 @@ interface UomCardProps {
 
 function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
   const icon = CATEGORY_ICON_MAP[unit.category] || <Atom size={16} />;
-  const iconBg = CATEGORY_BG[unit.category] || "#F1F5F9";
 
   return (
     <div
@@ -112,7 +96,7 @@ function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
         <div className="flex items-center gap-3 min-w-0">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0"
-            style={{ backgroundColor: iconBg, color: "#0A77FF" }}
+            style={{ backgroundColor: ICON_BG, color: "#0A77FF" }}
           >
             {icon}
           </div>
