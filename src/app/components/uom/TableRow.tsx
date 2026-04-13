@@ -210,17 +210,7 @@ export function getOrderedVisibleKeys(
   return result;
 }
 
-const CELL_PADDING: React.CSSProperties = {
-  paddingTop: 12,
-  paddingBottom: 12,
-  paddingLeft: 16,
-  paddingRight: 16,
-};
-
-function getCellPadding(_density?: DensityMode): React.CSSProperties {
-  // Density is now handled via Tailwind classes on <tr>, not inline padding
-  return CELL_PADDING;
-}
+// Cell padding removed — density is handled via Tailwind classes on <TableRow>
 
 /* ═══════════════════════════════════════════════
    Column header metadata
@@ -328,59 +318,23 @@ export function TableHeaderRow({
   );
 
   return (
-    <thead>
-      <tr
+    <TableHeader className="sticky top-0 z-20 bg-card">
+      <ShadcnTableRow
         className={`bg-muted/30 hover:bg-muted/30 ${headerDensityClass} ${className}`}
       >
         {/* ── Checkbox cell (select-all) ── */}
         {onSelectAll && (
-          <th
-            style={{
-              width: 40,
-              minWidth: 40,
-              maxWidth: 40,
-              padding: 0,
-              textAlign: "center",
-            }}
-            className="border-b border-border bg-muted/30"
+          <TableHead
+            className="w-10 min-w-[40px] max-w-[40px] p-0 text-center bg-muted/30"
           >
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelectAll();
-              }}
-              className="border-0 inline-flex items-center justify-center cursor-pointer p-0 bg-transparent"
-              aria-label="Select all rows"
-            >
-              <span
-                className="inline-flex items-center justify-center border-0"
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: "var(--radius-sm)",
-                  border: allSelected || someSelected
-                    ? "none"
-                    : "1.5px solid var(--border-strong)",
-                  backgroundColor: allSelected || someSelected
-                    ? "var(--primary)"
-                    : "var(--card)",
-                  transition: "background-color 0.15s ease, border-color 0.15s ease",
-                }}
-              >
-                {allSelected && (
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <path d="M1.5 5.5L4 8L8.5 2" stroke="var(--primary-foreground)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
-                {someSelected && !allSelected && (
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <rect x="2" y="4.5" width="6" height="1.5" rx="0.5" fill="var(--primary-foreground)"/>
-                  </svg>
-                )}
-              </span>
-            </button>
-          </th>
+            <div className="flex items-center justify-center">
+              <Checkbox
+                checked={allSelected ? true : someSelected ? "indeterminate" : false}
+                onCheckedChange={() => onSelectAll()}
+                aria-label="Select all rows"
+              />
+            </div>
+          </TableHead>
         )}
 
         {visibleKeys.map((key, idx) => {
@@ -390,8 +344,6 @@ export function TableHeaderRow({
           const colW = col.width ?? 120;
           const isSortable = !!hdr.field;
           const isActive = activeSort && hdr.field === activeSort.field;
-          // draggedIndex is in dragColumns space (which includes checkbox at 0)
-          // data columns start at index 1 in dragColumns, so compare with idx + 1
           const isDragged = draggedIndex != null && onSelectAll
             ? draggedIndex === idx + 1
             : draggedIndex === idx;
@@ -399,9 +351,9 @@ export function TableHeaderRow({
           const canDrag = !isRequired && !!onDragPointerDown;
 
           return (
-            <th
+            <TableHead
               key={key}
-              className={`relative select-none bg-muted/30 border-b border-border ${
+              className={`relative select-none bg-muted/30 ${
                 isSortable ? "cursor-pointer" : ""
               } ${canDrag ? "group/col" : ""} ${
                 isDragged ? "!bg-transparent opacity-35" : ""
@@ -425,9 +377,8 @@ export function TableHeaderRow({
               onPointerDown={
                 canDrag
                   ? (e) => {
-                      // Offset index by 1 when checkbox column exists (maps to dragColumns index)
                       const dragIdx = onSelectAll ? idx + 1 : idx;
-                      onDragPointerDown!(e, dragIdx);
+                      onDragPointerDown!(e as any, dragIdx);
                     }
                   : undefined
               }
@@ -438,55 +389,37 @@ export function TableHeaderRow({
               }
             >
               <div
-                className={`flex items-center gap-[4px] h-full ${
+                className={`flex items-center gap-1 h-full px-4 py-2.5 ${
                   hdr.align === "right" ? "justify-center" : ""
                 }`}
-                style={{
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  paddingLeft: 16,
-                  paddingRight: 16,
-                }}
               >
-                {/* Drag grip — visible on hover for draggable columns */}
+                {/* Drag grip */}
                 {canDrag && (
                   <span
-                    className="opacity-0 group-hover/col:opacity-100"
-                    style={{
-                      color: "var(--text-disabled)",
-                      cursor: "grab",
-                      flexShrink: 0,
-                      transition: "opacity 150ms ease",
-                      marginLeft: -4,
-                      marginRight: 2,
-                    }}
+                    className="opacity-0 group-hover/col:opacity-100 text-muted-foreground/50 cursor-grab shrink-0 transition-opacity -ml-1 mr-0.5"
                   >
                     <GripVertical size={12} />
                   </span>
                 )}
 
                 <span
-                  className="leading-none text-[13px]"
-                  style={{
-                    fontWeight: 500 as any,
-                    color: isActive
-                      ? "#0A77FF"
-                      : undefined,
-                  }}
+                  className={`leading-none text-[13px] font-medium ${
+                    isActive ? "text-primary" : "text-foreground"
+                  }`}
                 >
                   {hdr.label}
                 </span>
 
                 {/* Sort arrow */}
                 {isSortable && isActive && (
-                  <span className="leading-none" style={{ color: "#0A77FF" }}>
+                  <span className="leading-none text-primary">
                     {activeSort!.direction === "asc"
                       ? UOM_ICONS.sortAsc
                       : UOM_ICONS.sortDesc}
                   </span>
                 )}
                 {isSortable && !isActive && (
-                  <span className="leading-none opacity-0 group-hover/col:opacity-100 transition-opacity" style={{ color: "var(--text-muted)" }}>
+                  <span className="leading-none opacity-0 group-hover/col:opacity-100 transition-opacity text-muted-foreground">
                     {UOM_ICONS.sortNeutral}
                   </span>
                 )}
@@ -515,11 +448,11 @@ export function TableHeaderRow({
                   />
                 </div>
               )}
-            </th>
+            </TableHead>
           );
         })}
-      </tr>
-    </thead>
+      </ShadcnTableRow>
+    </TableHeader>
   );
 }
 
