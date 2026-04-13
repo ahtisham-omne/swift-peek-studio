@@ -50,7 +50,7 @@ export function InUseBadge({ inUse, count, className = "" }: InUseBadgeProps) {
           lineHeight: "normal",
           backgroundColor: inUse
             ? "hsl(var(--primary))"
-            : "hsl(var(--border))",
+            : "hsl(var(--muted-foreground) / 0.15)",
           color: inUse
             ? "hsl(var(--primary-foreground))"
             : "hsl(var(--muted-foreground))",
