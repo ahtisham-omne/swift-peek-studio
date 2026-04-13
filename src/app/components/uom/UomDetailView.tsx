@@ -358,19 +358,8 @@ export function UomDetailView() {
         className="mx-auto px-4 lg:px-6 xl:px-8 w-full"
         style={{ maxWidth: 1440, paddingTop: 12, paddingBottom: 0 }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, ease: "easeOut" }}
-          style={{
-            backgroundColor: "var(--card)",
-            borderRadius: "var(--radius)",
-            borderWidth: 1,
-            borderStyle: "solid",
-            borderColor: "var(--border)",
-            boxShadow: "var(--elevation-xs)",
-            overflow: "hidden",
-          }}
+        <div
+          className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-sm"
         >
           {/* ── Row 1: Back + Icon + Name/Desc + Actions ── */}
           <div
