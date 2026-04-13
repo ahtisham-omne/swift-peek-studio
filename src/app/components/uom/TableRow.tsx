@@ -324,9 +324,9 @@ export function TableHeaderRow({
       >
         {/* ── Checkbox cell (select-all) ── */}
         {onSelectAll && (
-          <TableHead
-            className="w-10 min-w-[40px] max-w-[40px] p-0 text-center bg-muted/30"
-          >
+            <TableHead
+              className="w-10 min-w-[40px] max-w-[40px] p-0 text-center bg-background"
+            >
             <div className="flex items-center justify-center">
               <Checkbox
                 checked={allSelected ? true : someSelected ? "indeterminate" : false}
@@ -749,8 +749,8 @@ export function TableRow({
 
   return (
     <ShadcnTableRow
-      className={`group transition-colors hover:bg-[#F0F7FF] ${densityClass} ${
-        selected ? "!bg-[#EDF4FF]/60" : ""
+      className={`group transition-colors hover:bg-surface-hover ${densityClass} ${
+        selected ? "!bg-primary-surface hover:!bg-primary-surface" : ""
       } ${onClick ? "cursor-pointer" : ""} ${className}`}
       data-row-id={unit.id}
       onClick={() => onClick?.(unit)}

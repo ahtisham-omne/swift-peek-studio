@@ -554,7 +554,7 @@ export function UomListView({
      ══════════════════════════════════════════════ */
 
   return (
-    <div className="flex flex-col h-full" style={{ backgroundColor: "var(--secondary)" }}>
+    <div className="flex flex-col h-full bg-background">
       <div className="flex items-center justify-between px-6 lg:px-8 h-12 border-b border-border bg-card shrink-0">
         <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
           <button
@@ -582,7 +582,7 @@ export function UomListView({
             />
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary/10">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary-surface">
               <span className="text-[11px] text-primary" style={{ fontWeight: 600 }}>AA</span>
             </div>
             <div className="hidden sm:block">
@@ -714,8 +714,8 @@ export function UomListView({
               <span className="text-sm hidden md:inline" style={{ fontWeight: 500 }}>
                 Insights
               </span>
-              <span
-                className="inline-flex items-center justify-center h-5 px-1.5 rounded-full text-[11px] bg-primary/10 text-primary"
+                <span
+                  className="inline-flex items-center justify-center h-5 px-1.5 rounded-full text-[11px] bg-primary-surface text-primary"
                 style={{ fontWeight: 600 }}
               >
                 {insightCards.length}
@@ -1535,7 +1535,7 @@ function ModuleHeader({
 }) {
   return (
     <div
-      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 -mx-6 lg:-mx-8 -mt-6 px-6 lg:px-8 pt-3.5 pb-3.5 bg-white border-b border-border shrink-0"
+      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 -mx-6 lg:-mx-8 -mt-6 px-6 lg:px-8 pt-3.5 pb-3.5 bg-card border-b border-border shrink-0"
     >
       {/* Left side */}
       <div className="flex items-center gap-2.5">
@@ -1572,7 +1572,7 @@ function UomInsightCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="border border-border rounded-lg bg-white min-w-0 overflow-hidden">
+    <div className="border border-border rounded-lg bg-card min-w-0 overflow-hidden">
       <div className="px-3 py-2">
         <div className="flex items-center justify-between gap-1 mb-1">
           <p className="text-[10.5px] text-muted-foreground whitespace-nowrap" style={{ fontWeight: 500 }}>
