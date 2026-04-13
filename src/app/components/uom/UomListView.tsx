@@ -9,7 +9,7 @@ import React, { useState, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Table, TableBody } from "../ui/table";
+import { Table, TableBody, TableRow as ShadcnTR, TableCell as ShadcnTD } from "../ui/table";
 
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { FilterPill } from "./FilterPill";
@@ -744,14 +744,14 @@ export function UomListView({
 
                 <TableBody>
                   {pagedUnits.length === 0 ? (
-                    <TableRow>
-                      <TableCell
+                    <ShadcnTR>
+                      <ShadcnTD
                         colSpan={visibleKeys.length + 1}
                         className="h-32 text-center text-sm text-muted-foreground"
                       >
                         No units match your filters.
-                      </TableCell>
-                    </TableRow>
+                      </ShadcnTD>
+                    </ShadcnTR>
                   ) : (
                     pagedUnits.map((unit) => (
                       <TableRow
