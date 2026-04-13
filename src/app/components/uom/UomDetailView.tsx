@@ -1367,72 +1367,51 @@ export function UomDetailView() {
                   </div>
 
                   {whereUsedSubTab === "items" && (
-                    <div
-                      className="overflow-x-auto"
-                      style={{
-                        borderWidth: 1,
-                        borderStyle: "solid",
-                        borderColor: "var(--border)",
-                        borderRadius: "var(--radius-md)",
-                      }}
-                    >
-                      <div style={{ minWidth: 480 }}>
-                        <TableHeader cols={["#", "PART NUMBER", "DESCRIPTION", "STATUS"]} template="40px minmax(100px, 140px) 1fr minmax(80px, 100px)" />
-                        {WHERE_USED_ITEMS.map((item, idx) => (
-                          <motion.div
-                            key={item.sku}
-                            initial={{ opacity: 0, y: 4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.04 * idx, duration: 0.22 }}
-                            className="grid items-center transition-colors"
-                            style={{
-                              gridTemplateColumns: "40px minmax(100px, 140px) 1fr minmax(80px, 100px)",
-                              borderColor: "var(--border-subtle)",
-                              borderBottomWidth: idx < WHERE_USED_ITEMS.length - 1 ? 1 : 0,
-                              borderBottomStyle: "solid" as const,
-                              backgroundColor: "rgba(0,0,0,0)",
-                              transition: "background-color 0.12s ease",
-                            }}
-                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--surface-hover)"; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)"; }}
-                          >
-                            <Cell muted>{idx + 1}</Cell>
-                            <div
-                              onClick={() => handleSkuClick(item.sku)}
-                              style={{
-                                padding: "11px 16px",
-                                fontSize: "var(--text-label)",
-                                lineHeight: "1",
-                                fontWeight: "var(--font-weight-medium)" as any,
-                                color: "var(--primary)",
-                                cursor: "pointer",
-                              }}
+                    <div className="overflow-hidden border border-border rounded-lg">
+                      <ShadcnTable>
+                        <ShadcnTableHeader className="sticky top-0 z-20 bg-card">
+                          <ShadcnTableRow className="bg-muted/30 hover:bg-muted/30 [&>th]:h-10">
+                            <TableHead className="whitespace-nowrap w-[40px]">#</TableHead>
+                            <TableHead className="whitespace-nowrap">PART NUMBER</TableHead>
+                            <TableHead className="whitespace-nowrap">DESCRIPTION</TableHead>
+                            <TableHead className="whitespace-nowrap">STATUS</TableHead>
+                          </ShadcnTableRow>
+                        </ShadcnTableHeader>
+                        <TableBody>
+                          {WHERE_USED_ITEMS.map((item, idx) => (
+                            <ShadcnTableRow
+                              key={item.sku}
+                              className="group transition-colors hover:bg-[#F0F7FF]"
                             >
-                              <span className="flex items-center gap-[4px]">
-                                {item.sku}
-                                <ExternalLink size={10} style={{ opacity: 0.6 }} />
-                              </span>
-                            </div>
-                            <Cell className="truncate">{item.name}</Cell>
-                            <div style={{ padding: "11px 16px" }}>
-                              <span
-                                className="inline-flex items-center"
-                                style={{
-                                  fontSize: 11,
-                                  lineHeight: "1",
-                                  padding: "3px 8px",
-                                  borderRadius: 6,
-                                  fontWeight: "var(--font-weight-medium)" as any,
-                                  backgroundColor: item.status === "Active" ? "var(--accent-surface)" : "var(--surface-raised)",
-                                  color: item.status === "Active" ? "var(--accent-text-strong)" : "var(--text-muted)",
-                                }}
-                              >
-                                {item.status}
-                              </span>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
+                              <TableCell className="text-sm text-muted-foreground">{idx + 1}</TableCell>
+                              <TableCell>
+                                <span
+                                  onClick={() => handleSkuClick(item.sku)}
+                                  className="flex items-center gap-1 text-sm cursor-pointer text-primary hover:underline"
+                                  style={{ fontWeight: 500 }}
+                                >
+                                  {item.sku}
+                                  <ExternalLink size={10} className="opacity-60" />
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-sm text-muted-foreground truncate max-w-[300px]">{item.name}</TableCell>
+                              <TableCell>
+                                <span
+                                  className="inline-flex items-center text-[11px] px-2 py-0.5 rounded-md border"
+                                  style={{
+                                    fontWeight: 500,
+                                    backgroundColor: item.status === "Active" ? "#ECFDF5" : "#F1F5F9",
+                                    borderColor: item.status === "Active" ? "#A7F3D0" : "#E2E8F0",
+                                    color: item.status === "Active" ? "#065F46" : "#64748B",
+                                  }}
+                                >
+                                  {item.status}
+                                </span>
+                              </TableCell>
+                            </ShadcnTableRow>
+                          ))}
+                        </TableBody>
+                      </ShadcnTable>
                     </div>
                   )}
 
