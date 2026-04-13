@@ -16,7 +16,7 @@ import { CategoryBadge, type UomCategory } from "./CategoryBadge";
 import { TypeLabel, type UomType } from "./TypeLabel";
 import { InUseBadge } from "./InUseBadge";
 import { UOM_ICONS } from "./design-tokens";
-import { Files, FilePenLine, Archive, GripVertical, MoreHorizontal, Eye } from "lucide-react";
+import { Files, FilePenLine, Archive, GripVertical, MoreHorizontal, Eye, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import type { ColumnDef } from "./ColumnsDropdown";
 import { type DensityMode } from "./DensityDropdown";
 import { TableHeader, TableRow as ShadcnTableRow, TableHead, TableBody, TableCell } from "../ui/table";
@@ -325,15 +325,13 @@ export function TableHeaderRow({
         {/* ── Checkbox cell (select-all) ── */}
         {onSelectAll && (
             <TableHead
-              className="w-10 min-w-[40px] max-w-[40px] p-0 text-center bg-background"
+              className="sticky left-0 z-20 bg-[#f8fafc] w-[40px] min-w-[40px] max-w-[40px] !pl-2 !pr-0"
             >
-            <div className="flex items-center justify-center">
               <Checkbox
                 checked={allSelected ? true : someSelected ? "indeterminate" : false}
                 onCheckedChange={() => onSelectAll()}
                 aria-label="Select all rows"
               />
-            </div>
           </TableHead>
         )}
 
@@ -403,9 +401,8 @@ export function TableHeaderRow({
                 )}
 
                 <span
-                  className={`leading-none text-[13px] font-medium ${
-                    isActive ? "text-primary" : "text-foreground"
-                  }`}
+                  className="leading-none text-[13px]"
+                  style={isActive ? { fontWeight: 500, color: "#0A77FF" } : { fontWeight: 500 }}
                 >
                   {hdr.label}
                 </span>
@@ -414,14 +411,12 @@ export function TableHeaderRow({
                 {isSortable && isActive && (
                   <span className="leading-none text-primary">
                     {activeSort!.direction === "asc"
-                      ? UOM_ICONS.sortAsc
-                      : UOM_ICONS.sortDesc}
+                      ? <ArrowUp className="w-3 h-3 shrink-0" style={{ color: "#0A77FF" }} />
+                      : <ArrowDown className="w-3 h-3 shrink-0" style={{ color: "#0A77FF" }} />}
                   </span>
                 )}
                 {isSortable && !isActive && (
-                  <span className="leading-none opacity-0 group-hover/col:opacity-100 transition-opacity text-muted-foreground">
-                    {UOM_ICONS.sortNeutral}
-                  </span>
+                  <ArrowUpDown className="w-3 h-3 shrink-0 text-muted-foreground opacity-0 group-hover/col:opacity-100 transition-opacity" />
                 )}
               </div>
 
@@ -758,19 +753,17 @@ export function TableRow({
       {/* ── Checkbox cell ── */}
       {onToggleSelect && (
         <TableCell
-          className="w-10 min-w-[40px] max-w-[40px] p-0 text-center"
+          className="sticky left-0 z-10 bg-inherit w-[40px] min-w-[40px] max-w-[40px] !pl-2 !pr-0"
           onClick={(e) => {
             e.stopPropagation();
             onToggleSelect(unit.id);
           }}
         >
-          <div className="flex items-center justify-center">
-            <Checkbox
-              checked={!!selected}
-              onCheckedChange={() => onToggleSelect(unit.id)}
-              aria-label={`Select ${unit.name}`}
-            />
-          </div>
+          <Checkbox
+            checked={!!selected}
+            onCheckedChange={() => onToggleSelect(unit.id)}
+            aria-label={`Select ${unit.name}`}
+          />
         </TableCell>
       )}
       {visibleKeys.map((key, idx) => {

@@ -20,7 +20,7 @@ import {
 
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { FilterPill } from "./FilterPill";
-import { CategoryDropdown } from "./CategoryDropdown";
+import { User } from "lucide-react";
 import {
   ColumnsDropdown,
   ColumnsSidePanel,
@@ -820,14 +820,11 @@ export function UomListView({
 
         {/* ── FILTERS — unified row: categories + type + status ── */}
         <div className="flex items-center gap-1.5 overflow-x-auto px-4 pb-3 shrink-0">
-          {/* Category dropdown */}
-          <CategoryDropdown
-            selected={filters.categories}
-            categoryCounts={categoryCounts}
-            onToggle={toggleCategory}
-            onClear={() => updateFilter({ categories: new Set() })}
-            defaultOpen={false}
-          />
+          {/* Me mode pill */}
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-xs text-muted-foreground hover:bg-muted/60 hover:text-foreground hover:border-muted-foreground/30 active:bg-muted transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+            <User className="w-3.5 h-3.5" />
+            Me mode
+          </button>
 
           {/* Separator */}
           <div className="w-px h-5 bg-border shrink-0" />
