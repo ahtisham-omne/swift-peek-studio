@@ -36,7 +36,7 @@ import { useToast } from "./Toast";
 import { DensityDropdown, type DensityMode } from "./DensityDropdown";
 import { UomColumnHeaderMenu } from "./UomColumnHeaderMenu";
 import { UomNotionFilterBar, type ColumnFilterMap } from "./UomNotionFilterBar";
-import { Plus, SlidersHorizontal, AlertTriangle, Archive } from "lucide-react";
+import { Plus, SlidersHorizontal, AlertTriangle, Archive, Search, X, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { BulkActionsBar } from "./BulkActionsBar";
 import {
