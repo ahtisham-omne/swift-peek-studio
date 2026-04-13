@@ -402,7 +402,7 @@ export function UomDetailView() {
                     />
                   ) : (
                     <div className="flex items-center flex-wrap gap-2">
-                      <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 700, lineHeight: "22px" }}>
+                      <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 600, lineHeight: "22px" }}>
                         {displayName}
                       </h1>
 
@@ -412,7 +412,7 @@ export function UomDetailView() {
                         style={{
                           padding: "2px 8px",
                           fontSize: 11,
-                          fontWeight: 600,
+                          fontWeight: 500,
                           backgroundColor: displayType === "Standard" ? "#DBEAFE" : "#F1F5F9",
                           borderColor: displayType === "Standard" ? "#BFDBFE" : "#E2E8F0",
                           color: displayType === "Standard" ? "#2563EB" : "#475569",
@@ -424,7 +424,7 @@ export function UomDetailView() {
                       {/* Category badge - blue */}
                       <span
                         className="inline-flex items-center rounded-md border border-[#BFDBFE] bg-[#DBEAFE] text-[#2563EB]"
-                        style={{ padding: "2px 8px", fontSize: 11, fontWeight: 600 }}
+                        style={{ padding: "2px 8px", fontSize: 11, fontWeight: 500 }}
                       >
                         {displayCategory}
                       </span>
@@ -451,7 +451,7 @@ export function UomDetailView() {
                       style={{ maxWidth: 500 }}
                     />
                   ) : (
-                    <p className="text-[12px] text-[#64748B] leading-[1.6]">
+                    <p className="text-[12px] text-[#94A3B8] leading-[1.6]">
                       {displayDescription}
                     </p>
                   )}
@@ -466,14 +466,14 @@ export function UomDetailView() {
                   <button
                     onClick={handleEditSave}
                     className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
-                    style={{ fontWeight: 600 }}
+                    style={{ fontWeight: 500 }}
                   >
                     <Check size={14} /> Save
                   </button>
                   <button
                     onClick={handleEditCancel}
                     className="rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[#334155] inline-flex items-center gap-1.5 h-9 px-3.5 text-[13px] transition-all duration-200 cursor-pointer shadow-sm"
-                    style={{ fontWeight: 500 }}
+                    style={{ fontWeight: 400 }}
                   >
                     Cancel
                   </button>
@@ -500,7 +500,7 @@ export function UomDetailView() {
                     <button
                       onClick={() => setEditModalOpen(true)}
                       className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
-                      style={{ fontWeight: 600 }}
+                      style={{ fontWeight: 500 }}
                     >
                       <Pencil className="w-3.5 h-3.5" />
                       Edit Unit
@@ -597,7 +597,7 @@ export function UomDetailView() {
                   style={{
                     padding: "10px 14px",
                     fontSize: 13,
-                    fontWeight: isActive ? 600 : 400,
+                    fontWeight: isActive ? 500 : 400,
                     backgroundColor: "transparent",
                     borderTopWidth: 0,
                     borderLeftWidth: 0,
