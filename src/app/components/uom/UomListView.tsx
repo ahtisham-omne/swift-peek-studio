@@ -744,20 +744,14 @@ export function UomListView({
 
                 <TableBody>
                   {pagedUnits.length === 0 ? (
-                    <tr>
-                      <td
+                    <TableRow>
+                      <TableCell
                         colSpan={visibleKeys.length + 1}
-                        style={{
-                          padding: "48px 20px",
-                          color: "var(--text-muted)",
-                          fontSize: "var(--text-label)",
-                          fontWeight: "var(--font-weight-normal)" as any,
-                          textAlign: "center",
-                        }}
+                        className="h-32 text-center text-sm text-muted-foreground"
                       >
                         No units match your filters.
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ) : (
                     pagedUnits.map((unit) => (
                       <TableRow
