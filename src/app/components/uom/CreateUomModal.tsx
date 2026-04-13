@@ -92,9 +92,9 @@ function StepTab({
   let labelWeight = "var(--font-weight-medium)" as any;
 
   if (disabled) {
-    dotBg = "var(--border)";
-    dotColor = "var(--text-disabled)";
-    labelColor = "var(--text-disabled)";
+    dotBg = "#E2E8F0";
+    dotColor = "#94A3B8";
+    labelColor = "#94A3B8";
     labelWeight = "var(--font-weight-normal)" as any;
   } else if (isActive) {
     dotBg = "var(--primary)";
