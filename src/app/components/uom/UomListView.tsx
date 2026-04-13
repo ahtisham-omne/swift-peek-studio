@@ -186,6 +186,15 @@ export function UomListView({
     );
   }, []);
 
+  const moveKpi = useCallback((fromIndex: number, toIndex: number) => {
+    setActiveKpis((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return next;
+    });
+  }, []);
+
   const activeKpiDefs = useMemo(() => {
     return activeKpis
       .map((key) => ALL_UOM_KPI_DEFINITIONS.find((d) => d.key === key))
