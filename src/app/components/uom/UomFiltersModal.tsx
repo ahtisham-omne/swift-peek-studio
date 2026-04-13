@@ -1,14 +1,18 @@
 /**
  * UOM Module -- Advanced Filters Modal
  *
- * Live-filtering Radix-style modal following the partner filters reference pattern.
+ * Styled to match the Partner Management vendor filters modal exactly.
  * Sections: Type, Status, Category, In-Use Count range, Name search, Symbol search.
- * All colors reference CSS custom properties from theme.css.
- * Typography uses only font faces from fonts.css (Inter 400).
  */
 
 import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { X, Search, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+} from "../ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import type { UomUnit } from "./sample-data";
 
@@ -124,7 +128,6 @@ export function UomFiltersModal({
   units,
   filteredCount,
 }: UomFiltersModalProps) {
-  const overlayRef = useRef<HTMLDivElement>(null);
   const isUnitInUse = useCallback(
     (unit: UomUnit) => Boolean(unit.inUse || (unit.inUseCount ?? 0) > 0),
     []
@@ -143,21 +146,6 @@ export function UomFiltersModal({
     () => applyAdvancedFilters(units, draft).length,
     [units, draft]
   );
-
-  // Close on Escape
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onOpenChange(false);
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [open, onOpenChange]);
-
-  // Close on overlay click
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === overlayRef.current) onOpenChange(false);
-  };
 
   // Compute bounds for range hints
   const inUseCountBounds = useMemo(() => {
@@ -191,7 +179,7 @@ export function UomFiltersModal({
     return map;
   }, [isUnitInUse, units]);
 
-  // Update draft (not parent) on every interaction
+  // Update draft
   const update = useCallback(
     (patch: Partial<UomAdvancedFilters>) => {
       setDraft((prev) => ({ ...prev, ...patch }));
@@ -220,525 +208,180 @@ export function UomFiltersModal({
     onOpenChange(false);
   };
 
-  if (!open) return null;
+  const activeCount = countActiveUomFilters(draft);
 
   return (
-    <div
-      ref={overlayRef}
-      onClick={handleOverlayClick}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "var(--overlay-backdrop)",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 560,
-          maxHeight: "85vh",
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "var(--card)",
-          borderRadius: 12,
-          boxShadow: "var(--elevation-xl)",
-          border: "1px solid var(--border)",
-          overflow: "hidden",
-        }}
-      >
-        {/* ── Header ── */}
-        <div
-          className="flex items-center justify-between shrink-0"
-          style={{
-            padding: "16px 20px",
-            borderBottom: "1px solid var(--border)",
-          }}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogPortal>
+        <DialogOverlay />
+        <DialogPrimitive.Content
+          aria-describedby={undefined}
+          className="fixed top-[50%] left-[50%] z-[200] translate-x-[-50%] translate-y-[-50%] w-full max-w-[680px] max-h-[85vh] bg-white rounded-xl shadow-2xl flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200 outline-none"
         >
-          <div className="flex items-center gap-2.5">
-            <span
-              style={{
-                fontSize: "var(--text-h4)",
-                fontWeight: "var(--font-weight-medium)" as any,
-                color: "var(--foreground)",
-                lineHeight: 1.3,
-              }}
+          <DialogPrimitive.Title className="sr-only">
+            Filters
+          </DialogPrimitive.Title>
+
+          {/* ─── Header ─── */}
+          <div className="flex items-center justify-center relative px-6 h-12 border-b border-border/60 shrink-0">
+            <button
+              type="button"
+              onClick={() => onOpenChange(false)}
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted/60 transition-colors cursor-pointer"
             >
+              <X className="w-4 h-4" />
+            </button>
+            <span className="text-[14px]" style={{ fontWeight: 600 }}>
               Filters
             </span>
-            {countActiveUomFilters(draft) > 0 && (
+            {activeCount > 0 && (
               <span
-                className="inline-flex items-center justify-center"
-                style={{
-                  minWidth: 20,
-                  height: 20,
-                  padding: "0 6px",
-                  borderRadius: 10,
-                  backgroundColor: "var(--primary)",
-                  color: "var(--primary-foreground)",
-                  fontSize: 11,
-                  fontWeight: "var(--font-weight-medium)" as any,
-                  lineHeight: 1,
-                }}
+                className="ml-2 min-w-[20px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white"
+                style={{ backgroundColor: "#0A77FF", fontWeight: 600 }}
               >
-                {countActiveUomFilters(draft)}
+                {activeCount}
               </span>
             )}
           </div>
-          <button
-            type="button"
-            onClick={() => onOpenChange(false)}
-            className="cursor-pointer flex items-center justify-center"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: "var(--radius-sm)",
-              border: "none",
-              backgroundColor: "transparent",
-              color: "var(--text-muted)",
-              transition: "background-color 150ms, color 150ms",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--surface-raised)";
-              e.currentTarget.style.color = "var(--foreground)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = "var(--text-muted)";
-            }}
-          >
-            <X size={18} />
-          </button>
-        </div>
 
-        {/* ── Scrollable Body ── */}
-        <div
-          className="flex-1 overflow-y-auto scrollbar-overlay"
-          style={{ overflowY: "auto" }}
-        >
-          {/* Section: Unit Type */}
-          <FilterSection title="Unit Type" subtitle="Filter by standard or custom units">
-            <SegmentedControl
-              options={["Standard", "Custom"]}
-              selected={draft.types}
-              counts={typeCounts}
-              onToggle={(val) => {
-                if (val === "__clear__") {
-                  update({ types: [] });
-                } else {
-                  toggleArrayValue("types", val);
-                }
-              }}
-            />
-          </FilterSection>
-
-          <Divider />
-
-          {/* Section: Status */}
-          <FilterSection title="Status" subtitle="In use means linked to items, BOMs, purchase orders, or vendors">
-            <div className="flex flex-wrap gap-2">
-              <Pill
-                label="In Use"
-                count={statusCounts["In Use"]}
-                selected={draft.statuses.includes("In Use")}
-                dotColor="var(--accent)"
-                onClick={() => toggleArrayValue("statuses", "In Use")}
+          {/* ─── Scrollable body ─── */}
+          <div className="flex-1 overflow-y-auto overscroll-contain">
+            {/* Section: Unit Type — segmented control */}
+            <Section title="Unit type" subtitle="Select the type of unit to show.">
+              <SegmentedControl
+                options={[
+                  { value: "Standard", label: "Standard" },
+                  { value: "Custom", label: "Custom" },
+                ]}
+                selected={draft.types}
+                onChange={(val) => update({ types: val })}
               />
-              <Pill
-                label="Unused"
-                count={statusCounts["Unused"]}
-                selected={draft.statuses.includes("Unused")}
-                dotColor="var(--text-disabled)"
-                onClick={() => toggleArrayValue("statuses", "Unused")}
-              />
-            </div>
-          </FilterSection>
+            </Section>
 
-          <Divider />
+            <Divider />
 
-          {/* Section: Category */}
-          <FilterSection title="Category" subtitle="Filter by measurement category">
-            <CategorySelectMenu
-              items={UOM_CATEGORIES.map((cat) => ({
-                value: cat,
-                label: cat,
-                count: categoryCounts[cat] ?? 0,
-              }))}
-              selected={draft.categories}
-              onToggle={(val) => toggleArrayValue("categories", val)}
-              onClear={() => update({ categories: [] })}
-            />
-          </FilterSection>
-
-          <Divider />
-
-          {/* Section: In-Use Count Range */}
-          <FilterSection title="Usage Count" subtitle="Filter by number of items, BOMs, purchase orders, or vendor records using this unit">
-            <div className="flex items-center gap-3">
-              <div className="flex-1">
-                <label
-                  style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-muted)",
-                    marginBottom: 4,
-                    display: "block",
-                  }}
-                >
-                  Min
-                </label>
-                <input
-                  type="number"
-                  placeholder={String(inUseCountBounds.min)}
-                  value={draft.inUseCountMin}
-                  onChange={(e) => update({ inUseCountMin: e.target.value })}
-                  className="outline-none w-full"
-                  style={{
-                    height: "var(--input-height)",
-                    padding: "0 12px",
-                    boxSizing: "border-box",
-                    backgroundColor: "var(--input-background)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "var(--radius-sm)",
-                    color: "var(--foreground)",
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    lineHeight: "normal",
-                  }}
+            {/* Section: Status — chip row */}
+            <Section title="Status">
+              <div className="flex flex-wrap gap-1.5">
+                <Pill
+                  label="Any"
+                  selected={draft.statuses.length === 0}
+                  onClick={() => update({ statuses: [] })}
+                />
+                <Pill
+                  label="In Use"
+                  selected={draft.statuses.includes("In Use")}
+                  onClick={() => toggleArrayValue("statuses", "In Use")}
+                  count={statusCounts["In Use"]}
+                />
+                <Pill
+                  label="Unused"
+                  selected={draft.statuses.includes("Unused")}
+                  onClick={() => toggleArrayValue("statuses", "Unused")}
+                  count={statusCounts["Unused"]}
                 />
               </div>
-              <span
-                style={{
-                  color: "var(--text-subtle)",
-                  fontSize: "var(--text-label)",
-                  marginTop: 20,
-                }}
-              >
-                --
-              </span>
-              <div className="flex-1">
-                <label
-                  style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-muted)",
-                    marginBottom: 4,
-                    display: "block",
-                  }}
-                >
-                  Max
-                </label>
-                <input
-                  type="number"
-                  placeholder={String(inUseCountBounds.max)}
-                  value={draft.inUseCountMax}
-                  onChange={(e) => update({ inUseCountMax: e.target.value })}
-                  className="outline-none w-full"
-                  style={{
-                    height: "var(--input-height)",
-                    padding: "0 12px",
-                    boxSizing: "border-box",
-                    backgroundColor: "var(--input-background)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "var(--radius-sm)",
-                    color: "var(--foreground)",
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    lineHeight: "normal",
-                  }}
-                />
-              </div>
-            </div>
-          </FilterSection>
+            </Section>
 
-          <Divider />
+            <Divider />
 
-          {/* Section: Text Filters */}
-          <FilterSection title="Text Search" subtitle="Filter by name or symbol text">
-            <div className="flex flex-col gap-3">
-              <div>
-                <label
-                  style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-muted)",
-                    marginBottom: 4,
-                    display: "block",
-                  }}
-                >
-                  Unit Name
-                </label>
-                <div className="relative">
-                  <Search
-                    size={14}
-                    className="absolute left-[10px] top-1/2 -translate-y-1/2"
-                    style={{ color: "var(--text-subtle)" }}
-                  />
+            {/* Section: Category — pill chips with show more */}
+            <Section title="Category" subtitle="Filter by measurement category.">
+              <PillSection
+                options={UOM_CATEGORIES.map((cat) => ({
+                  value: cat,
+                  label: cat,
+                }))}
+                selected={draft.categories}
+                onToggle={(val) => toggleArrayValue("categories", val)}
+                getCount={(val) => categoryCounts[val] ?? 0}
+              />
+            </Section>
+
+            <Divider />
+
+            {/* Section: Usage Count — min/max range */}
+            <Section title="Usage count range" subtitle="Filter by number of references using this unit.">
+              <RangeInputs
+                min={draft.inUseCountMin}
+                max={draft.inUseCountMax}
+                onMinChange={(v) => update({ inUseCountMin: v })}
+                onMaxChange={(v) => update({ inUseCountMax: v })}
+                minPlaceholder={String(inUseCountBounds.min)}
+                maxPlaceholder={String(inUseCountBounds.max)}
+                prefix=""
+              />
+            </Section>
+
+            <Divider />
+
+            {/* Section: Text Search */}
+            <Section title="Text search" subtitle="Filter by unit name or symbol.">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] text-muted-foreground mb-1 block" style={{ fontWeight: 500 }}>
+                    Unit name
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. Kilogram, Meter..."
                     value={draft.name}
                     onChange={(e) => update({ name: e.target.value })}
-                    className="outline-none w-full"
-                    style={{
-                      height: "var(--input-height)",
-                      padding: "0 12px 0 30px",
-                      boxSizing: "border-box",
-                      backgroundColor: "var(--input-background)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "var(--radius-sm)",
-                      color: "var(--foreground)",
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                      lineHeight: "normal",
-                    }}
+                    className="w-full h-9 px-3 text-[13px] border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-muted-foreground/40"
                   />
                 </div>
-              </div>
-              <div>
-                <label
-                  style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-muted)",
-                    marginBottom: 4,
-                    display: "block",
-                  }}
-                >
-                  Symbol
-                </label>
-                <div className="relative">
-                  <Search
-                    size={14}
-                    className="absolute left-[10px] top-1/2 -translate-y-1/2"
-                    style={{ color: "var(--text-subtle)" }}
-                  />
+                <div>
+                  <label className="text-[11px] text-muted-foreground mb-1 block" style={{ fontWeight: 500 }}>
+                    Symbol
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. kg, m, L..."
                     value={draft.symbol}
                     onChange={(e) => update({ symbol: e.target.value })}
-                    className="outline-none w-full"
-                    style={{
-                      height: "var(--input-height)",
-                      padding: "0 12px 0 30px",
-                      boxSizing: "border-box",
-                      backgroundColor: "var(--input-background)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "var(--radius-sm)",
-                      color: "var(--foreground)",
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                      lineHeight: "normal",
-                    }}
+                    className="w-full h-9 px-3 text-[13px] border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-muted-foreground/40"
                   />
                 </div>
               </div>
-            </div>
-          </FilterSection>
-        </div>
-
-        {/* ── Footer ── */}
-        <div
-          className="flex items-center justify-between shrink-0"
-          style={{
-            padding: "14px 20px",
-            borderTop: "1px solid var(--border)",
-            backgroundColor: "var(--card)",
-          }}
-        >
-          <button
-            type="button"
-            onClick={clearAll}
-            className="cursor-pointer"
-            style={{
-              padding: "8px 16px",
-              borderRadius: "var(--radius-sm)",
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--card)",
-              color: "var(--text-muted)",
-              fontSize: "var(--text-label)",
-              fontWeight: "var(--font-weight-medium)" as any,
-              lineHeight: "normal",
-              transition: "border-color 150ms, color 150ms, background-color 150ms",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "var(--destructive-border)";
-              e.currentTarget.style.color = "var(--destructive)";
-              e.currentTarget.style.backgroundColor = "var(--destructive-surface)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "var(--border)";
-              e.currentTarget.style.color = "var(--text-muted)";
-              e.currentTarget.style.backgroundColor = "var(--card)";
-            }}
-          >
-            Clear all
-          </button>
-          <button
-            type="button"
-            onClick={applyAndClose}
-            className="cursor-pointer"
-            style={{
-              padding: "8px 20px",
-              borderRadius: "var(--radius-sm)",
-              border: "none",
-              backgroundColor: "var(--primary)",
-              color: "var(--primary-foreground)",
-              fontSize: "var(--text-label)",
-              fontWeight: "var(--font-weight-medium)" as any,
-              lineHeight: "normal",
-              transition: "opacity 150ms",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = "0.9";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = "1";
-            }}
-          >
-            Show {draftFilteredCount} unit{draftFilteredCount !== 1 ? "s" : ""}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CategorySelectMenu({
-  items,
-  selected,
-  onToggle,
-  onClear,
-}: {
-  items: { value: string; label: string; count: number }[];
-  selected: string[];
-  onToggle: (value: string) => void;
-  onClear: () => void;
-}) {
-  const [open, setOpen] = useState(false);
-
-  const selectedLabel =
-    selected.length === 0
-      ? "All categories"
-      : selected.length === 1
-        ? selected[0]
-        : `${selected.length} categories selected`;
-
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        className="w-full cursor-pointer"
-        style={{
-          height: "var(--input-height)",
-          padding: "0 12px",
-          borderRadius: "var(--radius-sm)",
-          border: "1px solid var(--border)",
-          backgroundColor: "var(--input-background)",
-          color: "var(--foreground)",
-          fontSize: "var(--text-label)",
-          fontWeight: "var(--font-weight-normal)" as any,
-        }}
-      >
-        <span className="flex items-center justify-between gap-3">
-          <span style={{ color: selected.length === 0 ? "var(--text-muted)" : "var(--foreground)" }}>
-            {selectedLabel}
-          </span>
-          <ChevronDown
-            size={16}
-            style={{
-              color: "var(--text-subtle)",
-              transition: "transform 150ms",
-              transform: open ? "rotate(180deg)" : "rotate(0deg)",
-            }}
-          />
-        </span>
-      </button>
-
-      {open && (
-        <div
-          style={{
-            position: "absolute",
-            top: "calc(100% + 8px)",
-            left: 0,
-            right: 0,
-            zIndex: 10,
-            borderRadius: "var(--radius-sm)",
-            border: "1px solid var(--border)",
-            backgroundColor: "var(--card)",
-            boxShadow: "var(--elevation-lg)",
-            overflow: "hidden",
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => {
-              onClear();
-              setOpen(false);
-            }}
-            className="w-full cursor-pointer text-left"
-            style={{
-              border: "none",
-              borderBottom: "1px solid var(--border-subtle)",
-              backgroundColor: "transparent",
-              padding: "10px 12px",
-              color: "var(--primary)",
-              fontSize: "var(--text-label)",
-              fontWeight: "var(--font-weight-medium)" as any,
-            }}
-          >
-            Clear category filter
-          </button>
-
-          <div style={{ maxHeight: 240, overflowY: "auto" }}>
-            {items.map((item) => {
-              const isSelected = selected.includes(item.value);
-
-              return (
-                <button
-                  key={item.value}
-                  type="button"
-                  onClick={() => onToggle(item.value)}
-                  className="w-full cursor-pointer text-left"
-                  style={{
-                    border: "none",
-                    borderBottom: "1px solid var(--border-subtle)",
-                    backgroundColor: isSelected ? "var(--primary-surface)" : "transparent",
-                    padding: "10px 12px",
-                    color: isSelected ? "var(--primary-text-strong)" : "var(--foreground)",
-                    fontSize: "var(--text-label)",
-                    fontWeight: isSelected
-                      ? ("var(--font-weight-medium)" as any)
-                      : ("var(--font-weight-normal)" as any),
-                  }}
-                >
-                  <span className="flex items-center justify-between gap-3">
-                    <span>{item.label}</span>
-                    <span style={{ color: isSelected ? "var(--primary)" : "var(--text-muted)" }}>
-                      {item.count}
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
+            </Section>
           </div>
-        </div>
-      )}
-    </div>
+
+          {/* ─── Sticky footer ─── */}
+          <div className="flex items-center justify-between px-6 h-14 border-t border-border/60 shrink-0">
+            <button
+              type="button"
+              onClick={clearAll}
+              className="text-[13px] text-muted-foreground hover:text-foreground underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-foreground/50 transition-colors cursor-pointer"
+              style={{ fontWeight: 500 }}
+            >
+              Clear all
+            </button>
+            <button
+              type="button"
+              onClick={applyAndClose}
+              className="inline-flex items-center justify-center h-9 px-5 rounded-lg text-white text-[13px] cursor-pointer transition-colors hover:opacity-90"
+              style={{ backgroundColor: "#0A77FF", fontWeight: 600 }}
+            >
+              Show {draftFilteredCount.toLocaleString()} unit{draftFilteredCount !== 1 ? "s" : ""}
+            </button>
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    </Dialog>
   );
 }
 
 /* ═══════════════════════════════════════════════
-   Sub-components
+   Sub-components — matching vendor module exactly
    ═══════════════════════════════════════════════ */
 
-/** Section wrapper with title + subtitle */
-function FilterSection({
+/** Section divider */
+function Divider() {
+  return <div className="border-t border-border/50 mx-6" />;
+}
+
+/** Section wrapper */
+function Section({
   title,
   subtitle,
   children,
@@ -748,136 +391,73 @@ function FilterSection({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ padding: "16px 20px" }}>
-      <div style={{ marginBottom: 12 }}>
-        <span
-          style={{
-            fontSize: "var(--text-base)",
-            fontWeight: "var(--font-weight-medium)" as any,
-            color: "var(--foreground)",
-            lineHeight: 1.3,
-            display: "block",
-          }}
-        >
-          {title}
-        </span>
-        {subtitle && (
-          <span
-            style={{
-              fontSize: "var(--text-label)",
-              fontWeight: "var(--font-weight-normal)" as any,
-              color: "var(--text-muted)",
-              lineHeight: 1.4,
-              marginTop: 2,
-              display: "block",
-            }}
-          >
-            {subtitle}
-          </span>
-        )}
-      </div>
+    <div className="px-6 py-4">
+      <h4 className="text-[14px] mb-0.5" style={{ fontWeight: 600 }}>
+        {title}
+      </h4>
+      {subtitle && (
+        <p className="text-[12px] text-muted-foreground mb-3">{subtitle}</p>
+      )}
+      {!subtitle && <div className="mb-3" />}
       {children}
     </div>
   );
 }
 
-/** Horizontal divider */
-function Divider() {
-  return (
-    <div
-      style={{
-        height: 1,
-        backgroundColor: "var(--border-subtle)",
-        margin: "0 20px",
-      }}
-    />
-  );
-}
-
-/** Segmented control -- multi-select with "Any" implicit */
+/** Segmented control — matches vendor exactly */
 function SegmentedControl({
   options,
   selected,
-  counts,
-  onToggle,
+  onChange,
 }: {
-  options: string[];
+  options: { value: string; label: string }[];
   selected: string[];
-  counts: Record<string, number>;
-  onToggle: (value: string) => void;
+  onChange: (val: string[]) => void;
 }) {
-  const isAny = selected.length === 0;
-
+  const allSelected = selected.length === 0;
   return (
-    <div
-      className="inline-flex"
-      style={{
-        borderRadius: "var(--radius-sm)",
-        border: "1px solid var(--border)",
-        overflow: "hidden",
-        backgroundColor: "var(--surface-raised)",
-      }}
-    >
-      {/* Any button */}
+    <div className="flex rounded-lg border border-border overflow-hidden">
       <button
         type="button"
-        onClick={() => {
-          // If any is currently active (selected empty), do nothing
-          // If filters are active, clear to return to any
-          if (!isAny) onToggle("__clear__");
-        }}
-        className="cursor-pointer"
+        onClick={() => onChange([])}
+        className={`flex-1 py-2.5 text-[13px] cursor-pointer transition-colors border-r border-border ${
+          allSelected
+            ? "text-primary"
+            : "bg-white text-foreground hover:bg-muted/30"
+        }`}
         style={{
-          padding: "6px 14px",
-          border: "none",
-          fontSize: "var(--text-label)",
-          fontWeight: "var(--font-weight-normal)" as any,
-          lineHeight: "normal",
-          backgroundColor: isAny ? "var(--card)" : "transparent",
-          color: isAny ? "var(--foreground)" : "var(--text-muted)",
-          boxShadow: isAny ? "var(--elevation-pill)" : "none",
-          transition: "all 150ms",
+          fontWeight: 500,
+          backgroundColor: allSelected ? "#EDF4FF" : undefined,
         }}
       >
         Any
       </button>
-      {options.map((opt) => {
-        const isSelected = selected.includes(opt);
+      {options.map((opt, i) => {
+        const isSelected = selected.includes(opt.value);
         return (
           <button
-            key={opt}
+            key={opt.value}
             type="button"
-            onClick={() => onToggle(opt)}
-            className="cursor-pointer"
+            onClick={() => {
+              if (isSelected) {
+                onChange(selected.filter((v) => v !== opt.value));
+              } else {
+                onChange([...selected, opt.value]);
+              }
+            }}
+            className={`flex-1 py-2.5 text-[13px] cursor-pointer transition-colors ${
+              i < options.length - 1 ? "border-r border-border" : ""
+            } ${
+              isSelected
+                ? "text-primary"
+                : "bg-white text-foreground hover:bg-muted/30"
+            }`}
             style={{
-              padding: "6px 14px",
-              border: "none",
-              borderLeft: "1px solid var(--border)",
-              fontSize: "var(--text-label)",
-              fontWeight: "var(--font-weight-normal)" as any,
-              lineHeight: "normal",
-              backgroundColor: isSelected
-                ? "var(--primary-surface)"
-                : "transparent",
-              color: isSelected
-                ? "var(--primary)"
-                : "var(--text-muted)",
-              transition: "all 150ms",
+              fontWeight: 500,
+              backgroundColor: isSelected ? "#EDF4FF" : undefined,
             }}
           >
-            <span className="flex items-center gap-1.5">
-              {opt}
-              <span
-                style={{
-                  fontSize: 11,
-                  color: isSelected
-                    ? "var(--primary-text-strong)"
-                    : "var(--text-subtle)",
-                }}
-              >
-                {counts[opt] ?? 0}
-              </span>
-            </span>
+            {opt.label}
           </button>
         );
       })}
@@ -885,78 +465,38 @@ function SegmentedControl({
   );
 }
 
-/** Toggle pill chip with optional dot and count */
+/** Pill chip — matches vendor exactly */
 function Pill({
   label,
-  count,
   selected,
-  dotColor,
   onClick,
+  count,
 }: {
   label: string;
-  count?: number;
   selected: boolean;
-  dotColor?: string;
   onClick: () => void;
+  count?: number;
 }) {
-  const [hovered, setHovered] = useState(false);
-
   return (
     <button
       type="button"
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="cursor-pointer inline-flex items-center gap-[6px]"
+      className={`inline-flex items-center gap-1.5 h-[30px] px-3 rounded-full border text-[13px] cursor-pointer transition-all select-none shrink-0 ${
+        selected
+          ? "border-primary/30 text-primary"
+          : "bg-white text-foreground border-border hover:border-muted-foreground/40 hover:bg-muted/30"
+      }`}
       style={{
-        height: 30,
-        padding: count !== undefined ? "6px 6px 6px 12px" : "6px 12px",
-        borderRadius: 100,
-        border: selected
-          ? "1px solid var(--primary)"
-          : "1px solid var(--border)",
-        backgroundColor: selected
-          ? "var(--primary-surface-strong)"
-          : hovered
-            ? "var(--surface-raised)"
-            : "var(--card)",
-        color: selected ? "var(--primary)" : "var(--text-muted)",
-        fontSize: "var(--text-label)",
-        fontWeight: "var(--font-weight-normal)" as any,
-        lineHeight: "normal",
-        boxShadow: "var(--elevation-pill)",
-        transition: "all 150ms",
+        fontWeight: selected ? 500 : 400,
+        backgroundColor: selected ? "#EDF4FF" : undefined,
       }}
     >
-      {dotColor && (
-        <span
-          className="inline-block shrink-0 rounded-full"
-          style={{
-            width: 7,
-            height: 7,
-            backgroundColor: selected ? "var(--primary)" : dotColor,
-          }}
-        />
-      )}
       <span>{label}</span>
       {count !== undefined && (
         <span
-          className="inline-flex items-center justify-center rounded-full"
-          style={{
-            height: 18,
-            minWidth: 18,
-            padding: "0 6px",
-            fontSize: 11,
-            lineHeight: "normal",
-            fontWeight: "var(--font-weight-normal)" as any,
-            backgroundColor: selected
-              ? "var(--primary-surface-strong)"
-              : "var(--surface-raised)",
-            color: selected
-              ? "var(--primary-text-strong)"
-              : "var(--text-muted)",
-            border: selected ? "none" : "1px solid var(--border-subtle)",
-          }}
+          className={`text-[11px] tabular-nums ${
+            selected ? "text-primary/60" : "text-muted-foreground/50"
+          }`}
         >
           {count}
         </span>
@@ -965,61 +505,115 @@ function Pill({
   );
 }
 
-/** Pill section with "Show all N / Show less" toggle */
+/** Pill section with "Show more" — matches vendor exactly */
 function PillSection({
-  items,
+  options,
   selected,
   onToggle,
+  getCount,
   threshold = 8,
 }: {
-  items: { value: string; label: string; count: number }[];
+  options: { value: string; label: string }[];
   selected: string[];
   onToggle: (value: string) => void;
+  getCount: (value: string) => number;
   threshold?: number;
 }) {
-  const [expanded, setExpanded] = useState(false);
-  const visibleItems = expanded ? items : items.slice(0, threshold);
-  const hasMore = items.length > threshold;
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? options : options.slice(0, threshold);
+  const hasMore = options.length > threshold;
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2">
-        {visibleItems.map((item) => (
+      <div className="flex flex-wrap gap-1.5">
+        {visible.map((opt) => (
           <Pill
-            key={item.value}
-            label={item.label}
-            count={item.count}
-            selected={selected.includes(item.value)}
-            onClick={() => onToggle(item.value)}
+            key={opt.value}
+            label={opt.label}
+            selected={selected.includes(opt.value)}
+            onClick={() => onToggle(opt.value)}
+            count={getCount(opt.value)}
           />
         ))}
       </div>
       {hasMore && (
         <button
           type="button"
-          onClick={() => setExpanded(!expanded)}
-          className="cursor-pointer flex items-center gap-1 mt-2"
-          style={{
-            border: "none",
-            backgroundColor: "transparent",
-            color: "var(--primary)",
-            fontSize: "var(--text-label)",
-            fontWeight: "var(--font-weight-normal)" as any,
-            padding: "4px 0",
-            lineHeight: "normal",
-          }}
+          onClick={() => setShowAll(!showAll)}
+          className="inline-flex items-center gap-1 mt-2.5 text-[13px] cursor-pointer transition-colors hover:text-primary"
+          style={{ fontWeight: 500, color: "#0A77FF" }}
         >
-          {expanded ? (
-            <>
-              Show less <ChevronUp size={14} />
-            </>
-          ) : (
-            <>
-              Show all {items.length} <ChevronDown size={14} />
-            </>
-          )}
+          {showAll ? "Show less" : `Show all ${options.length}`}
+          {showAll ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
       )}
+    </div>
+  );
+}
+
+/** Min / Max range inputs — matches vendor exactly */
+function RangeInputs({
+  min,
+  max,
+  onMinChange,
+  onMaxChange,
+  minPlaceholder,
+  maxPlaceholder,
+  prefix = "$",
+}: {
+  min: string;
+  max: string;
+  onMinChange: (v: string) => void;
+  onMaxChange: (v: string) => void;
+  minPlaceholder?: string;
+  maxPlaceholder?: string;
+  prefix?: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex-1">
+        <label className="text-[11px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 500 }}>
+          Minimum
+        </label>
+        <div className="relative">
+          {prefix && (
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-muted-foreground">
+              {prefix}
+            </span>
+          )}
+          <input
+            type="number"
+            placeholder={minPlaceholder ?? "0"}
+            value={min}
+            onChange={(e) => onMinChange(e.target.value)}
+            className={`w-full h-9 pr-3 text-[13px] border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#D6E8FF] focus:border-[#ADD1FF] tabular-nums ${
+              prefix ? "pl-7" : "pl-3"
+            }`}
+          />
+        </div>
+      </div>
+      <span className="text-muted-foreground/30 mt-5">–</span>
+      <div className="flex-1">
+        <label className="text-[11px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 500 }}>
+          Maximum
+        </label>
+        <div className="relative">
+          {prefix && (
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-muted-foreground">
+              {prefix}
+            </span>
+          )}
+          <input
+            type="number"
+            placeholder={maxPlaceholder ?? "100"}
+            value={max}
+            onChange={(e) => onMaxChange(e.target.value)}
+            className={`w-full h-9 pr-3 text-[13px] border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#D6E8FF] focus:border-[#ADD1FF] tabular-nums ${
+              prefix ? "pl-7" : "pl-3"
+            }`}
+          />
+        </div>
+      </div>
     </div>
   );
 }
