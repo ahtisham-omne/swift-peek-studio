@@ -652,8 +652,6 @@ export function ColumnsSidePanel({
     </motion.div>
   );
 }
-
-      overKeyRef.current = null;
       setDrag(null);
       setOverKey(null);
     };
