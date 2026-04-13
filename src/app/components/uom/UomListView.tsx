@@ -5,7 +5,7 @@
  * All colors use CSS custom properties from theme.css.
  */
 
-import React, { useState, useMemo, useCallback, useRef } from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -79,6 +79,19 @@ import {
   countActiveUomFilters,
   applyAdvancedFilters,
 } from "./UomFiltersModal";
+import {
+  UomKpiInsightsPanel,
+  ALL_UOM_KPI_DEFINITIONS,
+  DEFAULT_UOM_ACTIVE_KPIS,
+  computeUomKpiValue,
+} from "./UomKpiInsightsPanel";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Check } from "lucide-react";
 
 const ARCHIVE_BLOCKING_REFERENCES = [
   {
@@ -161,7 +174,24 @@ export function UomListView({
   const [density, setDensity] = useState<DensityMode>("condensed");
   const [topBarSearch, setTopBarSearch] = useState("");
 
-  /* ── Edit modal state ── */
+  /* ── KPI Insights state ── */
+  const [activeKpis, setActiveKpis] = useState<string[]>([...DEFAULT_UOM_ACTIVE_KPIS]);
+  const [insightsPanelOpen, setInsightsPanelOpen] = useState(false);
+  const [insightsDateRange, setInsightsDateRange] = useState("last_30");
+  const [showInsights, setShowInsights] = useState(true);
+
+  const handleToggleKpi = useCallback((key: string) => {
+    setActiveKpis((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  }, []);
+
+  const activeKpiDefs = useMemo(() => {
+    return activeKpis
+      .map((key) => ALL_UOM_KPI_DEFINITIONS.find((d) => d.key === key))
+      .filter(Boolean) as typeof ALL_UOM_KPI_DEFINITIONS;
+  }, [activeKpis]);
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editUnit, setEditUnit] = useState<UomUnit | null>(null);
 
@@ -599,44 +629,90 @@ export function UomListView({
         <ModuleHeader
           onNewUnit={() => setCreateModalOpen(true)}
         />
+        {/* KPI Insights -- collapsible section */}
+        {showInsights && activeKpiDefs.length > 0 && (
         <div className="mb-4 shrink-0">
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground" style={{ fontWeight: 500 }}>
                 Performance Insights
               </span>
-              <button
-                type="button"
-                onClick={() => showToast("info", "Insight customization is coming soon")}
-                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors cursor-pointer"
-              >
-                <Calendar className="w-3 h-3" />
-                <span style={{ fontWeight: 500 }}>Last 30 days</span>
-                <ChevronDown className="w-2.5 h-2.5" />
-              </button>
+              {/* Date Range Filter */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors cursor-pointer">
+                    <Calendar className="w-3 h-3" />
+                    <span style={{ fontWeight: 500 }}>
+                      {insightsDateRange === "last_7" && "Last 7 days"}
+                      {insightsDateRange === "last_30" && "Last 30 days"}
+                      {insightsDateRange === "last_90" && "Last 90 days"}
+                      {insightsDateRange === "last_365" && "Last 12 months"}
+                      {insightsDateRange === "all_time" && "All time"}
+                    </span>
+                    <ChevronDown className="w-2.5 h-2.5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-[170px]">
+                  {[
+                    { key: "last_7", label: "Last 7 days" },
+                    { key: "last_30", label: "Last 30 days" },
+                    { key: "last_90", label: "Last 90 days" },
+                    { key: "last_365", label: "Last 12 months" },
+                    { key: "all_time", label: "All time" },
+                  ].map((opt) => (
+                    <DropdownMenuItem
+                      key={opt.key}
+                      className="flex items-center justify-between cursor-pointer"
+                      onClick={() => setInsightsDateRange(opt.key)}
+                    >
+                      <span className="text-sm">{opt.label}</span>
+                      {insightsDateRange === opt.key && (
+                        <Check className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <button
               type="button"
-              onClick={() => showToast("info", "Insight customization is coming soon")}
-              className="inline-flex items-center gap-1 text-[11px] text-primary hover:bg-muted/50 px-2 py-0.5 rounded-md transition-colors cursor-pointer"
-              style={{ fontWeight: 500 }}
+              onClick={() => setInsightsPanelOpen(true)}
+              className="inline-flex items-center gap-1 text-[11px] hover:bg-muted/50 px-2 py-0.5 rounded-md transition-colors cursor-pointer"
+              style={{ fontWeight: 500, color: "#0A77FF" }}
             >
               <Plus className="w-3 h-3" />
               Add Insights
             </button>
           </div>
 
+          {/* KPI Cards — responsive grid */}
           <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))" }}>
-            {insightCards.map((card) => (
-              <UomInsightCard
-                key={card.label}
-                label={card.label}
-                value={card.value}
-                icon={card.icon}
-              />
-            ))}
+            {activeKpiDefs.map((kpi) => {
+              const value = computeUomKpiValue(kpi.key, allUnits);
+              return (
+                <UomInsightCard
+                  key={kpi.key}
+                  label={kpi.label}
+                  value={value}
+                  iconName={kpi.iconName}
+                  iconBg={kpi.iconBg}
+                  iconColor={kpi.iconColor}
+                  onRemove={() => handleToggleKpi(kpi.key)}
+                />
+              );
+            })}
           </div>
         </div>
+        )}
+
+        {/* KPI Insights Panel (drawer) */}
+        <UomKpiInsightsPanel
+          open={insightsPanelOpen}
+          onOpenChange={setInsightsPanelOpen}
+          activeKpis={activeKpis}
+          onToggleKpi={handleToggleKpi}
+          units={allUnits}
+        />
 
         <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col">
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
@@ -707,7 +783,10 @@ export function UomListView({
 
             <button
               type="button"
-              onClick={() => showToast("info", "Insight customization is coming soon")}
+              onClick={() => {
+                if (!showInsights) setShowInsights(true);
+                setInsightsPanelOpen(true);
+              }}
               className="inline-flex items-center justify-center h-9 gap-2 px-3 rounded-lg border border-border bg-white text-foreground shadow-sm hover:bg-muted/40 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
             >
               <BarChart3 className="w-[18px] h-[18px] text-muted-foreground/80" />
@@ -718,7 +797,7 @@ export function UomListView({
                   className="inline-flex items-center justify-center h-5 px-1.5 rounded-full text-[11px] bg-primary-surface text-primary"
                 style={{ fontWeight: 600 }}
               >
-                {insightCards.length}
+                {activeKpis.length}
               </span>
             </button>
 
@@ -1565,23 +1644,30 @@ function ModuleHeader({
 function UomInsightCard({
   label,
   value,
-  icon,
+  iconName,
+  iconBg,
+  iconColor,
+  onRemove,
 }: {
   label: string;
-  value: number;
-  icon: React.ReactNode;
+  value: string;
+  iconName: string;
+  iconBg: string;
+  iconColor: string;
+  onRemove: () => void;
 }) {
   return (
-    <div className="border border-border rounded-lg bg-card min-w-0 overflow-hidden">
+    <div className="border border-border rounded-lg bg-card min-w-0 overflow-hidden group relative">
       <div className="px-3 py-2">
         <div className="flex items-center justify-between gap-1 mb-1">
           <p className="text-[10.5px] text-muted-foreground whitespace-nowrap" style={{ fontWeight: 500 }}>
             {label}
           </p>
-          <div className="shrink-0 text-muted-foreground/70">
-            <div className="flex items-center justify-center w-3.5 h-3.5">
-              {icon}
-            </div>
+          <div
+            className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center"
+            style={{ backgroundColor: iconBg, color: iconColor }}
+          >
+            <UomKpiIconSmall name={iconName} />
           </div>
         </div>
         <div className="flex items-baseline gap-1.5">
@@ -1590,6 +1676,33 @@ function UomInsightCard({
           </p>
         </div>
       </div>
+      {/* Remove button on hover */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onRemove(); }}
+        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-muted/80 hover:bg-destructive/10 hover:text-destructive flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+        title="Remove widget"
+      >
+        <X className="w-3 h-3" />
+      </button>
     </div>
   );
+}
+
+function UomKpiIconSmall({ name }: { name: string }) {
+  const s = { width: 12, height: 12 };
+  switch (name) {
+    case "Package": return <Package style={s} />;
+    case "Ruler": return <Ruler style={s} />;
+    case "CheckCircle2": return <CheckCircle2 style={s} />;
+    case "Layers": return <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>;
+    case "ArrowLeftRight": return <ArrowLeftRight style={s} />;
+    case "Tags": return <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19"/><path d="M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8 18.414a2 2 0 0 0 2.828 0L15 14.243a2 2 0 0 0 0-2.828Z"/><circle cx="6.5" cy="9.5" r=".5" fill="currentColor"/></svg>;
+    case "BarChart3": return <BarChart3 style={s} />;
+    case "Archive": return <Archive style={s} />;
+    case "Gauge": return <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>;
+    case "Scale": return <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>;
+    case "Boxes": return <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"/><path d="m7 16.5-4.74-2.85"/><path d="m7 16.5 5-3"/><path d="M7 16.5v5.17"/><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z"/><path d="m17 16.5-5-3"/><path d="m17 16.5 4.74-2.85"/><path d="M17 16.5v5.17"/><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"/><path d="M12 8 7.26 5.15"/><path d="m12 8 4.74-2.85"/><path d="M12 13.5V8"/></svg>;
+    case "Zap": return <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>;
+    default: return <BarChart3 style={s} />;
+  }
 }
