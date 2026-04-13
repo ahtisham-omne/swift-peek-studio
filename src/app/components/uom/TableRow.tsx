@@ -291,7 +291,8 @@ export function TableHeaderRow({
 }: TableHeaderRowProps) {
   const colMap = new Map(columns.map((c) => [c.key, c]));
 
-  const HEADER_BG = "#f8fafc";
+  /* Density classes matching Partner Management */
+  const headerDensityClass = density === "condensed" ? "[&>th]:h-8" : "";
 
   /* ── Resize handler ── */
   const handleResizeStart = useCallback(
@@ -332,11 +333,7 @@ export function TableHeaderRow({
   return (
     <thead>
       <tr
-        className={className}
-        style={{
-          height: 40,
-          backgroundColor: HEADER_BG,
-        }}
+        className={`bg-muted/30 hover:bg-muted/30 ${headerDensityClass} ${className}`}
       >
         {/* ── Checkbox cell (select-all) ── */}
         {onSelectAll && (
@@ -346,14 +343,9 @@ export function TableHeaderRow({
               minWidth: 40,
               maxWidth: 40,
               padding: 0,
-              backgroundColor: HEADER_BG,
-              borderColor: "var(--border)",
-              borderBottomWidth: 1,
-              borderBottomStyle: "solid",
-              borderRightWidth: 1,
-              borderRightStyle: "solid",
               textAlign: "center",
             }}
+            className="border-b border-r border-border bg-muted/30"
           >
             <button
               type="button"
