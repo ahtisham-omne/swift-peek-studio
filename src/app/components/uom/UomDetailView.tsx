@@ -350,21 +350,13 @@ export function UomDetailView() {
 
   return (
     <>
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.25 }}
-      style={{
-        backgroundColor: "var(--secondary)",
-        minHeight: "100%",
-      }}
-    >
+    <div className="flex-1 flex flex-col overflow-y-auto bg-[#F8FAFC]">
       {/* ═══════════════════════════════════════
-         HEADER CARD — rounded card matching reference
+         HEADER CARD — rounded card matching vendor detail
          ═══════════════════════════════════════ */}
       <div
-        className={containerCls}
-        style={{ ...containerMax, paddingTop: 16, paddingBottom: 0 }}
+        className="mx-auto px-4 lg:px-6 xl:px-8 w-full"
+        style={{ maxWidth: 1440, paddingTop: 12, paddingBottom: 0 }}
       >
         <motion.div
           initial={{ opacity: 0, y: -6 }}
