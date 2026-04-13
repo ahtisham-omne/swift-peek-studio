@@ -1708,110 +1708,59 @@ export function UomDetailView() {
               {activeTab === "activity" && (
                 <div>
                   <div className="flex items-center gap-2" style={{ marginBottom: 12 }}>
-                    <span style={{ fontSize: "var(--text-label)", fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)", lineHeight: "1" }}>
+                    <span className="text-sm text-[#334155]" style={{ fontWeight: 500 }}>
                       Recent Activity
                     </span>
-                    <CountBadge count={RECENT_ACTIVITY.length} />
+                    <span className="inline-flex items-center justify-center text-[11px] px-1.5 py-0.5 rounded bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]" style={{ fontWeight: 500 }}>
+                      {RECENT_ACTIVITY.length}
+                    </span>
                   </div>
 
-                  <div
-                    style={{
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--border)",
-                      borderRadius: "var(--radius-md)",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {RECENT_ACTIVITY.map((item, idx) => (
-                      <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.04 * idx, duration: 0.22 }}
-                        className="flex items-start gap-3 transition-colors"
-                        style={{
-                          padding: "12px 16px",
-                          borderColor: "var(--border-subtle)",
-                          borderBottomWidth: idx < RECENT_ACTIVITY.length - 1 ? 1 : 0,
-                          borderBottomStyle: "solid" as const,
-                          backgroundColor: "rgba(0,0,0,0)",
-                          transition: "background-color 0.12s ease",
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--surface-hover)"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)"; }}
-                      >
-                        {/* User avatar */}
-                        <span
-                          className="inline-flex items-center justify-center shrink-0"
-                          style={{
-                            width: 24,
-                            height: 24,
-                            borderRadius: "50%",
-                            backgroundColor: "var(--primary-surface)",
-                            color: "var(--primary)",
-                            fontSize: 9,
-                            fontWeight: "var(--font-weight-medium)" as any,
-                            lineHeight: "1",
-                            marginTop: 1,
-                          }}
-                        >
-                          {item.userInitials}
-                        </span>
-
-                        {/* Content */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-[6px]">
-                            <span style={{ fontSize: "var(--text-label)", lineHeight: "1", fontWeight: "var(--font-weight-medium)" as any, color: "var(--text-strong)" }}>
-                              {item.action}
-                            </span>
-                            <span
-                              className="shrink-0"
-                              style={{
-                                width: 3,
-                                height: 3,
-                                borderRadius: "50%",
-                                backgroundColor: "var(--text-subtle)",
-                                display: "inline-block",
-                              }}
-                            />
-                            <span style={{ fontSize: 12, lineHeight: "1", color: "var(--text-muted)", fontWeight: "var(--font-weight-normal)" as any }}>
-                              {item.user}
-                            </span>
-                          </div>
-                          {item.detail && (
-                            <span className="block" style={{ fontSize: 12, lineHeight: "1.4", color: "var(--text-muted)", marginTop: 4, fontWeight: "var(--font-weight-normal)" as any }}>
-                              {item.detail}
-                            </span>
-                          )}
-                          {item.field && item.value && (
-                            <div className="flex items-center gap-[6px]" style={{ marginTop: 4 }}>
-                              <span
-                                style={{
-                                  fontSize: 11,
-                                  lineHeight: "1",
-                                  fontWeight: "var(--font-weight-medium)" as any,
-                                  color: "var(--text-subtle)",
-                                  backgroundColor: "var(--surface-raised)",
-                                  padding: "3px 7px",
-                                  borderRadius: 4,
-                                }}
-                              >
-                                {item.field}
-                              </span>
-                              <span style={{ fontSize: 11, lineHeight: "1", color: "var(--text-muted)", fontWeight: "var(--font-weight-normal)" as any }}>
-                                {item.value}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Date */}
-                        <span className="shrink-0" style={{ fontSize: 11, lineHeight: "1", color: "var(--text-subtle)", marginTop: 2, fontWeight: "var(--font-weight-normal)" as any }}>
-                          {item.date}
-                        </span>
-                      </motion.div>
-                    ))}
+                  <div className="overflow-hidden border border-border rounded-lg">
+                    <ShadcnTable>
+                      <ShadcnTableHeader className="sticky top-0 z-20 bg-card">
+                        <ShadcnTableRow className="bg-muted/30 hover:bg-muted/30 [&>th]:h-10">
+                          <TableHead className="whitespace-nowrap w-[200px]">ACTION</TableHead>
+                          <TableHead className="whitespace-nowrap">DETAILS</TableHead>
+                          <TableHead className="whitespace-nowrap w-[120px]">DATE</TableHead>
+                        </ShadcnTableRow>
+                      </ShadcnTableHeader>
+                      <TableBody>
+                        {RECENT_ACTIVITY.map((item, idx) => (
+                          <ShadcnTableRow
+                            key={idx}
+                            className="group transition-colors hover:bg-[#F0F7FF]"
+                          >
+                            <TableCell>
+                              <div className="flex items-center gap-2.5">
+                                <span
+                                  className="inline-flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
+                                  style={{ backgroundColor: "#EDF4FF", color: "#0A77FF", fontSize: 9, fontWeight: 500 }}
+                                >
+                                  {item.userInitials}
+                                </span>
+                                <div>
+                                  <span className="text-[12px] text-[#334155] block" style={{ fontWeight: 500 }}>{item.action}</span>
+                                  <span className="text-[11px] text-[#94A3B8]">{item.user}</span>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              {item.detail && (
+                                <span className="text-[12px] text-[#64748B]">{item.detail}</span>
+                              )}
+                              {item.field && item.value && (
+                                <div className="flex items-center gap-1.5 mt-0.5">
+                                  <span className="text-[11px] text-[#64748B] bg-[#F1F5F9] px-1.5 py-0.5 rounded" style={{ fontWeight: 500 }}>{item.field}</span>
+                                  <span className="text-[11px] text-[#94A3B8]">{item.value}</span>
+                                </div>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-[12px] text-[#94A3B8]">{item.date}</TableCell>
+                          </ShadcnTableRow>
+                        ))}
+                      </TableBody>
+                    </ShadcnTable>
                   </div>
                 </div>
               )}
