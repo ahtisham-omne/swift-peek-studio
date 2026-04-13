@@ -543,6 +543,31 @@ export function UomDetailView() {
                 )}
               </span>
 
+              {isInUse && (
+                <>
+                  <MetaDot />
+                  <span
+                    className="inline-flex items-center gap-1.5"
+                    style={{
+                      padding: "4px 10px",
+                      borderRadius: 6,
+                      backgroundColor: "var(--surface-raised)",
+                      border: "1px solid var(--border-subtle)",
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: "var(--text-muted)",
+                      lineHeight: 1,
+                    }}
+                  >
+                    <span>In Active Use</span>
+                    <span style={{ fontSize: 6, color: "var(--text-muted)", opacity: 0.5 }}>●</span>
+                    <span>Editing Locked</span>
+                    <span style={{ fontSize: 6, color: "var(--text-muted)", opacity: 0.5 }}>●</span>
+                    <span>Protects Items & Transactions</span>
+                  </span>
+                </>
+              )}
+
             </div>
           </div>
 
