@@ -728,11 +728,11 @@ export function UomDetailView() {
                       <div className="flex items-start justify-between" style={{ marginBottom: 16, gap: 12 }}>
                         <div>
                           <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
-                            <span style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-semibold)" as any, color: "var(--foreground)", lineHeight: "1.2" }}>
+                            <span style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)", lineHeight: "1.2" }}>
                               {sectionTitle}
                             </span>
                           </div>
-                          <span style={{ fontSize: "var(--text-label)", color: "var(--text-muted)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.3" }}>
+                          <span style={{ fontSize: "var(--text-label)", color: "var(--text-subtle)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.3" }}>
                             {conversionSection === "same"
                               ? `Only one same-category conversion is allowed. This applies to all units in the ${unit?.category || "this"} category.`
                               : `Define how ${displaySymbol} converts to a unit in another category.`
@@ -986,7 +986,7 @@ export function UomDetailView() {
                             {/* Units — symbol (name) */}
                             <TableCell>
                               <div className="flex items-center gap-2 text-sm">
-                                <span style={{ fontWeight: 500, color: "#0F172A" }}>
+                                <span style={{ fontWeight: 500, color: "#334155" }}>
                                   {row.unitSymbol}
                                 </span>
                                 <span className="text-muted-foreground">
