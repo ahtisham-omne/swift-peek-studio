@@ -479,21 +479,23 @@ export function UomDetailView() {
           <div className="border-t border-[#F1F5F9] px-4 lg:px-5 py-2.5">
             {isInUse && (
               <div
+                className="inline-flex items-center gap-2 mb-2"
                 style={{
-                  marginBottom: 8,
-                  padding: "8px 10px",
-                  borderRadius: "var(--radius)",
-                  backgroundColor: "var(--surface-raised)",
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "var(--border-subtle)",
-                  color: "var(--text-muted)",
+                  padding: "6px 12px",
+                  borderRadius: 8,
+                  backgroundColor: "#FEF3C7",
+                  border: "1px solid #FDE68A",
                   fontSize: 12,
-                  fontWeight: "var(--font-weight-normal)" as any,
-                  lineHeight: "1.35",
+                  fontWeight: 500,
+                  color: "#92400E",
+                  lineHeight: 1.4,
                 }}
               >
-                This UOM is in active use, so editing is locked to protect existing items and transactions.
+                <span>In Active Use</span>
+                <span style={{ color: "#D97706", fontSize: 8 }}>●</span>
+                <span>Editing Locked</span>
+                <span style={{ color: "#D97706", fontSize: 8 }}>●</span>
+                <span>Protects Existing Items & Transactions</span>
               </div>
             )}
             <div
