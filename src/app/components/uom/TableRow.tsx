@@ -404,28 +404,19 @@ export function TableHeaderRow({
           return (
             <th
               key={key}
-              className={`relative select-none ${
-                isSortable ? "cursor-pointer" : ""
-              } ${canDrag ? "group/col" : ""}`}
+              className={`relative select-none bg-muted/30 border-b border-border ${
+                key !== PINNED_RIGHT ? "border-r" : ""
+              } ${isSortable ? "cursor-pointer" : ""} ${canDrag ? "group/col" : ""} ${
+                isDragged ? "!bg-transparent opacity-35" : ""
+              }`}
               style={{
                 width: colW,
                 minWidth: key === PINNED_RIGHT ? colW : Math.min(colW, 80),
                 padding: 0,
                 boxSizing: "border-box",
-                borderColor: "var(--border)",
-                borderBottomWidth: 1,
-                borderBottomStyle: "solid",
-                borderRightWidth: key !== PINNED_RIGHT ? 1 : 0,
-                borderRightStyle: "solid",
-                // Always use non-shorthand properties to avoid conflict with
-                // global CSS `* { @apply border-border }` which sets backgroundColor
-                backgroundColor: isDragged ? "transparent" : HEADER_BG,
-                backgroundImage: isDragged
-                  ? "repeating-linear-gradient(45deg, transparent, transparent 4px, var(--border) 4px, var(--border) 5px)"
-                  : "none",
                 ...(isDragged
                   ? {
-                      opacity: 0.35,
+                      backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 4px, var(--border) 4px, var(--border) 5px)",
                       borderRadius: "var(--radius-sm)",
                       outline: "2px dashed var(--primary-border)",
                       outlineOffset: -2,
@@ -433,7 +424,6 @@ export function TableHeaderRow({
                   : {}),
                 transition: "opacity 200ms ease, outline 200ms ease",
                 textAlign: "left",
-                fontWeight: "var(--font-weight-normal)" as any,
               }}
               onPointerDown={
                 canDrag
