@@ -477,27 +477,6 @@ export function UomDetailView() {
 
           {/* ── Row 2: Meta info — Type · Category · Symbol ── */}
           <div className="border-t border-[#F1F5F9] px-4 lg:px-5 py-2.5">
-            {isInUse && (
-              <div
-                className="inline-flex items-center gap-2 mb-2"
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  backgroundColor: "#FEF3C7",
-                  border: "1px solid #FDE68A",
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: "#92400E",
-                  lineHeight: 1.4,
-                }}
-              >
-                <span>In Active Use</span>
-                <span style={{ color: "#D97706", fontSize: 8 }}>●</span>
-                <span>Editing Locked</span>
-                <span style={{ color: "#D97706", fontSize: 8 }}>●</span>
-                <span>Protects Existing Items & Transactions</span>
-              </div>
-            )}
             <div
               className="flex items-center flex-wrap"
               style={{
