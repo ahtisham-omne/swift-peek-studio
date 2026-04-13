@@ -526,8 +526,7 @@ export function UomListView({
                 placeholder="Search by name, symbol, or category..."
                 value={filters.search}
                 onChange={(e) => updateFilter({ search: e.target.value })}
-                className="w-full pl-9 pr-8 h-9 text-sm bg-white border border-border/80 rounded-lg shadow-sm outline-none placeholder:text-muted-foreground/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                style={{ color: "var(--foreground)" }}
+                className="w-full pl-9 pr-8 h-9 text-sm bg-white border border-border/80 rounded-lg shadow-sm outline-none placeholder:text-muted-foreground/50 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 transition-all"
               />
               {filters.search && (
                 <button

@@ -939,18 +939,12 @@ export function TableRow({
         return (
           <td
             key={key}
+            className={`border-b border-border ${key !== PINNED_RIGHT ? "border-r" : ""} ${isDragged ? "opacity-35" : ""}`}
             style={{
               width: colW,
               minWidth: key === PINNED_RIGHT ? colW : Math.min(colW, 80),
               padding: 0,
               boxSizing: "border-box",
-              borderColor: "var(--border-subtle)",
-              borderBottomWidth: 1,
-              borderBottomStyle: "solid",
-              borderRightWidth: key !== PINNED_RIGHT ? 1 : 0,
-              borderRightStyle: "solid",
-              borderRightColor: "var(--border-subtle)",
-              ...(isDragged ? { opacity: 0.35 } : {}),
               transition: "opacity 200ms ease",
             }}
           >
