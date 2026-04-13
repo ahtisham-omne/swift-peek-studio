@@ -1656,28 +1656,95 @@ function ModuleHeader({
   );
 }
 
-function UomInsightCard({
+const DND_UOM_KPI = "DND_UOM_KPI";
+
+function DraggableUomKpiCard({
+  index,
+  kpiKey,
   label,
   value,
   iconName,
   iconBg,
   iconColor,
+  moveCard,
   onRemove,
 }: {
+  index: number;
+  kpiKey: string;
   label: string;
   value: string;
   iconName: string;
   iconBg: string;
   iconColor: string;
-  onRemove: () => void;
+  moveCard: (from: number, to: number) => void;
+  onRemove?: () => void;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [{ isDragging }, drag, preview] = useDrag({
+    type: DND_UOM_KPI,
+    item: () => ({ index }),
+    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+  });
+
+  const [{ isOver }, drop] = useDrop({
+    accept: DND_UOM_KPI,
+    hover(item: { index: number }, monitor) {
+      if (!ref.current) return;
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      if (dragIndex === hoverIndex) return;
+      const hoverRect = ref.current.getBoundingClientRect();
+      const hoverMiddleX = (hoverRect.right - hoverRect.left) / 2;
+      const hoverMiddleY = (hoverRect.bottom - hoverRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      if (!clientOffset) return;
+      const hoverClientX = clientOffset.x - hoverRect.left;
+      const hoverClientY = clientOffset.y - hoverRect.top;
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY && hoverClientX < hoverMiddleX) return;
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY && hoverClientX > hoverMiddleX) return;
+      moveCard(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+    collect: (monitor) => ({ isOver: monitor.isOver() }),
+  });
+
+  preview(drop(ref));
+  drag(ref);
+
+  /* Dragging ghost — dashed placeholder */
+  if (isDragging) {
+    return (
+      <div
+        ref={ref}
+        className="rounded-lg border border-dashed border-[#0A77FF]/20 bg-[#0A77FF]/[0.02] min-h-[52px] pointer-events-none"
+      />
+    );
+  }
+
   return (
-    <div className="border border-border rounded-lg bg-card min-w-0 overflow-hidden group relative">
+    <div
+      ref={ref}
+      className={`border rounded-lg bg-white group relative min-w-0 transition-all duration-200 select-none overflow-hidden cursor-grab active:cursor-grabbing ${
+        isOver
+          ? "border-[#0A77FF]/30 bg-[#0A77FF]/[0.03] shadow-[0_0_0_2px_rgba(10,119,255,0.08)] scale-[1.02]"
+          : "border-[#E2E8F0] hover:-translate-y-[1px] hover:border-[#93B8F7] hover:shadow-[0_2px_8px_-3px_rgba(10,119,255,0.06)]"
+      }`}
+    >
+      {/* Drop zone overlay */}
+      {isOver && (
+        <div className="absolute inset-0 rounded-lg bg-[#0A77FF]/[0.02] pointer-events-none" />
+      )}
       <div className="px-3 py-2">
+        {/* Drag handle — top-right pill */}
+        <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-all duration-150 flex items-center bg-[#F1F5F9] rounded-md p-1 z-10 pointer-events-none">
+          <GripVertical className="w-3.5 h-3.5 text-[#64748B]" />
+        </div>
+        {/* Label row: label + icon */}
         <div className="flex items-center justify-between gap-1 mb-1">
-          <p className="text-[10.5px] text-muted-foreground whitespace-nowrap" style={{ fontWeight: 500 }}>
-            {label}
-          </p>
+          <div className="flex items-center gap-1 min-w-0">
+            <p className="text-[10.5px] text-[#64748B] whitespace-nowrap" style={{ fontWeight: 500 }}>{label}</p>
+          </div>
           <div
             className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center"
             style={{ backgroundColor: iconBg, color: iconColor }}
@@ -1685,20 +1752,21 @@ function UomInsightCard({
             <UomKpiIconSmall name={iconName} />
           </div>
         </div>
+        {/* Value */}
         <div className="flex items-baseline gap-1.5">
-          <p className="text-[15px] tracking-tight whitespace-nowrap text-foreground" style={{ fontWeight: 600, lineHeight: 1.2 }}>
-            {value}
-          </p>
+          <p className="text-[15px] text-[#334155] tracking-tight whitespace-nowrap" style={{ fontWeight: 600, lineHeight: 1.2 }}>{value}</p>
         </div>
       </div>
-      {/* Remove button on hover */}
-      <button
-        onClick={(e) => { e.stopPropagation(); onRemove(); }}
-        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-muted/80 hover:bg-destructive/10 hover:text-destructive flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-        title="Remove widget"
-      >
-        <X className="w-3 h-3" />
-      </button>
+      {/* Remove button — bottom-right on hover */}
+      {onRemove && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
+          className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-all duration-150 p-1 rounded cursor-pointer hover:bg-red-50 z-10"
+          title={`Remove ${label}`}
+        >
+          <Trash2 className="w-3 h-3 text-[#94A3B8] hover:text-[#EF4444]" />
+        </button>
+      )}
     </div>
   );
 }
