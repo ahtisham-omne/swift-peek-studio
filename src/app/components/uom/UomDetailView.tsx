@@ -15,6 +15,8 @@
 
 import React, { useState, useCallback, useRef } from "react";
 import { Table as ShadcnTable, TableHeader as ShadcnTableHeader, TableRow as ShadcnTableRow, TableHead, TableBody, TableCell } from "../ui/table";
+import { Button } from "../ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import ReactDOM from "react-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
