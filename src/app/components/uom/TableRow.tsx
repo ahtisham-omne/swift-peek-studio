@@ -351,25 +351,23 @@ export function TableHeaderRow({
           return (
             <TableHead
               key={key}
-              className={`relative select-none bg-muted/30 ${
+              data-col-drag-key={key}
+              className={`relative select-none bg-muted/30 whitespace-nowrap group/col ${
                 isSortable ? "cursor-pointer" : ""
-              } ${canDrag ? "group/col" : ""} ${
-                isDragged ? "!bg-transparent opacity-35" : ""
+              } ${canDrag ? "cursor-grab" : ""} ${
+                isDragged ? "" : ""
               }`}
               style={{
                 width: colW,
                 minWidth: key === PINNED_RIGHT ? colW : Math.min(colW, 80),
                 padding: 0,
                 boxSizing: "border-box",
+                overflow: "hidden",
                 ...(isDragged
                   ? {
-                      backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 4px, var(--border) 4px, var(--border) 5px)",
-                      borderRadius: "var(--radius-sm)",
-                      outline: "2px dashed var(--primary-border)",
-                      outlineOffset: -2,
+                      background: "linear-gradient(180deg, rgba(10,119,255,0.08) 0%, rgba(10,119,255,0.03) 100%)",
                     }
                   : {}),
-                transition: "opacity 200ms ease, outline 200ms ease",
                 textAlign: "left",
               }}
               onPointerDown={
@@ -386,6 +384,10 @@ export function TableHeaderRow({
                   : undefined
               }
             >
+              {/* Blue accent bar on top edge of dragged column header */}
+              {isDragged && (
+                <div className="absolute top-0 left-0 right-0 h-[2px] rounded-b-full" style={{ backgroundColor: "#0A77FF" }} />
+              )}
               <div
                 className={`flex items-center gap-1 h-full px-4 py-2.5 ${
                   hdr.align === "right" ? "justify-center" : ""

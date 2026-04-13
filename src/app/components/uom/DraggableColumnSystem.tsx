@@ -403,32 +403,19 @@ export function ColumnDragPreview({ dragState, previewElRef, renderPreview }: Co
         renderPreview(dragState.label)
       ) : (
         <div
-          className="flex items-center"
+          className="flex items-center gap-1.5 h-[32px] pl-2 pr-3 rounded-md whitespace-nowrap"
           style={{
-            gap: 4,
-            height: 28,
-            padding: "0 12px",
-            backgroundColor: "var(--card)",
-            border: "1px solid var(--primary-border)",
-            borderRadius: "var(--radius-md)",
-            boxShadow:
-              "var(--elevation-drag)",
-            fontFamily: "'Inter', sans-serif",
+            marginLeft: 12,
+            marginTop: -14,
+            backgroundColor: "rgba(255,255,255,0.92)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid rgba(10,119,255,0.3)",
+            boxShadow: "0 1px 3px rgba(10,119,255,0.08), 0 6px 20px rgba(0,0,0,0.10)",
           }}
         >
-          <GripVertical
-            style={{ width: 12, height: 12, color: "var(--primary)", flexShrink: 0 }}
-          />
-          <span
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 12,
-              lineHeight: "16px",
-              fontWeight: "var(--font-weight-semibold)" as any,
-              color: "var(--primary)",
-              whiteSpace: "nowrap",
-            }}
-          >
+          <GripVertical className="w-3 h-3 shrink-0" style={{ color: "#0A77FF" }} />
+          <span className="text-[13px]" style={{ color: "#0A77FF", fontWeight: 500 }}>
             {dragState.label}
           </span>
         </div>
