@@ -1808,84 +1808,40 @@ export function UomDetailView() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 8 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-[0_20px_60px_-12px_rgba(0,0,0,0.25)] pointer-events-auto flex flex-col"
-            style={{ width: 520, maxWidth: "calc(100vw - 40px)", maxHeight: "calc(100vh - 40px)" }}
+            className="bg-white border border-border rounded-xl overflow-hidden shadow-[0_20px_60px_-12px_rgba(0,0,0,0.25)] pointer-events-auto flex flex-col"
+            style={{ width: 480, maxWidth: "calc(100vw - 40px)" }}
           >
-            <div className="overflow-y-auto flex-1 pb-2">
-              {/* Header */}
-              <div className="flex items-start gap-3.5 p-6 pb-0">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-[#FEF2F2] border border-[#FECACA]">
-                  <AlertTriangle size={18} strokeWidth={2} className="text-[#DC2626]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-[15px] text-[#0F172A] m-0 leading-snug" style={{ fontWeight: 600 }}>
-                    Archive "{displayName}"?
-                  </h3>
-                  <p className="text-[13px] text-[#64748B] mt-1.5 leading-relaxed" style={{ fontWeight: 400 }}>
-                    This unit can't be archived while it is associated with active transactions and records.
-                  </p>
-                </div>
+            {/* Top red gradient banner with warning icon */}
+            <div className="flex flex-col items-center pt-8 pb-5 px-6" style={{ background: "linear-gradient(180deg, #FEF2F2 0%, #FFFFFF 100%)" }}>
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white border border-[#FECACA] shadow-sm mb-4">
+                <AlertTriangle size={26} strokeWidth={2} className="text-[#DC2626]" />
               </div>
-
-              {/* Blocking explanation */}
-              <div className="px-6 pt-4" style={{ paddingLeft: 78 }}>
-                <ul className="m-0 p-0 list-none flex flex-col gap-2">
-                  {[
-                    "Remove or complete the active references listed below before archiving this unit",
-                    "Historical records stay intact after the unit is no longer actively referenced",
-                    "Once associations are cleared, archiving will become available again",
-                  ].map((text) => (
-                    <li key={text} className="flex items-start gap-2 text-[12px] text-[#94A3B8] leading-[1.5]" style={{ fontWeight: 400 }}>
-                      <span className="w-1 h-1 rounded-full bg-[#CBD5E1] mt-[7px] shrink-0" />
-                      {text}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Warning banner */}
-              <div className="mx-6 mt-4 p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA]">
-                <div className="flex items-center gap-2 text-[12px] text-[#DC2626]" style={{ fontWeight: 500 }}>
-                  <AlertTriangle size={13} strokeWidth={2} />
-                  Archiving is unavailable until these active references are removed
-                </div>
-              </div>
-
-              {/* Active references */}
-              <div className="px-6 pt-4">
-                <div className="text-[12px] text-[#334155] mb-3" style={{ fontWeight: 500 }}>
-                  Active references
-                </div>
-                <div className="flex flex-col gap-2.5">
-                  {ARCHIVE_BLOCKING_REFERENCES.map((group) => (
-                    <div key={group.label} className="flex flex-wrap items-start gap-x-2 gap-y-1">
-                      <span className="text-[12px] text-[#334155]" style={{ fontWeight: 500 }}>{group.label}:</span>
-                      <span className="text-[12px] text-[#94A3B8]" style={{ fontWeight: 400 }}>{group.entries.join(", ")}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <span className="text-[11px] tracking-[1.5px] uppercase text-[#DC2626] mb-2" style={{ fontWeight: 600 }}>Archive</span>
+              <h3 className="text-[17px] text-foreground text-center m-0 leading-snug" style={{ fontWeight: 600 }}>
+                Archive this unit?
+              </h3>
+              <p className="text-[13px] text-muted-foreground text-center mt-2 leading-relaxed max-w-[340px]" style={{ fontWeight: 400 }}>
+                <span className="text-foreground" style={{ fontWeight: 500 }}>{displayName}</span> will be removed from active workflows. Historical records are preserved and you can restore later.
+              </p>
             </div>
 
-            {/* Footer actions */}
-            <div className="flex items-center justify-end gap-2.5 px-6 py-4 border-t border-[#F1F5F9] shrink-0">
-              <button
-                type="button"
-                onClick={() => setArchiveModalOpen(false)}
-                className="cursor-pointer h-9 px-4 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[13px] text-[#334155] transition-colors shadow-sm"
-                style={{ fontWeight: 500 }}
-              >
-                Cancel
-              </button>
+            {/* Actions */}
+            <div className="flex flex-col gap-2.5 px-6 pb-6">
               <button
                 type="button"
                 onClick={handleArchiveConfirm}
-                disabled
-                aria-disabled="true"
-                className="h-9 px-4 rounded-lg border border-[#E2E8F0] bg-[#F1F5F9] text-[13px] text-[#94A3B8] cursor-not-allowed shadow-sm"
+                className="cursor-pointer w-full h-11 rounded-lg bg-[#DC2626] hover:bg-[#B91C1C] text-white text-[14px] transition-colors border-none shadow-sm"
                 style={{ fontWeight: 500 }}
               >
-                Cannot Archive
+                Archive Unit
+              </button>
+              <button
+                type="button"
+                onClick={() => setArchiveModalOpen(false)}
+                className="cursor-pointer w-full h-10 rounded-lg bg-transparent hover:bg-muted/50 text-[14px] text-muted-foreground transition-colors border-none"
+                style={{ fontWeight: 400 }}
+              >
+                Cancel
               </button>
             </div>
           </motion.div>
