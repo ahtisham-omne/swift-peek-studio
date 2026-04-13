@@ -423,49 +423,24 @@ export function UomDetailView() {
               </div>
             </div>
 
-            {/* Right cluster: action buttons */}
-            <div className="flex items-center gap-[6px] shrink-0">
+            {/* Right: Actions + Edit CTA */}
+            <div className="flex items-center shrink-0 gap-2">
               {isEditing ? (
                 <>
-                  <motion.button
-                    whileHover={{ filter: "brightness(1.08)" }}
-                    whileTap={{ scale: 0.96 }}
-                    type="button"
+                  <button
                     onClick={handleEditSave}
-                    className="inline-flex items-center gap-[4px] cursor-pointer border-none"
-                    style={{
-                      padding: "7px 18px",
-                      borderRadius: "var(--radius)",
-                      backgroundColor: "var(--primary)",
-                      color: "var(--primary-foreground)",
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      lineHeight: "1",
-                    }}
+                    className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
+                    style={{ fontWeight: 600 }}
                   >
-                    <Check size={12} strokeWidth={2.5} /> Save
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ backgroundColor: "var(--surface-raised)" }}
-                    whileTap={{ scale: 0.96 }}
-                    type="button"
+                    <Check size={14} /> Save
+                  </button>
+                  <button
                     onClick={handleEditCancel}
-                    className="inline-flex items-center gap-[4px] cursor-pointer"
-                    style={{
-                      padding: "6px 14px",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--border)",
-                      borderRadius: "var(--radius)",
-                      backgroundColor: "var(--card)",
-                      color: "var(--text-muted)",
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      lineHeight: "1",
-                    }}
+                    className="rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[#334155] inline-flex items-center gap-1.5 h-9 px-3.5 text-[13px] transition-all duration-200 cursor-pointer shadow-sm"
+                    style={{ fontWeight: 500 }}
                   >
                     Cancel
-                  </motion.button>
+                  </button>
                 </>
               ) : (
                 <>
@@ -473,68 +448,35 @@ export function UomDetailView() {
                     { icon: Copy, label: "Duplicate", handler: handleDuplicate },
                     { icon: Archive, label: "Archive", handler: () => setArchiveModalOpen(true) },
                   ].map(({ icon: BtnIcon, label, handler }) => (
-                    <motion.button
+                    <button
                       key={label}
-                      whileHover={{ backgroundColor: "var(--surface-hover)" }}
-                      whileTap={{ scale: 0.94 }}
-                      type="button"
                       aria-label={label}
                       title={label}
-                      className="inline-flex items-center justify-center cursor-pointer"
-                      style={{
-                        width: 34,
-                        height: 34,
-                        borderWidth: 1,
-                        borderStyle: "solid",
-                        borderColor: "var(--border)",
-                        borderRadius: "var(--radius)",
-                        backgroundColor: "rgba(0,0,0,0)",
-                        color: "var(--text-subtle)",
-                        padding: 0,
-                        transition: "all 0.12s",
-                      }}
+                      className="rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] flex items-center justify-center cursor-pointer shadow-sm transition-all duration-200"
+                      style={{ width: 36, height: 36 }}
                       onClick={handler}
                     >
-                      <BtnIcon size={14} strokeWidth={1.8} />
-                    </motion.button>
+                      <BtnIcon className="text-[#64748B]" style={{ width: 16, height: 16 }} />
+                    </button>
                   ))}
 
                   {isCustom && !isInUse && (
-                    <motion.button
-                      whileHover={{ filter: "brightness(1.06)" }}
-                      whileTap={{ scale: 0.96 }}
-                      type="button"
+                    <button
                       onClick={() => setEditModalOpen(true)}
-                      className="inline-flex items-center gap-[5px] border-none"
-                      style={{
-                        padding: "8px 20px",
-                        borderRadius: "var(--radius)",
-                        backgroundColor: "var(--primary)",
-                        color: "var(--primary-foreground)",
-                        fontSize: "var(--text-label)",
-                        fontWeight: "var(--font-weight-medium)" as any,
-                        lineHeight: "1",
-                        marginLeft: 2,
-                        cursor: "pointer",
-                      }}
+                      className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
+                      style={{ fontWeight: 600 }}
                     >
+                      <Pencil className="w-3.5 h-3.5" />
                       Edit Unit
-                    </motion.button>
+                    </button>
                   )}
                 </>
               )}
             </div>
           </div>
 
-          {/* ── Row 2: Meta info — Type · Category · Symbol · Fractional quantities ── */}
-          <div
-            style={{
-              borderTopWidth: 1,
-              borderTopStyle: "solid",
-              borderColor: "var(--border-subtle)",
-              padding: "10px 20px",
-            }}
-          >
+          {/* ── Row 2: Meta info — Type · Category · Symbol ── */}
+          <div className="border-t border-[#F1F5F9] px-4 lg:px-5 py-2.5">
             {isInUse && (
               <div
                 style={{
