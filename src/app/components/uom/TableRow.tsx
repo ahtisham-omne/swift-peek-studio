@@ -395,11 +395,7 @@ export function TableHeaderRow({
               >
                 {/* Drag grip */}
                 {canDrag && (
-                  <span
-                    className="opacity-0 group-hover/col:opacity-100 text-muted-foreground/50 cursor-grab shrink-0 transition-opacity -ml-1 mr-0.5"
-                  >
-                    <GripVertical size={12} />
-                  </span>
+                  <GripVertical className={`absolute left-1 top-1/2 -translate-y-1/2 w-3 h-3 transition-opacity z-[5] pointer-events-none ${isDragged ? "opacity-100 text-primary" : "opacity-0 group-hover/col:opacity-100 text-muted-foreground/40"}`} />
                 )}
 
                 <span
