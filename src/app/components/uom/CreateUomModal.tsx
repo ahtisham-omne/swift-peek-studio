@@ -713,8 +713,8 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
           style={{
             borderRadius: "var(--radius-lg)",
             backgroundColor: "var(--card)",
-            boxShadow: "var(--elevation-xl)",
-            maxHeight: "90vh",
+            boxShadow: "0 24px 48px -12px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.05)",
+            height: "min(680px, 90vh)",
             fontFamily: "var(--font-family)",
           }}
         >
