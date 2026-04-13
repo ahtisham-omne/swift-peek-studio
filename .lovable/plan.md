@@ -1,62 +1,90 @@
 
 
-# UOM Listing Table — Match Partner Management Design
+# UOM Page — Side-by-Side Comparison & Fix Plan
 
-## Root Cause Analysis
+## Detailed Differences Found
 
-The UOM table was built with custom inline styles and a raw `<table>` element, while the Partner Management table uses **shadcn/ui `<Table>` components** with Tailwind utility classes for density, hover states, and header backgrounds. Here are the specific mismatches:
+After comparing both pages line-by-line, here are ALL remaining mismatches:
 
-### Issues Found
+### 1. Table Body Rows — Wrong hover, missing density classes
+- **Partners**: `hover:bg-[#F0F7FF]` on `<TableRow>`, density via `[&>td]:py-1 [&>td]:pl-4 [&>td]:pr-2` (condensed) / `[&>td]:py-2 [&>td]:pl-4 [&>td]:pr-2` (comfort)
+- **UOM**: Uses `hover:bg-muted/20` on raw `<tr>`, inline `style={{ backgroundColor: ROW_BG }}` with `#F0F7FF` on hover via state, density class `[&>td]:py-1 [&>td]:px-2` (missing `pl-4 pr-2` pattern)
+- **Fix**: Change hover to `hover:bg-[#F0F7FF]`, update density classes to `[&>td]:py-1 [&>td]:pl-4 [&>td]:pr-2` / `[&>td]:py-2 [&>td]:pl-4 [&>td]:pr-2`, remove inline ROW_BG hover state management
 
-**1. Search Bar** — UOM uses a raw `<input>` with mixed inline/Tailwind styles. Partners uses the shadcn `<Input>` component with class `pl-9 pr-8 h-9 text-sm bg-white border-border/80 shadow-sm placeholder:text-muted-foreground/50 focus-visible:border-primary focus-visible:ring-primary/20`.
+### 2. Table Uses Raw HTML Instead of shadcn Components
+- **Partners**: Uses `<Table>`, `<TableHeader>`, `<TableBody>`, `<TableRow>`, `<TableHead>`, `<TableCell>` from shadcn
+- **UOM**: Uses raw `<table>`, `<thead>`, `<tr>`, `<th>`, `<td>`
+- **Fix**: Replace raw HTML elements with shadcn Table components in `TableRow.tsx`. This ensures consistent base styles (border-b, padding, etc.)
 
-**2. Table Header** — UOM uses hardcoded `backgroundColor: "#f8fafc"` via inline styles on each `<th>`. Partners uses `bg-muted/30 hover:bg-muted/30` on the header `<TableRow>`, with density classes `[&>th]:h-8` (condensed) / `[&>th]:h-12` (relaxed).
+### 3. Selected Row Background
+- **Partners**: Selected = `!bg-[#EDF4FF]/60`, hover on selected row still `group-hover:bg-[#F0F7FF]`
+- **UOM**: Selected = `#EDF4FF` via inline style
+- **Fix**: Use Tailwind classes instead of inline styles
 
-**3. Filter Pills (grey color)** — UOM's inactive pills use `border-border text-muted-foreground` which is correct, but the active state count badge uses `bg-primary/10` which may render differently. Partners uses `bg-muted` for inactive count badges.
+### 4. Checkbox — Custom vs shadcn Checkbox
+- **Partners**: Uses shadcn `<Checkbox>` component
+- **UOM**: Custom checkbox with inline styles and manual SVG rendering
+- **Fix**: Replace custom checkbox with shadcn `<Checkbox>` component in both header and body rows
 
-**4. Density / Row Styling** — UOM uses custom inline `DENSITY_PADDING` objects applied via `style={{}}`. Partners uses Tailwind classes:
-   - Condensed: `[&>td]:py-1 [&>td]:px-2`
-   - Comfort: `[&>td]:py-2 [&>td]:pl-4 [&>td]:pr-2` (or `[&>td]:py-3`)
-   - Row hover: `hover:bg-[#F0F7FF]` (not `hover:bg-muted/50`)
+### 5. Cell Padding — Inline Styles vs Tailwind
+- **Partners**: No inline padding on cells — density is controlled entirely by `[&>td]` classes on the `<TableRow>`
+- **UOM**: Every cell renders its own `cellPad` inline style (`paddingTop: 12, paddingBottom: 12, paddingLeft: 16, paddingRight: 16`)
+- **Fix**: Remove all `cellPad` / `CELL_PADDING` inline styles from cells. Let the density classes on `<TableRow>` handle padding.
 
-**5. Table structure** — UOM uses raw `<table>/<thead>/<tr>/<th>/<td>` elements. Partners uses shadcn `<Table>/<TableHeader>/<TableRow>/<TableHead>/<TableCell>` components which apply consistent base styles.
+### 6. Search Bar — Raw Input vs shadcn Input
+- **Partners**: Uses shadcn `<Input>` component with class `pl-9 pr-8 h-9 text-sm bg-white border-border/80 shadow-sm placeholder:text-muted-foreground/50 focus-visible:border-primary focus-visible:ring-primary/20`
+- **UOM**: Uses raw `<input>` with similar classes but missing the shadcn focus-visible ring behavior
+- **Fix**: Use the shadcn `<Input>` component from `../ui/input`
 
-**6. Typography** — UOM header text is `text-[13px] font-500` which is close. Partners uses shadcn `<TableHead>` defaults (`text-foreground h-10 px-2 text-left font-medium whitespace-nowrap`) then density overrides.
+### 7. Count Display — Different Typography
+- **Partners**: Uses colored spans: `<span className="text-foreground">{filtered}</span><span className="text-muted-foreground/60"> of </span><span className="text-muted-foreground">{total}</span><span className="text-muted-foreground/70"> partners</span>`
+- **UOM**: Uses a plain string `${filteredUnits.length} of ${allUnits.length} units` with `text-muted-foreground`
+- **Fix**: Match Partners' colored span pattern with separate styling for count vs label
 
-**7. Density dropdown** — UOM has 4 modes (condensed/comfort/relaxed/card). Partners has 3 (condensed/comfort/card). The relaxed mode doesn't exist in Partners.
+### 8. Pagination — Raw Buttons vs shadcn Button
+- **Partners**: Uses shadcn `<Button variant="ghost" size="sm">` and shadcn `<Select>` for records-per-page
+- **UOM**: Uses raw `<button>` elements and raw `<select>` for records-per-page
+- **Fix**: Replace with shadcn `<Button>` and `<Select>` components
+
+### 9. Header Row — Missing `TableHeader` sticky wrapper
+- **Partners**: `<TableHeader className="sticky top-0 z-20 bg-card">`
+- **UOM**: Raw `<thead>` without sticky class
+- **Fix**: Add sticky positioning to header
+
+### 10. Module Header — Button Style
+- **Partners**: Uses shadcn `<Button>` component: `<Button className="bg-primary text-primary-foreground shrink-0">`
+- **UOM**: Raw `<button>` with inline classes
+- **Fix**: Use shadcn `<Button>` component
 
 ---
 
-## Plan
+## Implementation Plan
 
-### Step 1: Update Search Bar to use shadcn `<Input>`
-- Replace the raw `<input>` in `UomListView.tsx` toolbar with the shadcn `<Input>` component
-- Apply exact Partner classes: `pl-9 pr-8 h-9 text-sm bg-white border-border/80 shadow-sm placeholder:text-muted-foreground/50 focus-visible:border-primary focus-visible:ring-primary/20`
+### Step 1: Refactor TableRow.tsx — Use shadcn Table Components
+- Replace `<thead>`, `<tr>`, `<th>` with `<TableHeader>`, `<TableRow>`, `<TableHead>` from `../ui/table`
+- Replace body `<tr>`, `<td>` with `<TableRow>`, `<TableCell>`
+- Replace custom checkbox with shadcn `<Checkbox>` from `../ui/checkbox`
+- Remove all `cellPad` / `CELL_PADDING` inline styles — let density classes control padding
+- Change header row class to `bg-muted/30 hover:bg-muted/30`
+- Change body row hover to `hover:bg-[#F0F7FF]`
+- Use density classes: condensed `[&>td]:py-1 [&>td]:pl-4 [&>td]:pr-2`, comfort `[&>td]:py-2 [&>td]:pl-4 [&>td]:pr-2`
+- Remove the inline `backgroundColor: ROW_BG` hover state management (the `hovered` state + inline style)
+- Selected row: use class-based `bg-[#EDF4FF]/60` instead of inline style
 
-### Step 2: Refactor Table to use shadcn Table components
-- Replace raw `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>` in `TableRow.tsx` with shadcn `<Table>`, `<TableHeader>`, `<TableBody>`, `<TableRow>`, `<TableHead>`, `<TableCell>`
-- Apply Partner header row classes: `bg-muted/30 hover:bg-muted/30` with density variants `[&>th]:h-8` (condensed), default h-10, `[&>th]:h-12` (relaxed)
-- Apply Partner body row classes: `hover:bg-[#F0F7FF] cursor-pointer` with density: condensed `[&>td]:py-1 [&>td]:px-2`, comfort `[&>td]:py-2 [&>td]:pl-4 [&>td]:pr-2`
-- Remove all inline style-based padding/color from header and body cells
+### Step 2: Refactor UomListView.tsx — Search, Count, Pagination, Module Header
+- **Search**: Replace raw `<input>` with shadcn `<Input>` component
+- **Count display**: Use colored spans matching Partners pattern
+- **Pagination**: Replace raw `<button>` with shadcn `<Button variant="ghost" size="sm">`, replace raw `<select>` with shadcn `<Select>`
+- **Table wrapper**: Replace raw `<table>` with shadcn `<Table>`, add `<TableHeader className="sticky top-0 z-20 bg-card">` around header, use `<TableBody>`
+- **Module header**: Use shadcn `<Button>` for "Create New Unit"
 
-### Step 3: Fix Filter Pills inactive background
-- Ensure inactive pill count badges use `bg-muted` (not `bg-muted/50` or similar)
-- Match exact Partner `FilterPills` styling for active/inactive states
+### Step 3: DensityDropdown.tsx — Already aligned (3 modes)
+- No changes needed — already has condensed/comfort/card
 
-### Step 4: Align Density modes with Partners
-- Remove "relaxed" density option from `DensityDropdown.tsx` — Partners only has condensed/comfort/card
-- Update density Tailwind classes to match Partners exactly
-- Remove the `DENSITY_PADDING` inline style system and use Tailwind class approach
-
-### Step 5: Typography alignment
-- Table header: use shadcn `<TableHead>` defaults (font-medium, text-foreground)
-- Table body cells: `text-sm` (13px), `text-foreground` for primary content, `text-muted-foreground` for secondary
-- Filters button: `text-sm font-500`
-- Count display: `text-sm tabular-nums font-500`
+### Step 4: FilterPill.tsx — Already aligned
+- Already matches Partners' FilterPills exactly
 
 ### Files to modify
-- `src/app/components/uom/UomListView.tsx` — search bar, toolbar, table wrapper, pagination
-- `src/app/components/uom/TableRow.tsx` — header and body row components (use shadcn Table primitives, Tailwind density classes)
-- `src/app/components/uom/DensityDropdown.tsx` — remove "relaxed" mode, simplify to 3 options
-- `src/app/components/uom/FilterPill.tsx` — minor tweaks to inactive state background
+- `src/app/components/uom/TableRow.tsx` — major refactor: shadcn components, remove inline styles, density classes
+- `src/app/components/uom/UomListView.tsx` — search bar, count display, pagination, table wrapper, module header
 
