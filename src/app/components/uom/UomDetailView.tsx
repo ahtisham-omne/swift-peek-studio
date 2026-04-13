@@ -350,202 +350,97 @@ export function UomDetailView() {
 
   return (
     <>
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.25 }}
-      style={{
-        backgroundColor: "var(--secondary)",
-        minHeight: "100%",
-      }}
-    >
+    <div className="flex-1 flex flex-col overflow-y-auto bg-[#F8FAFC]">
       {/* ═══════════════════════════════════════
-         HEADER CARD — rounded card matching reference
+         HEADER CARD — rounded card matching vendor detail
          ═══════════════════════════════════════ */}
       <div
-        className={containerCls}
-        style={{ ...containerMax, paddingTop: 16, paddingBottom: 0 }}
+        className="mx-auto px-4 lg:px-6 xl:px-8 w-full"
+        style={{ maxWidth: 1440, paddingTop: 12, paddingBottom: 0 }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, ease: "easeOut" }}
-          style={{
-            backgroundColor: "var(--card)",
-            borderRadius: "var(--radius)",
-            borderWidth: 1,
-            borderStyle: "solid",
-            borderColor: "var(--border)",
-            boxShadow: "var(--elevation-xs)",
-            overflow: "hidden",
-          }}
+        <div
+          className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-sm"
         >
           {/* ── Row 1: Back + Icon + Name/Desc + Actions ── */}
           <div
-            className="flex items-center justify-between flex-wrap"
-            style={{ padding: "14px 20px", gap: 10 }}
+            className="flex items-center justify-between gap-4 px-4 lg:px-5"
+            style={{ padding: "12px 16px" }}
           >
-            {/* Left cluster: back, divider, icon, name+desc */}
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              {/* Back button */}
-              <motion.button
-                whileHover={{ backgroundColor: "var(--surface-hover)" }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
+            {/* Left cluster: back, icon, name+desc */}
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              {/* Back button — square like vendor */}
+              <button
                 onClick={() => navigate("/uom")}
-                className="inline-flex items-center gap-[3px] cursor-pointer border-none shrink-0"
-                style={{
-                  padding: "6px 10px 6px 6px",
-                  borderRadius: "var(--radius)",
-                  backgroundColor: "rgba(0,0,0,0)",
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-normal)" as any,
-                  color: "var(--text-muted)",
-                  transition: "all 0.12s",
-                  lineHeight: "1",
-                }}
+                className="rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] flex items-center justify-center shrink-0 cursor-pointer shadow-[0_1px_3px_0_rgba(0,0,0,0.04),0_1px_2px_-1px_rgba(0,0,0,0.03)] transition-all duration-250"
+                style={{ width: 44, height: 44 }}
               >
-                <ChevronLeft size={14} strokeWidth={1.8} />
-                Back
-              </motion.button>
-
-              {/* Vertical divider */}
-              <div style={{ width: 1, height: 28, backgroundColor: "var(--border)", flexShrink: 0 }} />
+                <ChevronLeft className="text-[#94A3B8]" style={{ width: 20, height: 20 }} />
+              </button>
 
               {/* Icon badge */}
               <div
-                className="inline-flex items-center justify-center shrink-0"
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "var(--radius)",
-                  backgroundColor: "var(--surface-raised)",
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "var(--border)",
-                }}
+                className="rounded-xl flex items-center justify-center shrink-0 border border-[#E2E8F0] shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]"
+                style={{ width: 44, height: 44, backgroundColor: "#EDF4FF" }}
               >
-                <Layers size={15} style={{ color: "var(--primary-soft)" }} strokeWidth={1.6} />
+                <Layers size={18} style={{ color: "#0A77FF" }} strokeWidth={1.6} />
               </div>
 
               {/* Name + description stacked */}
-              <div className="min-w-0 flex flex-col" style={{ gap: 3 }}>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className="outline-none"
-                    style={{
-                      fontSize: "var(--text-base)",
-                      fontWeight: "var(--font-weight-semibold)" as any,
-                      color: "var(--foreground)",
-                      backgroundColor: "var(--input-background)",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--primary)",
-                      borderRadius: "var(--radius-sm)",
-                      height: "var(--input-height)",
-                      padding: "0 12px",
-                      boxSizing: "border-box",
-                      minWidth: 200,
-                      lineHeight: "1",
-                    }}
-                    autoFocus
-                  />
-                ) : (
-                  <span
-                    style={{
-                      fontSize: "var(--text-base)",
-                      fontWeight: "var(--font-weight-semibold)" as any,
-                      color: "var(--foreground)",
-                      lineHeight: "1.2",
-                    }}
-                  >
-                    {displayName}
-                  </span>
-                )}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center flex-wrap gap-1.5">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="outline-none rounded-lg border border-[#0A77FF] h-9 px-3 text-[16px]"
+                      style={{ fontWeight: 700, color: "#0F172A", minWidth: 200, lineHeight: "22px" }}
+                      autoFocus
+                    />
+                  ) : (
+                    <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 700, lineHeight: "22px" }}>
+                      {displayName}
+                    </h1>
+                  )}
+                </div>
 
-                {/* Description — directly under name */}
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editDescription}
-                    onChange={(e) => setEditDescription(e.target.value)}
-                    className="outline-none w-full"
-                    style={{
-                      fontSize: "var(--text-label)",
-                      color: "var(--foreground)",
-                      maxWidth: 500,
-                      backgroundColor: "var(--input-background)",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--primary)",
-                      borderRadius: "var(--radius-sm)",
-                      height: "var(--input-height)",
-                      padding: "0 12px",
-                      boxSizing: "border-box",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                    }}
-                  />
-                ) : (
-                  <span
-                    style={{
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                      color: "var(--text-muted)",
-                      lineHeight: "1.4",
-                    }}
-                  >
-                    {displayDescription}
-                  </span>
-                )}
+                {/* Description */}
+                <div className="mt-1.5 max-w-3xl">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      className="outline-none w-full rounded-lg border border-[#0A77FF] h-8 px-3 text-[12px] text-[#64748B]"
+                      style={{ maxWidth: 500 }}
+                    />
+                  ) : (
+                    <p className="text-[12px] text-[#64748B] leading-[1.6]">
+                      {displayDescription}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Right cluster: action buttons */}
-            <div className="flex items-center gap-[6px] shrink-0">
+            {/* Right: Actions + Edit CTA */}
+            <div className="flex items-center shrink-0 gap-2">
               {isEditing ? (
                 <>
-                  <motion.button
-                    whileHover={{ filter: "brightness(1.08)" }}
-                    whileTap={{ scale: 0.96 }}
-                    type="button"
+                  <button
                     onClick={handleEditSave}
-                    className="inline-flex items-center gap-[4px] cursor-pointer border-none"
-                    style={{
-                      padding: "7px 18px",
-                      borderRadius: "var(--radius)",
-                      backgroundColor: "var(--primary)",
-                      color: "var(--primary-foreground)",
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      lineHeight: "1",
-                    }}
+                    className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
+                    style={{ fontWeight: 600 }}
                   >
-                    <Check size={12} strokeWidth={2.5} /> Save
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ backgroundColor: "var(--surface-raised)" }}
-                    whileTap={{ scale: 0.96 }}
-                    type="button"
+                    <Check size={14} /> Save
+                  </button>
+                  <button
                     onClick={handleEditCancel}
-                    className="inline-flex items-center gap-[4px] cursor-pointer"
-                    style={{
-                      padding: "6px 14px",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--border)",
-                      borderRadius: "var(--radius)",
-                      backgroundColor: "var(--card)",
-                      color: "var(--text-muted)",
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      lineHeight: "1",
-                    }}
+                    className="rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[#334155] inline-flex items-center gap-1.5 h-9 px-3.5 text-[13px] transition-all duration-200 cursor-pointer shadow-sm"
+                    style={{ fontWeight: 500 }}
                   >
                     Cancel
-                  </motion.button>
+                  </button>
                 </>
               ) : (
                 <>
@@ -553,68 +448,35 @@ export function UomDetailView() {
                     { icon: Copy, label: "Duplicate", handler: handleDuplicate },
                     { icon: Archive, label: "Archive", handler: () => setArchiveModalOpen(true) },
                   ].map(({ icon: BtnIcon, label, handler }) => (
-                    <motion.button
+                    <button
                       key={label}
-                      whileHover={{ backgroundColor: "var(--surface-hover)" }}
-                      whileTap={{ scale: 0.94 }}
-                      type="button"
                       aria-label={label}
                       title={label}
-                      className="inline-flex items-center justify-center cursor-pointer"
-                      style={{
-                        width: 34,
-                        height: 34,
-                        borderWidth: 1,
-                        borderStyle: "solid",
-                        borderColor: "var(--border)",
-                        borderRadius: "var(--radius)",
-                        backgroundColor: "rgba(0,0,0,0)",
-                        color: "var(--text-subtle)",
-                        padding: 0,
-                        transition: "all 0.12s",
-                      }}
+                      className="rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] flex items-center justify-center cursor-pointer shadow-sm transition-all duration-200"
+                      style={{ width: 36, height: 36 }}
                       onClick={handler}
                     >
-                      <BtnIcon size={14} strokeWidth={1.8} />
-                    </motion.button>
+                      <BtnIcon className="text-[#64748B]" style={{ width: 16, height: 16 }} />
+                    </button>
                   ))}
 
                   {isCustom && !isInUse && (
-                    <motion.button
-                      whileHover={{ filter: "brightness(1.06)" }}
-                      whileTap={{ scale: 0.96 }}
-                      type="button"
+                    <button
                       onClick={() => setEditModalOpen(true)}
-                      className="inline-flex items-center gap-[5px] border-none"
-                      style={{
-                        padding: "8px 20px",
-                        borderRadius: "var(--radius)",
-                        backgroundColor: "var(--primary)",
-                        color: "var(--primary-foreground)",
-                        fontSize: "var(--text-label)",
-                        fontWeight: "var(--font-weight-medium)" as any,
-                        lineHeight: "1",
-                        marginLeft: 2,
-                        cursor: "pointer",
-                      }}
+                      className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
+                      style={{ fontWeight: 600 }}
                     >
+                      <Pencil className="w-3.5 h-3.5" />
                       Edit Unit
-                    </motion.button>
+                    </button>
                   )}
                 </>
               )}
             </div>
           </div>
 
-          {/* ── Row 2: Meta info — Type · Category · Symbol · Fractional quantities ── */}
-          <div
-            style={{
-              borderTopWidth: 1,
-              borderTopStyle: "solid",
-              borderColor: "var(--border-subtle)",
-              padding: "10px 20px",
-            }}
-          >
+          {/* ── Row 2: Meta info — Type · Category · Symbol ── */}
+          <div className="border-t border-[#F1F5F9] px-4 lg:px-5 py-2.5">
             {isInUse && (
               <div
                 style={{
@@ -751,125 +613,63 @@ export function UomDetailView() {
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div>
+          {/* Tab bar — inside header card bottom */}
+          <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide border-t border-[#F1F5F9] px-4 lg:px-5">
+            {DETAIL_TABS.map((tab) => {
+              const isActive = tab.id === activeTab;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-3.5 border-b-2 transition-all duration-200 whitespace-nowrap cursor-pointer outline-none border-0 ${
+                    isActive
+                      ? "border-[#0A77FF] text-[#0A77FF]"
+                      : "border-transparent text-[#64748B] hover:text-[#334155] hover:border-[#CBD5E1]"
+                  }`}
+                  style={{
+                    padding: "10px 14px",
+                    fontSize: 13,
+                    fontWeight: isActive ? 600 : 400,
+                    backgroundColor: "transparent",
+                    borderTopWidth: 0,
+                    borderLeftWidth: 0,
+                    borderRightWidth: 0,
+                  }}
+                >
+                  <tab.icon size={14} strokeWidth={isActive ? 2 : 1.6} />
+                  {tab.label}
+                  {tab.count !== null && (
+                    <span
+                      className="inline-flex items-center justify-center"
+                      style={{
+                        fontSize: 11,
+                        padding: "2px 6px",
+                        borderRadius: 4,
+                        backgroundColor: isActive ? "#EDF4FF" : "#F1F5F9",
+                        color: isActive ? "#0A77FF" : "#64748B",
+                        fontWeight: 500,
+                        lineHeight: "1",
+                      }}
+                    >
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* ═══════════════════════════════════════
-         CONTENT: Tab bar + panels
+         CONTENT: Tab panels
          ═══════════════════════════════════════ */}
-      <div
-        className={containerCls}
-        style={{ ...containerMax, paddingTop: 20, paddingBottom: 48 }}
-      >
-        {/* Tab bar */}
-        <div
-          className="flex items-end overflow-x-auto no-scrollbar"
-          style={{
-            padding: "0 2px",
-            gap: 0,
-            position: "relative",
-            borderColor: "var(--border)",
-            borderBottomWidth: 1,
-            borderBottomStyle: "solid",
-          }}
-        >
-          {DETAIL_TABS.map((tab) => {
-            const isActive = tab.id === activeTab;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className="inline-flex items-center gap-[6px] cursor-pointer outline-none whitespace-nowrap shrink-0 border-0"
-                style={{
-                  padding: "10px 15px",
-                  fontSize: "var(--text-label)",
-                  fontWeight: isActive
-                    ? ("var(--font-weight-semibold)" as any)
-                    : ("var(--font-weight-medium)" as any),
-                  color: isActive ? "var(--foreground)" : "var(--text-muted)",
-                  backgroundColor: isActive ? "var(--card)" : "rgba(0,0,0,0)",
-                  borderTopWidth: isActive ? 1 : 0,
-                  borderLeftWidth: isActive ? 1 : 0,
-                  borderRightWidth: isActive ? 1 : 0,
-                  borderBottomWidth: 0,
-                  borderStyle: "solid",
-                  borderColor: isActive ? "var(--border)" : "rgba(0,0,0,0)",
-                  borderRadius: "var(--radius-md) var(--radius-md) 0 0",
-                  transition: "all 0.18s cubic-bezier(0.4, 0, 0.2, 1)",
-                  lineHeight: "1",
-                  position: "relative",
-                  zIndex: isActive ? 2 : 1,
-                  marginBottom: isActive ? -1 : 0,
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = "var(--text-strong)";
-                    e.currentTarget.style.backgroundColor = "var(--surface-hover)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = "var(--text-muted)";
-                    e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
-                  }
-                }}
-              >
-                <tab.icon size={14} strokeWidth={isActive ? 2 : 1.6} style={{ opacity: isActive ? 1 : 0.55 }} />
-                {tab.label}
-                {tab.count !== null && (
-                  <span
-                    className="inline-flex items-center justify-center"
-                    style={{
-                      fontSize: 11,
-                      padding: "2px 6px",
-                      borderRadius: 4,
-                      backgroundColor: isActive
-                        ? "var(--primary-surface)"
-                        : "var(--surface-raised)",
-                      color: isActive
-                        ? "var(--primary)"
-                        : "var(--text-subtle)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      lineHeight: "1",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: isActive ? "rgba(0,0,0,0)" : "var(--border)",
-                    }}
-                  >
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+      <div className="flex-1">
+        <div className="mx-auto px-4 lg:px-6 xl:px-8 pt-4 pb-8 w-full" style={{ maxWidth: 1440 }}>
 
-        {/* Two-column layout */}
-        <div
-          className="flex flex-col lg:flex-row"
-          style={{
-            paddingTop: 16,
-            gap: 16,
-            alignItems: "flex-start",
-          }}
-        >
-          {/* ── LEFT PANEL ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08, duration: 0.3 }}
-            className="flex-1 min-w-0"
-            style={{
-              backgroundColor: "var(--card)",
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: "var(--border)",
-              borderRadius: "var(--radius-lg)",
-              overflow: "hidden",
-              boxShadow: "var(--elevation-xs)",
-            }}
-          >
+          {/* Content area */}
+          <div className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-sm">
             <div style={{ padding: activeTab === "conversions" ? 0 : 20 }}>
               {/* ──── CONVERSIONS TAB ──── */}
               {activeTab === "conversions" && (() => {
@@ -2122,10 +1922,10 @@ export function UomDetailView() {
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.div>
+    </div>
 
     {/* ── EDIT MODAL ── */}
     <CreateUomModal
