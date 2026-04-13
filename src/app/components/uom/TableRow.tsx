@@ -892,7 +892,7 @@ export function TableRow({
       {/* ── Checkbox cell ── */}
       {onToggleSelect && (
         <td
-          className="border-b border-r border-border text-center"
+          className="border-b border-border text-center"
           style={{
             width: 40,
             minWidth: 40,
@@ -939,7 +939,7 @@ export function TableRow({
         return (
           <td
             key={key}
-            className={`border-b border-border ${key !== PINNED_RIGHT ? "border-r" : ""} ${isDragged ? "opacity-35" : ""}`}
+            className={`border-b border-border ${isDragged ? "opacity-35" : ""}`}
             style={{
               width: colW,
               minWidth: key === PINNED_RIGHT ? colW : Math.min(colW, 80),
