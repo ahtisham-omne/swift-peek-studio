@@ -418,9 +418,9 @@ export function UomDetailView() {
                         {displayType}
                       </span>
 
-                      {/* Category badge */}
+                      {/* Category badge - blue */}
                       <span
-                        className="inline-flex items-center rounded-md border border-[#C4B5FD] bg-[#EDE9FE] text-[#7C3AED]"
+                        className="inline-flex items-center rounded-md border border-[#BFDBFE] bg-[#DBEAFE] text-[#2563EB]"
                         style={{ padding: "2px 8px", fontSize: 11, fontWeight: 600 }}
                       >
                         {displayCategory}
@@ -431,7 +431,7 @@ export function UomDetailView() {
                         className="inline-flex items-center rounded-md border border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
                         style={{ padding: "2px 8px", fontSize: 11, fontWeight: 500 }}
                       >
-                        {displaySymbol}
+                        Symbol: {displaySymbol}
                       </span>
                     </div>
                   )}
