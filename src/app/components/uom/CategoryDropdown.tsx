@@ -13,6 +13,7 @@ import {
 } from "./CategoryBadge";
 import { UOM_ICONS } from "./design-tokens";
 import { ChevronDown } from "lucide-react";
+import { Input } from "../ui/input";
 
 /* ═══════════════════════════════════════════════
    Props
@@ -90,81 +91,33 @@ export function CategoryDropdown({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-[6px] cursor-pointer select-none transition-all rounded-full"
-        style={{
-          height: 30,
-          padding: hasSelection ? "6px 6px 6px 12px" : "6px 12px",
-          fontSize: "var(--text-label)",
-          fontWeight: "var(--font-weight-normal)" as any,
-          lineHeight: "normal",
-          border: hasSelection
-            ? "1px solid var(--primary)"
-            : "1px solid var(--border)",
-          backgroundColor: hasSelection
-            ? "var(--primary-surface)"
-            : "var(--card)",
-          boxShadow: "var(--elevation-pill)",
-          color: hasSelection
-            ? "var(--primary)"
-            : "var(--text-muted)",
-        }}
+        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+          hasSelection
+            ? "border-primary bg-primary/10 text-primary hover:bg-primary/15"
+            : "border-border text-muted-foreground hover:bg-muted/60 hover:text-foreground hover:border-muted-foreground/30 active:bg-muted"
+        }`}
       >
         <span>{label}</span>
 
         {hasSelection && (
           <span
-            className="inline-flex items-center justify-center rounded-full"
-            style={{
-              height: 18,
-              minWidth: 18,
-              padding: "0 8px",
-              fontSize: 13,
-              lineHeight: "normal",
-              fontWeight: "var(--font-weight-semibold)" as any,
-              backgroundColor: "var(--primary-surface-strong)",
-              color: "var(--primary-text-strong)",
-            }}
+            className="text-[10px] rounded-full px-1.5 py-px min-w-[18px] text-center bg-primary/10 text-primary"
+            style={{ fontWeight: 600 }}
           >
             {count}
           </span>
         )}
 
-        <ChevronDown
-          size={14}
-          style={{
-            color: hasSelection
-              ? "var(--primary)"
-              : "var(--text-subtle)",
-          }}
-        />
+        <ChevronDown size={14} className={hasSelection ? "text-primary" : "text-muted-foreground/70"} />
       </button>
 
       {/* ── DROPDOWN PANEL ── */}
       {open && (
         <div
-          className="absolute left-0 z-30"
-          style={{
-            marginTop: 4,
-            minWidth: 280,
-            maxWidth: "calc(100vw - 32px)",
-            backgroundColor: "var(--card)",
-            border: hasSelection
-              ? "1px solid var(--primary)"
-              : "1px solid var(--border)",
-            borderRadius: "var(--radius-md)",
-            boxShadow:
-              "var(--elevation-md)",
-          }}
+          className="absolute left-0 z-30 mt-1 min-w-[280px] max-w-[calc(100vw-32px)] rounded-lg border border-border bg-popover shadow-md overflow-hidden"
         >
           {/* Search section */}
-          <div
-            style={{
-              padding: 10,
-              borderColor: "var(--border-subtle)",
-              borderBottomWidth: 1,
-              borderBottomStyle: "solid" as const,
-            }}
-          >
+          <div className="p-2.5 border-b border-border">
             <div className="relative">
               <span
                 className="absolute left-[8px] top-1/2 -translate-y-1/2 text-[12px]"
@@ -172,19 +125,12 @@ export function CategoryDropdown({
               >
                 {UOM_ICONS.search}
               </span>
-              <input
+              <Input
                 type="text"
                 placeholder="Search categories..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full text-[13px] outline-none"
-                style={{
-                  padding: "6px 10px 6px 28px",
-                  border: "1px solid var(--border)",
-                  borderRadius: "var(--radius-sm)",
-                  color: "var(--foreground)",
-                  backgroundColor: "var(--input-background)",
-                }}
+                className="h-8 w-full border-border/80 bg-white pl-7 text-[13px] shadow-none placeholder:text-muted-foreground/50"
                 autoFocus
               />
             </div>
@@ -192,26 +138,11 @@ export function CategoryDropdown({
 
           {/* Clear section */}
           {hasSelection && (
-            <div
-              style={{
-                borderColor: "var(--border-subtle)",
-                borderBottomWidth: 1,
-                borderBottomStyle: "solid" as const,
-              }}
-            >
+            <div className="border-b border-border">
               <button
                 type="button"
                 onClick={() => onClear()}
-                className="w-full text-left cursor-pointer transition-colors hover:bg-red-50"
-                style={{
-                  padding: "8px 14px",
-                  fontSize: 12,
-                  fontWeight: "var(--font-weight-medium)" as any,
-                  lineHeight: "1",
-                  color: "var(--destructive)",
-                  backgroundColor: "transparent",
-                  border: "none",
-                }}
+                className="w-full px-3.5 py-2 text-left text-xs font-medium text-destructive transition-colors hover:bg-destructive/10"
               >
                 Clear all selections
               </button>
@@ -219,13 +150,7 @@ export function CategoryDropdown({
           )}
 
           {/* Category list */}
-          <div
-            style={{
-              maxHeight: 280,
-              overflowY: "auto",
-            }}
-            className="scrollbar-overlay"
-          >
+          <div style={{ maxHeight: 280, overflowY: "auto" }} className="scrollbar-overlay">
             {visibleCategories.length === 0 ? (
               <div
                 className="text-[13px] text-center"

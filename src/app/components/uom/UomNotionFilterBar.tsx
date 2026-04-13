@@ -104,14 +104,7 @@ export function UomNotionFilterBar({
 
   return (
     <div
-      className="flex items-center gap-[6px] overflow-x-auto no-scrollbar"
-      style={{
-        padding: "8px 24px",
-        borderColor: "var(--border-subtle)",
-        borderBottomWidth: 1,
-        borderBottomStyle: "solid" as const,
-        backgroundColor: "var(--card)",
-      }}
+      className="flex items-center gap-[6px] overflow-x-auto no-scrollbar px-4 py-2 border-b border-border bg-card"
     >
       {/* Active filter chips */}
       {activeFilterKeys.map((key) => {

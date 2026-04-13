@@ -96,7 +96,7 @@ export function DensityDropdown({ density, onDensityChange }: DensityDropdownPro
                   {option.icon}
                 </span>
                 <div className="flex flex-col items-start flex-1 min-w-0">
-                  <span className="text-sm text-foreground" style={{ fontWeight: 400 }}>
+                  <span className="text-sm text-foreground" style={{ fontWeight: 500 }}>
                     {option.label}
                   </span>
                   <span className="text-xs text-muted-foreground">
@@ -104,7 +104,7 @@ export function DensityDropdown({ density, onDensityChange }: DensityDropdownPro
                   </span>
                 </div>
                 {isActive && (
-                  <Check className="w-4 h-4 shrink-0" style={{ color: "#0A77FF" }} />
+                  <Check className="w-4 h-4 shrink-0 text-primary" />
                 )}
               </button>
             );

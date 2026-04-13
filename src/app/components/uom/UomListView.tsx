@@ -10,10 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Table, TableBody, TableRow as ShadcnTR, TableCell as ShadcnTD } from "../ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { FilterPill } from "./FilterPill";
-import { UomButton } from "./Button";
 import { CategoryDropdown } from "./CategoryDropdown";
 import {
   ColumnsDropdown,
@@ -552,10 +558,11 @@ export function UomListView({
               }`}
             >
               <SlidersHorizontal className={`w-3.5 h-3.5 ${activeAdvFilterCount > 0 ? "text-primary" : "text-muted-foreground"}`} />
-              <span className="text-sm font-medium">Filters</span>
+              <span className="text-sm" style={{ fontWeight: 500 }}>Filters</span>
               {activeAdvFilterCount > 0 && (
                 <span
-                  className="ml-0.5 min-w-[18px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white bg-primary font-semibold"
+                  className="ml-0.5 min-w-[18px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-primary-foreground bg-primary"
+                  style={{ fontWeight: 600 }}
                 >
                   {activeAdvFilterCount}
                 </span>
@@ -580,6 +587,8 @@ export function UomListView({
                 </>
               )}
             </span>
+
+            <div className="w-px h-5 bg-border/60 mx-1 hidden sm:block" />
 
             <DensityDropdown
               density={density}
@@ -688,8 +697,7 @@ export function UomListView({
             {/* ── Scroll container for DraggableColumnSystem ── */}
             <div
               ref={tableScrollRef}
-              style={{ overflowX: "auto" }}
-              className="scrollbar-overlay"
+              className="min-h-0 flex-1 overflow-auto scrollbar-overlay"
             >
               <Table
                 style={{
@@ -805,19 +813,23 @@ export function UomListView({
             <div className="flex flex-col sm:flex-row items-center justify-center px-4 py-3 border-t border-border gap-3 shrink-0">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>Records per page</span>
-                <select
-                  value={pageSize}
-                  onChange={(e) => {
-                    setPageSize(Number(e.target.value));
+                <Select
+                  value={String(pageSize)}
+                  onValueChange={(value) => {
+                    setPageSize(Number(value));
                     setPage(1);
                   }}
-                  className="h-8 w-[70px] rounded-md border border-border bg-white px-2 text-sm cursor-pointer outline-none focus:ring-2 focus:ring-primary/20"
                 >
-                  <option value={10}>10</option>
-                  <option value={25}>25</option>
-                  <option value={50}>50</option>
-                  <option value={100}>100</option>
-                </select>
+                  <SelectTrigger className="h-8 w-[74px] bg-white text-sm shadow-none">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex items-center gap-1">
                 <Button
@@ -1394,8 +1406,8 @@ function ModuleHeader({
     >
       {/* Left side */}
       <div className="flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#EDF4FF' }}>
-          <span style={{ color: '#0A77FF', fontSize: 16, lineHeight: 1 }}>⇄</span>
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+          <span style={{ fontSize: 16, lineHeight: 1 }}>⇄</span>
         </div>
         <div>
           <h1 className="font-bold text-[20px]">Units of Measures</h1>
