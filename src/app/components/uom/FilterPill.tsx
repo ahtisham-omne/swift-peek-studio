@@ -35,14 +35,13 @@ export function FilterPill({
         transition-colors whitespace-nowrap shrink-0 cursor-pointer
         ${
           active
-            ? "border-primary bg-[#EDF4FF] hover:bg-[#D6E8FF] active:bg-[#ADD1FF]"
+            ? "border-primary/30 bg-primary/10 text-primary hover:bg-primary/15 active:bg-primary/20"
             : "border-border text-muted-foreground hover:bg-muted/60 hover:text-foreground hover:border-muted-foreground/30 active:bg-muted"
         }
         ${className}
       `}
       style={{
         fontWeight: active ? 500 : 400,
-        color: active ? "#0A77FF" : undefined,
       }}
     >
       {/* Optional leading status dot */}
@@ -52,7 +51,7 @@ export function FilterPill({
           style={{
             width: 6,
             height: 6,
-            backgroundColor: active ? "#0A77FF" : dot,
+            backgroundColor: active ? "var(--primary)" : dot,
           }}
         />
       )}
@@ -64,11 +63,10 @@ export function FilterPill({
       {count !== undefined && (
         <span
           className={`text-[10px] rounded-full px-1.5 py-px min-w-[18px] text-center ${
-            active ? "bg-primary/10" : "bg-muted"
+            active ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
           }`}
           style={{
             fontWeight: 600,
-            color: active ? "#0A77FF" : "#475569",
           }}
         >
           {count}

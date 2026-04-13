@@ -136,50 +136,23 @@ export function ColumnsDropdown({
 
   return (
     <div className={className}>
-      {/* Trigger button — matches Figma reference: pill shape with count badge */}
+      {/* Trigger button — aligned with vendor listing controls */}
       <button
         type="button"
         onClick={toggleOpen}
-        className="flex items-center gap-1.5 cursor-pointer"
-        style={{
-          padding: "6px 8px 6px 6px",
-          borderRadius: "100px",
-          border: "1px solid var(--border)",
-          backgroundColor: open ? "var(--primary-surface)" : "var(--card)",
-          color: "var(--text-default)",
-          fontFamily: "'Inter', sans-serif",
-          fontSize: "var(--text-label)",
-          fontWeight: "var(--font-weight-medium)" as any,
-          lineHeight: 1,
-          transition: "border-color 150ms, background-color 150ms",
-        }}
-        onMouseEnter={(e) => {
-          if (!open) {
-            (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong)";
-            (e.currentTarget as HTMLElement).style.backgroundColor = "var(--surface-raised)";
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (!open) {
-            (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-            (e.currentTarget as HTMLElement).style.backgroundColor = "var(--card)";
-          }
-        }}
+        className={`inline-flex items-center justify-center h-9 gap-2 px-3 rounded-lg border bg-white shadow-sm transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
+          open
+            ? "border-primary/30 text-primary bg-primary/10"
+            : "border-border text-foreground hover:bg-muted/40"
+        }`}
       >
-        <span
-          className="inline-flex items-center justify-center rounded-full"
-          style={{
-            width: 18,
-            height: 18,
-            fontSize: "var(--text-label)",
-            fontWeight: "var(--font-weight-medium)" as any,
-            backgroundColor: "var(--primary-surface)",
-            color: "var(--primary)",
-          }}
-        >
+        <Columns3 size={18} style={{ color: open ? "var(--primary)" : "var(--text-muted)" }} />
+        <span className="text-sm hidden md:inline" style={{ fontWeight: 500 }}>
+          Columns
+        </span>
+        <span className="inline-flex min-w-[22px] h-5 items-center justify-center rounded-full bg-primary/10 px-1.5 text-[11px] text-primary" style={{ fontWeight: 600 }}>
           {visibleCount}
         </span>
-        <Columns3 size={20} style={{ color: open ? "var(--primary)" : "var(--text-muted)" }} />
       </button>
     </div>
   );
