@@ -661,6 +661,9 @@ export function UomListView({
           )}
         </div>
 
+        {/* Divider between filters and table content */}
+        <div className="border-t border-border shrink-0" />
+
         {/* ── DATA TABLE or CARD VIEW ── */}
         {density === "card" ? (
           <UomCardGrid
@@ -669,9 +672,9 @@ export function UomListView({
             onCardClick={(u) => navigate(`/unit/${u.id}`)}
           />
         ) : (
-        <div className="flex">
+        <div className="flex min-h-0 overflow-auto flex-1">
           {/* Table content */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 flex flex-col">
             {/* ── Notion-style filter bar ── */}
             <UomNotionFilterBar
               columns={columns}
