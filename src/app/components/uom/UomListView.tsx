@@ -174,7 +174,24 @@ export function UomListView({
   const [density, setDensity] = useState<DensityMode>("condensed");
   const [topBarSearch, setTopBarSearch] = useState("");
 
-  /* ── Edit modal state ── */
+  /* ── KPI Insights state ── */
+  const [activeKpis, setActiveKpis] = useState<string[]>([...DEFAULT_UOM_ACTIVE_KPIS]);
+  const [insightsPanelOpen, setInsightsPanelOpen] = useState(false);
+  const [insightsDateRange, setInsightsDateRange] = useState("last_30");
+  const [showInsights, setShowInsights] = useState(true);
+
+  const handleToggleKpi = useCallback((key: string) => {
+    setActiveKpis((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  }, []);
+
+  const activeKpiDefs = useMemo(() => {
+    return activeKpis
+      .map((key) => ALL_UOM_KPI_DEFINITIONS.find((d) => d.key === key))
+      .filter(Boolean) as typeof ALL_UOM_KPI_DEFINITIONS;
+  }, [activeKpis]);
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editUnit, setEditUnit] = useState<UomUnit | null>(null);
 
