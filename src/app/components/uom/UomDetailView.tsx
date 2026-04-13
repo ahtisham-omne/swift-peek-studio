@@ -477,27 +477,6 @@ export function UomDetailView() {
 
           {/* ── Row 2: Meta info — Type · Category · Symbol ── */}
           <div className="border-t border-[#F1F5F9] px-4 lg:px-5 py-2.5">
-            {isInUse && (
-              <div
-                className="inline-flex items-center gap-2 mb-2"
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  backgroundColor: "#FEF3C7",
-                  border: "1px solid #FDE68A",
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: "#92400E",
-                  lineHeight: 1.4,
-                }}
-              >
-                <span>In Active Use</span>
-                <span style={{ color: "#D97706", fontSize: 8 }}>●</span>
-                <span>Editing Locked</span>
-                <span style={{ color: "#D97706", fontSize: 8 }}>●</span>
-                <span>Protects Existing Items & Transactions</span>
-              </div>
-            )}
             <div
               className="flex items-center flex-wrap"
               style={{
@@ -563,6 +542,31 @@ export function UomDetailView() {
                   </span>
                 )}
               </span>
+
+              {isInUse && (
+                <>
+                  <MetaDot />
+                  <span
+                    className="inline-flex items-center gap-1.5"
+                    style={{
+                      padding: "4px 10px",
+                      borderRadius: 6,
+                      backgroundColor: "var(--surface-raised)",
+                      border: "1px solid var(--border-subtle)",
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: "var(--text-muted)",
+                      lineHeight: 1,
+                    }}
+                  >
+                    <span>In Active Use</span>
+                    <span style={{ fontSize: 6, color: "var(--text-muted)", opacity: 0.5 }}>●</span>
+                    <span>Editing Locked</span>
+                    <span style={{ fontSize: 6, color: "var(--text-muted)", opacity: 0.5 }}>●</span>
+                    <span>Protects Items & Transactions</span>
+                  </span>
+                </>
+              )}
 
             </div>
           </div>
