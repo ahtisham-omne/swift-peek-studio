@@ -547,23 +547,19 @@ export function UomDetailView() {
                 <>
                   <MetaDot />
                   <span
-                    className="inline-flex items-center gap-1.5"
+                    className="inline-flex items-center"
                     style={{
                       padding: "4px 10px",
                       borderRadius: 6,
                       backgroundColor: "var(--surface-raised)",
                       border: "1px solid var(--border-subtle)",
                       fontSize: 12,
-                      fontWeight: 500,
+                      fontWeight: 400,
                       color: "var(--text-muted)",
-                      lineHeight: 1,
+                      lineHeight: 1.35,
                     }}
                   >
-                    <span>In Active Use</span>
-                    <span style={{ fontSize: 6, color: "var(--text-muted)", opacity: 0.5 }}>●</span>
-                    <span>Editing Locked</span>
-                    <span style={{ fontSize: 6, color: "var(--text-muted)", opacity: 0.5 }}>●</span>
-                    <span>Protects Items & Transactions</span>
+                    This UOM is in active use, so editing is locked to protect existing items and transactions.
                   </span>
                 </>
               )}
