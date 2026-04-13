@@ -827,23 +827,25 @@ export function UomListView({
                 </select>
               </div>
               <div className="flex items-center gap-1">
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   disabled={safePage <= 1}
                   onClick={() => setPage(1)}
-                  className="inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="h-8 w-8 p-0"
                 >
                   <ChevronsLeft className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   disabled={safePage <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="h-8 px-2 gap-1"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   Prev
-                </button>
+                </Button>
 
                 {pageNumbers.map((pg, idx) =>
                   pg === "..." ? (
@@ -851,38 +853,41 @@ export function UomListView({
                       ...
                     </span>
                   ) : (
-                    <button
+                    <Button
                       key={pg}
-                      type="button"
+                      variant={safePage === pg ? "default" : "ghost"}
+                      size="sm"
                       onClick={() => setPage(pg as number)}
-                      className={`inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm transition-colors cursor-pointer ${
+                      className={`h-8 w-8 p-0 ${
                         safePage === pg
                           ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:bg-muted/60"
+                          : "text-muted-foreground"
                       }`}
                     >
                       {pg}
-                    </button>
+                    </Button>
                   )
                 )}
 
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="h-8 px-2 gap-1"
                 >
                   Next
                   <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage(totalPages)}
-                  className="inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="h-8 w-8 p-0"
                 >
                   <ChevronsRight className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
           </div>
