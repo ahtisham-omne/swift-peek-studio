@@ -220,9 +220,9 @@ const CELL_PADDING: React.CSSProperties = {
   paddingRight: 16,
 };
 
-function getCellPadding(density?: DensityMode): React.CSSProperties {
-  if (!density || density === "card") return CELL_PADDING;
-  return DENSITY_PADDING[density];
+function getCellPadding(_density?: DensityMode): React.CSSProperties {
+  // Density is now handled via Tailwind classes on <tr>, not inline padding
+  return CELL_PADDING;
 }
 
 /* ═══════════════════════════════════════════════
