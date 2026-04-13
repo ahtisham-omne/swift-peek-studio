@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Table, TableBody } from "../ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { FilterPill } from "./FilterPill";
