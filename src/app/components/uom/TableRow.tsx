@@ -16,7 +16,7 @@ import { CategoryBadge, type UomCategory } from "./CategoryBadge";
 import { TypeLabel, type UomType } from "./TypeLabel";
 import { InUseBadge } from "./InUseBadge";
 import { UOM_ICONS } from "./design-tokens";
-import { Files, FilePenLine, Archive, GripVertical, MoreHorizontal, Eye } from "lucide-react";
+import { Files, FilePenLine, Archive, GripVertical, MoreHorizontal, Eye, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import type { ColumnDef } from "./ColumnsDropdown";
 import { type DensityMode } from "./DensityDropdown";
 import { TableHeader, TableRow as ShadcnTableRow, TableHead, TableBody, TableCell } from "../ui/table";
