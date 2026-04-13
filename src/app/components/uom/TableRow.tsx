@@ -753,19 +753,17 @@ export function TableRow({
       {/* ── Checkbox cell ── */}
       {onToggleSelect && (
         <TableCell
-          className="w-10 min-w-[40px] max-w-[40px] p-0 text-center"
+          className="sticky left-0 z-10 bg-inherit w-[40px] min-w-[40px] max-w-[40px] !pl-2 !pr-0"
           onClick={(e) => {
             e.stopPropagation();
             onToggleSelect(unit.id);
           }}
         >
-          <div className="flex items-center justify-center">
-            <Checkbox
-              checked={!!selected}
-              onCheckedChange={() => onToggleSelect(unit.id)}
-              aria-label={`Select ${unit.name}`}
-            />
-          </div>
+          <Checkbox
+            checked={!!selected}
+            onCheckedChange={() => onToggleSelect(unit.id)}
+            aria-label={`Select ${unit.name}`}
+          />
         </TableCell>
       )}
       {visibleKeys.map((key, idx) => {
