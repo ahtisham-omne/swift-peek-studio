@@ -1800,241 +1800,80 @@ export function UomDetailView() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             onClick={() => setArchiveModalOpen(false)}
-            style={{
-              position: "fixed",
-              inset: 0,
-              backgroundColor: "rgba(0,0,0,0.35)",
-              zIndex: 9998,
-            }}
+            className="fixed inset-0 bg-black/40 z-[9998]"
           />
-          <div
-            style={{
-              position: "fixed",
-              inset: 0,
-              zIndex: 9999,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              pointerEvents: "none",
-            }}
-          >
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
           <motion.div
             initial={{ opacity: 0, scale: 0.97, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 8 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            style={{
-              width: 560,
-              maxWidth: "calc(100vw - 40px)",
-              backgroundColor: "var(--background)",
-              borderRadius: "var(--radius-lg)",
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: "var(--border)",
-              boxShadow: "0 20px 60px -12px rgba(0,0,0,0.18)",
-              maxHeight: "calc(100vh - 40px)",
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-              pointerEvents: "auto",
-            }}
+            className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-[0_20px_60px_-12px_rgba(0,0,0,0.25)] pointer-events-auto flex flex-col"
+            style={{ width: 520, maxWidth: "calc(100vw - 40px)", maxHeight: "calc(100vh - 40px)" }}
           >
-            <div style={{ overflowY: "auto", flex: 1, paddingBottom: 8 }}>
+            <div className="overflow-y-auto flex-1 pb-2">
               {/* Header */}
-              <div
-                className="flex items-start gap-[14px]"
-                style={{ padding: "24px 24px 0 24px" }}
-              >
-                <div
-                  className="flex items-center justify-center shrink-0"
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "var(--radius)",
-                    backgroundColor: "var(--destructive-surface)",
-                    borderWidth: 1,
-                    borderStyle: "solid",
-                    borderColor: "var(--destructive-border)",
-                  }}
-                >
-                  <AlertTriangle
-                    size={18}
-                    strokeWidth={2}
-                    style={{ color: "var(--destructive)" }}
-                  />
+              <div className="flex items-start gap-3.5 p-6 pb-0">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-[#FEF2F2] border border-[#FECACA]">
+                  <AlertTriangle size={18} strokeWidth={2} className="text-[#DC2626]" />
                 </div>
-                <div className="flex-1" style={{ minWidth: 0 }}>
-                  <h3
-                    style={{
-                      margin: 0,
-                      fontSize: "var(--text-base)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      color: "var(--foreground)",
-                      lineHeight: "1.3",
-                      fontFamily: "var(--font-family)",
-                    }}
-                  >
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-[15px] text-[#0F172A] m-0 leading-snug" style={{ fontWeight: 600 }}>
                     Archive "{displayName}"?
                   </h3>
-                  <p
-                    style={{
-                      margin: "8px 0 0 0",
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                      color: "var(--text-muted)",
-                      lineHeight: "1.5",
-                      fontFamily: "var(--font-family)",
-                    }}
-                  >
-                    This unit can’t be archived while it is associated with active transactions and records.
+                  <p className="text-[13px] text-[#64748B] mt-1.5 leading-relaxed" style={{ fontWeight: 400 }}>
+                    This unit can't be archived while it is associated with active transactions and records.
                   </p>
                 </div>
               </div>
 
               {/* Blocking explanation */}
-              <div style={{ padding: "16px 24px 0 78px" }}>
-                <ul
-                  style={{
-                    margin: 0,
-                    padding: 0,
-                    listStyle: "none",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 8,
-                  }}
-                >
+              <div className="px-6 pt-4" style={{ paddingLeft: 78 }}>
+                <ul className="m-0 p-0 list-none flex flex-col gap-2">
                   {[
                     "Remove or complete the active references listed below before archiving this unit",
                     "Historical records stay intact after the unit is no longer actively referenced",
                     "Once associations are cleared, archiving will become available again",
                   ].map((text) => (
-                    <li
-                      key={text}
-                      className="flex items-start gap-[8px]"
-                      style={{
-                        fontSize: "var(--text-label)",
-                        fontWeight: "var(--font-weight-normal)" as any,
-                        color: "var(--text-subtle)",
-                        lineHeight: "1.45",
-                        fontFamily: "var(--font-family)",
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: 5,
-                          height: 5,
-                          borderRadius: "50%",
-                          backgroundColor: "var(--text-muted)",
-                          marginTop: 5,
-                          flexShrink: 0,
-                        }}
-                      />
+                    <li key={text} className="flex items-start gap-2 text-[12px] text-[#94A3B8] leading-[1.5]" style={{ fontWeight: 400 }}>
+                      <span className="w-1 h-1 rounded-full bg-[#CBD5E1] mt-[7px] shrink-0" />
                       {text}
                     </li>
                   ))}
                 </ul>
               </div>
 
-              {/* Usage summary */}
-              <div
-                style={{
-                  margin: "16px 24px 0 24px",
-                  padding: "12px 14px",
-                  borderRadius: "var(--radius)",
-                  backgroundColor: "var(--destructive-surface)",
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "var(--destructive-border)",
-                }}
-              >
-                <div
-                  className="flex items-center gap-[8px]"
-                  style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-medium)" as any,
-                    color: "var(--destructive)",
-                    lineHeight: "1",
-                    fontFamily: "var(--font-family)",
-                  }}
-                >
+              {/* Warning banner */}
+              <div className="mx-6 mt-4 p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA]">
+                <div className="flex items-center gap-2 text-[12px] text-[#DC2626]" style={{ fontWeight: 500 }}>
                   <AlertTriangle size={13} strokeWidth={2} />
                   Archiving is unavailable until these active references are removed
                 </div>
               </div>
 
-              <div style={{ padding: "16px 24px 0 24px" }}>
-                <div
-                  style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-medium)" as any,
-                    color: "var(--foreground)",
-                    lineHeight: "1.4",
-                  }}
-                >
+              {/* Active references */}
+              <div className="px-6 pt-4">
+                <div className="text-[12px] text-[#334155] mb-3" style={{ fontWeight: 500 }}>
                   Active references
                 </div>
-                <div className="mt-3 flex flex-col gap-2">
+                <div className="flex flex-col gap-2.5">
                   {ARCHIVE_BLOCKING_REFERENCES.map((group) => (
-                    <div
-                      key={group.label}
-                      className="flex flex-wrap items-start gap-x-2 gap-y-1"
-                      style={{
-                        fontSize: "var(--text-label)",
-                        lineHeight: "1.6",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "var(--text-label)",
-                          fontWeight: "var(--font-weight-medium)" as any,
-                          color: "var(--foreground)",
-                          lineHeight: "1.4",
-                        }}
-                      >
-                        {group.label}:
-                      </div>
-                      <div
-                        style={{
-                          color: "var(--text-subtle)",
-                          fontSize: "var(--text-label)",
-                          lineHeight: "1.6",
-                        }}
-                      >
-                        {group.entries.join(", ")}
-                      </div>
+                    <div key={group.label} className="flex flex-wrap items-start gap-x-2 gap-y-1">
+                      <span className="text-[12px] text-[#334155]" style={{ fontWeight: 500 }}>{group.label}:</span>
+                      <span className="text-[12px] text-[#94A3B8]" style={{ fontWeight: 400 }}>{group.entries.join(", ")}</span>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Actions */}
-            <div
-              className="flex items-center justify-end gap-[10px]"
-              style={{
-                padding: "16px 24px 20px",
-                borderTop: "1px solid var(--border-subtle)",
-                flexShrink: 0,
-              }}
-            >
+            {/* Footer actions */}
+            <div className="flex items-center justify-end gap-2.5 px-6 py-4 border-t border-[#F1F5F9] shrink-0">
               <button
                 type="button"
                 onClick={() => setArchiveModalOpen(false)}
-                className="cursor-pointer border-none"
-                style={{
-                  padding: "8px 18px",
-                  borderRadius: "var(--radius-md)",
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-medium)" as any,
-                  lineHeight: "1",
-                  backgroundColor: "rgba(0,0,0,0)",
-                  color: "var(--text-subtle)",
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "var(--border)",
-                  fontFamily: "var(--font-family)",
-                  transition: "all 0.12s",
-                }}
+                className="cursor-pointer h-9 px-4 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[13px] text-[#334155] transition-colors shadow-sm"
+                style={{ fontWeight: 500 }}
               >
                 Cancel
               </button>
@@ -2043,22 +1882,8 @@ export function UomDetailView() {
                 onClick={handleArchiveConfirm}
                 disabled
                 aria-disabled="true"
-                className="border-none"
-                style={{
-                  padding: "8px 18px",
-                  borderRadius: "var(--radius-md)",
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-medium)" as any,
-                  lineHeight: "1",
-                  backgroundColor: "var(--surface-raised)",
-                  color: "var(--text-muted)",
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "var(--border)",
-                  fontFamily: "var(--font-family)",
-                  transition: "all 0.12s",
-                  cursor: "not-allowed",
-                }}
+                className="h-9 px-4 rounded-lg border border-[#E2E8F0] bg-[#F1F5F9] text-[13px] text-[#94A3B8] cursor-not-allowed shadow-sm"
+                style={{ fontWeight: 500 }}
               >
                 Cannot Archive
               </button>
