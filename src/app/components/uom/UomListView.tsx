@@ -62,6 +62,7 @@ import {
   CheckCircle2,
   Package,
   Ruler,
+  BarChart3,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { BulkActionsBar } from "./BulkActionsBar";
@@ -625,7 +626,7 @@ export function UomListView({
             </button>
           </div>
 
-          <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))" }}>
+          <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))" }}>
             {insightCards.map((card) => (
               <UomInsightCard
                 key={card.label}
@@ -637,7 +638,7 @@ export function UomListView({
           </div>
         </div>
 
-        <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col shadow-sm">
+        <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col">
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
         <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
           {/* Left — Search + Filters button */}
@@ -703,6 +704,23 @@ export function UomListView({
             </span>
 
             <div className="w-px h-5 bg-border/60 mx-1 hidden sm:block" />
+
+            <button
+              type="button"
+              onClick={() => showToast("info", "Insight customization is coming soon")}
+              className="inline-flex items-center justify-center h-9 gap-2 px-3 rounded-lg border border-border bg-white text-foreground shadow-sm hover:bg-muted/40 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            >
+              <BarChart3 className="w-[18px] h-[18px] text-muted-foreground/80" />
+              <span className="text-sm hidden md:inline" style={{ fontWeight: 500 }}>
+                Insights
+              </span>
+              <span
+                className="inline-flex items-center justify-center h-5 px-1.5 rounded-full text-[11px] bg-primary/10 text-primary"
+                style={{ fontWeight: 600 }}
+              >
+                {insightCards.length}
+              </span>
+            </button>
 
             <DensityDropdown
               density={density}
@@ -1521,19 +1539,22 @@ function ModuleHeader({
     >
       {/* Left side */}
       <div className="flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center"
+          style={{ backgroundColor: "var(--primary-surface)", color: "var(--primary)" }}
+        >
           <ArrowLeftRight className="w-4 h-4" />
         </div>
         <div>
-          <h1 className="font-bold text-[20px] text-foreground">Units of Measure</h1>
-          <p className="text-sm text-muted-foreground">
-            Organize standard, custom, and item-linked units in one place.
+          <h1 className="font-bold text-[20px] text-foreground">Unit of Measure</h1>
+          <p className="text-xs text-muted-foreground">
+            Organize standard, custom, and item-linked units — all in one place.
           </p>
         </div>
       </div>
 
       {/* Right side — action button */}
-      <Button size="lg" className="shrink-0 shadow-sm" onClick={onNewUnit}>
+      <Button className="bg-primary text-primary-foreground shrink-0" onClick={onNewUnit}>
         <Plus className="w-4 h-4 mr-1.5" />
         Create New Unit
       </Button>
@@ -1551,19 +1572,22 @@ function UomInsightCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div
-      className="rounded-xl border border-border bg-card px-4 py-3.5"
-      style={{ boxShadow: "var(--elevation-btn-light)" }}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="mt-2 text-[18px] leading-none text-foreground" style={{ fontWeight: 600 }}>
+    <div className="border border-border rounded-lg bg-white min-w-0 overflow-hidden">
+      <div className="px-3 py-2">
+        <div className="flex items-center justify-between gap-1 mb-1">
+          <p className="text-[10.5px] text-muted-foreground whitespace-nowrap" style={{ fontWeight: 500 }}>
+            {label}
+          </p>
+          <div className="shrink-0 text-muted-foreground/70">
+            <div className="flex items-center justify-center w-3.5 h-3.5">
+              {icon}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-baseline gap-1.5">
+          <p className="text-[15px] tracking-tight whitespace-nowrap text-foreground" style={{ fontWeight: 600, lineHeight: 1.2 }}>
             {value}
           </p>
-        </div>
-        <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          {icon}
         </div>
       </div>
     </div>
