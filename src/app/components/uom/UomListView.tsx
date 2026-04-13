@@ -7,6 +7,9 @@
 
 import React, { useState, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Table, TableBody } from "../ui/table";
 
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { FilterPill } from "./FilterPill";
@@ -521,12 +524,12 @@ export function UomListView({
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70 pointer-events-none" />
-              <input
+              <Input
                 type="text"
                 placeholder="Search by name, symbol, or category..."
                 value={filters.search}
                 onChange={(e) => updateFilter({ search: e.target.value })}
-                className="w-full pl-9 pr-8 h-9 text-sm bg-white border border-border/80 rounded-lg shadow-sm outline-none placeholder:text-muted-foreground/50 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 transition-all"
+                className="pl-9 pr-8 h-9 text-sm bg-white border-border/80 shadow-sm placeholder:text-muted-foreground/50 focus-visible:border-primary focus-visible:ring-primary/20"
               />
               {filters.search && (
                 <button
@@ -549,11 +552,10 @@ export function UomListView({
               }`}
             >
               <SlidersHorizontal className={`w-3.5 h-3.5 ${activeAdvFilterCount > 0 ? "text-primary" : "text-muted-foreground"}`} />
-              <span className="text-sm" style={{ fontWeight: 500 }}>Filters</span>
+              <span className="text-sm font-medium">Filters</span>
               {activeAdvFilterCount > 0 && (
                 <span
-                  className="ml-0.5 min-w-[18px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white"
-                  style={{ backgroundColor: "#0A77FF", fontWeight: 600 }}
+                  className="ml-0.5 min-w-[18px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white bg-primary font-semibold"
                 >
                   {activeAdvFilterCount}
                 </span>
@@ -563,10 +565,20 @@ export function UomListView({
 
           {/* Right — Count + Controls */}
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-sm tabular-nums hidden sm:inline text-muted-foreground" style={{ fontWeight: 500 }}>
-              {filteredUnits.length !== allUnits.length
-                ? `${filteredUnits.length} of ${allUnits.length} units`
-                : `${allUnits.length} units`}
+            <span className="text-sm tabular-nums font-medium hidden sm:inline">
+              {filteredUnits.length !== allUnits.length ? (
+                <>
+                  <span className="text-foreground">{filteredUnits.length}</span>
+                  <span className="text-muted-foreground/60"> of </span>
+                  <span className="text-muted-foreground">{allUnits.length}</span>
+                  <span className="text-muted-foreground/70"> units</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-foreground">{allUnits.length}</span>
+                  <span className="text-muted-foreground/70"> units</span>
+                </>
+              )}
             </span>
 
             <DensityDropdown
@@ -815,23 +827,25 @@ export function UomListView({
                 </select>
               </div>
               <div className="flex items-center gap-1">
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   disabled={safePage <= 1}
                   onClick={() => setPage(1)}
-                  className="inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="h-8 w-8 p-0"
                 >
                   <ChevronsLeft className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   disabled={safePage <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="h-8 px-2 gap-1"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   Prev
-                </button>
+                </Button>
 
                 {pageNumbers.map((pg, idx) =>
                   pg === "..." ? (
@@ -839,38 +853,41 @@ export function UomListView({
                       ...
                     </span>
                   ) : (
-                    <button
+                    <Button
                       key={pg}
-                      type="button"
+                      variant={safePage === pg ? "default" : "ghost"}
+                      size="sm"
                       onClick={() => setPage(pg as number)}
-                      className={`inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm transition-colors cursor-pointer ${
+                      className={`h-8 w-8 p-0 ${
                         safePage === pg
                           ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:bg-muted/60"
+                          : "text-muted-foreground"
                       }`}
                     >
                       {pg}
-                    </button>
+                    </Button>
                   )
                 )}
 
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="h-8 px-2 gap-1"
                 >
                   Next
                   <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage(totalPages)}
-                  className="inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="h-8 w-8 p-0"
                 >
                   <ChevronsRight className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -1396,15 +1413,10 @@ function ModuleHeader({
       </div>
 
       {/* Right side — action button */}
-      <button
-        type="button"
-        onClick={onNewUnit}
-        className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-primary/90 transition-colors shrink-0"
-        style={{ fontWeight: 500 }}
-      >
+      <Button className="bg-primary text-primary-foreground shrink-0" onClick={onNewUnit}>
         <Plus className="w-4 h-4" />
         Create New Unit
-      </button>
+      </Button>
     </div>
   );
 }
