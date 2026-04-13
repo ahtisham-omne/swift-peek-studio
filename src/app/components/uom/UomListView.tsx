@@ -696,23 +696,28 @@ export function UomListView({
             </button>
           </div>
 
-          {/* KPI Cards — responsive grid */}
-          <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))" }}>
-            {activeKpiDefs.map((kpi) => {
-              const value = computeUomKpiValue(kpi.key, allUnits);
-              return (
-                <UomInsightCard
-                  key={kpi.key}
-                  label={kpi.label}
-                  value={value}
-                  iconName={kpi.iconName}
-                  iconBg={kpi.iconBg}
-                  iconColor={kpi.iconColor}
-                  onRemove={() => handleToggleKpi(kpi.key)}
-                />
-              );
-            })}
-          </div>
+          {/* KPI Cards — draggable responsive grid */}
+          <DndProvider backend={HTML5Backend}>
+            <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))" }}>
+              {activeKpiDefs.map((kpi, idx) => {
+                const value = computeUomKpiValue(kpi.key, allUnits);
+                return (
+                  <DraggableUomKpiCard
+                    key={kpi.key}
+                    index={idx}
+                    kpiKey={kpi.key}
+                    label={kpi.label}
+                    value={value}
+                    iconName={kpi.iconName}
+                    iconBg={kpi.iconBg}
+                    iconColor={kpi.iconColor}
+                    moveCard={moveKpi}
+                    onRemove={() => handleToggleKpi(kpi.key)}
+                  />
+                );
+              })}
+            </div>
+          </DndProvider>
         </div>
         )}
 
