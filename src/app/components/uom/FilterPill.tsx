@@ -1,7 +1,7 @@
 /**
  * UOM Module — Filter Pill
  *
- * Rounded pill toggle matching Partners listing style:
+ * Matches Partner Management FilterPills exactly:
  *   Default:  border-border, text-muted-foreground
  *   Hover:    bg-muted/60, text-foreground
  *   Active:   border-primary, bg-[#EDF4FF], text-primary (#0A77FF)

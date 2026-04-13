@@ -1,25 +1,14 @@
 /**
  * UOM Module — Density Dropdown
  *
- * Matches the reference image: plain text trigger "Comfort ▾"
- * with a clean popover on click.
- * All colors use CSS custom properties from theme.css.
+ * Matches Partner Management: 3 modes (condensed, comfort, card).
+ * Uses shadcn DropdownMenu for consistency.
  */
 
 import React, { useState, useRef, useEffect } from "react";
-import { AlignJustify, LayoutGrid, Check, ChevronDown } from "lucide-react";
+import { AlignJustify, List, LayoutGrid, Check, ChevronDown } from "lucide-react";
 
-export type DensityMode = "condensed" | "comfort" | "relaxed" | "card";
-
-/** Cell padding values per density mode */
-export const DENSITY_PADDING: Record<
-  Exclude<DensityMode, "card">,
-  { paddingTop: number; paddingBottom: number; paddingLeft: number; paddingRight: number }
-> = {
-  condensed: { paddingTop: 4, paddingBottom: 4, paddingLeft: 16, paddingRight: 16 },
-  comfort: { paddingTop: 12, paddingBottom: 12, paddingLeft: 16, paddingRight: 16 },
-  relaxed: { paddingTop: 20, paddingBottom: 20, paddingLeft: 16, paddingRight: 16 },
-};
+export type DensityMode = "condensed" | "comfort" | "card";
 
 interface DensityOption {
   mode: DensityMode;
@@ -32,26 +21,20 @@ const DENSITY_OPTIONS: DensityOption[] = [
   {
     mode: "condensed",
     label: "Condensed",
-    description: "Compact view",
-    icon: <AlignJustify size={14} strokeWidth={2.5} />,
+    description: "Compact rows, more data visible",
+    icon: <AlignJustify size={18} />,
   },
   {
     mode: "comfort",
     label: "Comfort",
-    description: "Balanced view",
-    icon: <AlignJustify size={14} strokeWidth={1.8} />,
-  },
-  {
-    mode: "relaxed",
-    label: "Relaxed",
-    description: "Spacious view",
-    icon: <AlignJustify size={14} strokeWidth={1.2} />,
+    description: "Default balanced spacing",
+    icon: <List size={18} />,
   },
   {
     mode: "card",
     label: "Card View",
-    description: "Grid layout",
-    icon: <LayoutGrid size={14} />,
+    description: "Visual grid cards layout",
+    icon: <LayoutGrid size={18} />,
   },
 ];
 
@@ -79,63 +62,24 @@ export function DensityDropdown({ density, onDensityChange }: DensityDropdownPro
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Trigger — dropdown button matching Figma reference */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 cursor-pointer"
-        style={{
-          padding: "5px 10px 5px 8px",
-          borderRadius: "var(--radius-md)",
-          border: "1px solid var(--border)",
-          backgroundColor: open ? "var(--surface-hover)" : "var(--card)",
-          color: "var(--text-base-second)",
-          fontFamily: "'Inter', sans-serif",
-          fontSize: "var(--text-label)",
-          fontWeight: "var(--font-weight-normal)" as any,
-          lineHeight: "20px",
-          transition: "background-color 150ms, border-color 150ms",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "var(--surface-hover)";
-        }}
-        onMouseLeave={(e) => {
-          if (!open) {
-            e.currentTarget.style.backgroundColor = "var(--card)";
-          }
-        }}
+        type="button"
+        className="inline-flex items-center justify-center h-9 gap-2 px-3 rounded-lg border border-border bg-white text-foreground shadow-sm hover:bg-muted/40 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
       >
-        <span
-          className="flex items-center justify-center"
-          style={{ color: "var(--text-muted)", flexShrink: 0 }}
-        >
-          <AlignJustify size={15} />
+        {density === "condensed" && <AlignJustify className="w-[18px] h-[18px] text-muted-foreground/80" />}
+        {density === "comfort" && <List className="w-[18px] h-[18px] text-muted-foreground/80" />}
+        {density === "card" && <LayoutGrid className="w-[18px] h-[18px] text-muted-foreground/80" />}
+        <span className="text-sm hidden md:inline" style={{ fontWeight: 500 }}>
+          {currentOption.label}
         </span>
-        <span>{currentOption.label}</span>
-        <ChevronDown
-          size={14}
-          style={{
-            color: "var(--text-muted)",
-            flexShrink: 0,
-            transition: "transform 150ms",
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
-          }}
-        />
+        <ChevronDown className="w-3.5 h-3.5 text-muted-foreground/60" />
       </button>
 
-      {/* Dropdown menu */}
       {open && (
         <div
-          className="absolute z-50"
-          style={{
-            top: "calc(100% + 4px)",
-            right: 0,
-            minWidth: 200,
-            backgroundColor: "var(--popover)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius-md)",
-            boxShadow: "var(--elevation-sm)",
-            padding: "4px 0",
-          }}
+          className="absolute z-50 w-[230px] p-1.5 bg-popover border border-border rounded-lg shadow-md"
+          style={{ top: "calc(100% + 4px)", right: 0 }}
         >
           {DENSITY_OPTIONS.map((option) => {
             const isActive = option.mode === density;
@@ -146,67 +90,21 @@ export function DensityDropdown({ density, onDensityChange }: DensityDropdownPro
                   onDensityChange(option.mode);
                   setOpen(false);
                 }}
-                className="flex items-center w-full gap-2.5 cursor-pointer"
-                style={{
-                  padding: "8px 12px",
-                  backgroundColor: isActive ? "var(--primary-surface)" : "transparent",
-                  color: "var(--foreground)",
-                  border: "none",
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-normal)" as any,
-                  lineHeight: 1.5,
-                  transition: "background-color 100ms",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive)
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "var(--surface-hover)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = isActive
-                    ? "var(--primary-surface)"
-                    : "transparent";
-                }}
+                className="flex items-center gap-3 py-2.5 px-3 w-full cursor-pointer rounded-md hover:bg-muted/60 transition-colors border-none bg-transparent text-left"
               >
-                <span
-                  className="flex items-center justify-center"
-                  style={{
-                    width: 20,
-                    height: 20,
-                    color: isActive ? "var(--primary)" : "var(--text-muted)",
-                  }}
-                >
+                <span className="text-muted-foreground shrink-0">
                   {option.icon}
                 </span>
                 <div className="flex flex-col items-start flex-1 min-w-0">
-                  <span
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                      color: isActive ? "var(--primary)" : "var(--foreground)",
-                      lineHeight: 1.4,
-                    }}
-                  >
+                  <span className="text-sm text-foreground" style={{ fontWeight: 400 }}>
                     {option.label}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "12px",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                      color: "var(--text-subtle)",
-                      lineHeight: 1.3,
-                    }}
-                  >
+                  <span className="text-xs text-muted-foreground">
                     {option.description}
                   </span>
                 </div>
                 {isActive && (
-                  <Check
-                    size={14}
-                    style={{ color: "var(--primary)", flexShrink: 0 }}
-                  />
+                  <Check className="w-4 h-4 shrink-0" style={{ color: "#0A77FF" }} />
                 )}
               </button>
             );
