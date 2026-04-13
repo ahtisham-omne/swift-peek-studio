@@ -947,104 +947,68 @@ export function UomDetailView() {
 
                         return (
                           <>
-                      <div
-                        className="overflow-hidden flex-1"
-                        style={{
-                          borderWidth: 1,
-                          borderStyle: "solid",
-                          borderColor: "var(--border)",
-                          borderRadius: "var(--radius)",
-                        }}
-                      >
-                        <ConversionTableHeader
-                          cols={conversionSection === "same"
-                            ? ["CONVERSION FACTOR", "UNITS", "TYPE"]
-                            : ["CONVERSION FACTOR", "UNITS", "CATEGORY"]}
-                          template={conversionSection === "same"
-                            ? "1fr 1fr minmax(80px, 120px)"
-                            : "1fr 1fr minmax(100px, 140px)"}
-                        />
+                      <div className="overflow-hidden flex-1 border border-border rounded-lg">
+                        <ShadcnTable>
+                          <ShadcnTableHeader className="sticky top-0 z-20 bg-card">
+                            <ShadcnTableRow className="bg-muted/30 hover:bg-muted/30 [&>th]:h-10">
+                              <TableHead className="whitespace-nowrap">CONVERSION FACTOR</TableHead>
+                              <TableHead className="whitespace-nowrap">UNITS</TableHead>
+                              <TableHead className="whitespace-nowrap">{conversionSection === "same" ? "TYPE" : "CATEGORY"}</TableHead>
+                            </ShadcnTableRow>
+                          </ShadcnTableHeader>
+                          <TableBody>
                         {pageRows.length === 0 && !isAddingConversion && (
-                          <div
-                            className="flex items-center justify-center"
-                            style={{
-                              padding: "40px 20px",
-                              color: "var(--text-muted)",
-                              fontSize: "var(--text-label)",
-                              fontWeight: "var(--font-weight-normal)" as any,
-                            }}
-                          >
-                            No conversions defined yet. Click "Add Conversion" to get started.
-                          </div>
+                          <ShadcnTableRow>
+                            <TableCell colSpan={3} className="h-32 text-center text-muted-foreground text-sm">
+                              No conversions defined yet. Click "Add Conversion" to get started.
+                            </TableCell>
+                          </ShadcnTableRow>
                         )}
                         {pageRows.map((row, idx) => {
                           const isBaseConversion = conversionSection === "same" && sameCatConversions.length > 0 && row.unitSymbol === sameCatConversions[0].unitSymbol;
                           return (
-                          <motion.div
+                          <ShadcnTableRow
                             key={`conv-${startIdx + idx}`}
-                            initial={{ opacity: 0, y: 4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.03 * idx, duration: 0.2 }}
-                            className="grid items-center transition-colors"
-                            style={{
-                              gridTemplateColumns: conversionSection === "same"
-                                ? "1fr 1fr minmax(80px, 120px)"
-                                : "1fr 1fr minmax(100px, 140px)",
-                              borderColor: "var(--border-subtle)",
-                              borderBottomWidth: idx < pageRows.length - 1 ? 1 : 0,
-                              borderBottomStyle: "solid" as const,
-                              backgroundColor: isBaseConversion ? "var(--primary-surface)" : "rgba(0,0,0,0)",
-                              transition: "background-color 0.12s ease",
-                            }}
-                            onMouseEnter={(e) => { if (!isBaseConversion) e.currentTarget.style.backgroundColor = "var(--surface-hover)"; }}
-                            onMouseLeave={(e) => { if (!isBaseConversion) e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)"; }}
+                            className={`group transition-colors hover:bg-[#F0F7FF] ${
+                              isBaseConversion ? "!bg-[#EDF4FF]" : ""
+                            }`}
                           >
                             {/* Conversion Factor */}
-                            <div style={{ padding: "12px 16px", fontSize: "var(--text-label)", lineHeight: "1.4", fontWeight: "var(--font-weight-normal)" as any, color: "var(--foreground)" }}>
+                            <TableCell className="text-sm">
                               {row.factor === 0 ? (
-                                <span style={{ color: "var(--text-subtle)", fontStyle: "italic" }}>—</span>
+                                <span className="text-muted-foreground italic">—</span>
                               ) : (
                                 row.factor.toLocaleString(undefined, { maximumFractionDigits: 6 })
                               )}
-                            </div>
+                            </TableCell>
                             {/* Units — symbol (name) */}
-                            <div className="flex items-center gap-2" style={{ padding: "12px 16px", fontSize: "var(--text-label)", lineHeight: "1.4" }}>
-                              <span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--text-strong)" }}>
-                                {row.unitSymbol}
-                              </span>
-                              {"  "}
-                              <span style={{ color: "var(--text-subtle)", fontWeight: "var(--font-weight-normal)" as any }}>
-                                ({row.unitName})
-                              </span>
-                              {isBaseConversion && (
-                                <span
-                                  style={{
-                                    fontSize: 10,
-                                    padding: "2px 6px",
-                                    borderRadius: 4,
-                                    backgroundColor: "var(--primary)",
-                                    color: "var(--primary-foreground)",
-                                    fontWeight: "var(--font-weight-medium)" as any,
-                                    lineHeight: "1",
-                                    marginLeft: 4,
-                                  }}
-                                >
-                                  Defined
+                            <TableCell>
+                              <div className="flex items-center gap-2 text-sm">
+                                <span style={{ fontWeight: 500, color: "#0F172A" }}>
+                                  {row.unitSymbol}
                                 </span>
-                              )}
-                            </div>
-                            {/* Type col for same-category / Category col for cross-category */}
-                            {conversionSection === "same" && (
-                              <div style={{ padding: "12px 16px" }}>
+                                <span className="text-muted-foreground">
+                                  ({row.unitName})
+                                </span>
+                                {isBaseConversion && (
+                                  <span
+                                    className="text-[10px] px-1.5 py-0.5 rounded bg-[#0A77FF] text-white"
+                                    style={{ fontWeight: 500, lineHeight: 1 }}
+                                  >
+                                    Defined
+                                  </span>
+                                )}
+                              </div>
+                            </TableCell>
+                            {/* Type / Category */}
+                            <TableCell>
+                              {conversionSection === "same" ? (
                                 <TypeLabel type={(row.type || "Standard") as any} />
-                              </div>
-                            )}
-                            {conversionSection === "cross" && (
-                              <div style={{ padding: "12px 16px" }}>
+                              ) : (
                                 <CategoryBadge category={row.category!} />
-                              </div>
-                            )}
-                          </motion.div>
+                              )}
+                            </TableCell>
+                          </ShadcnTableRow>
                           );
                         })}
 
