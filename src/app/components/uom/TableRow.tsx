@@ -23,7 +23,7 @@ import { InUseBadge } from "./InUseBadge";
 import { UOM_ICONS } from "./design-tokens";
 import { Files, FilePenLine, Archive, GripVertical, MoreHorizontal, Eye } from "lucide-react";
 import type { ColumnDef } from "./ColumnsDropdown";
-import { DENSITY_PADDING, type DensityMode } from "./DensityDropdown";
+import { type DensityMode } from "./DensityDropdown";
 
 /* ══════════════════════════════════════════════
    Search highlight helper
