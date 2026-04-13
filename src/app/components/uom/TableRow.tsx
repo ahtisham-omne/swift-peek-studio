@@ -291,7 +291,7 @@ export function TableHeaderRow({
 }: TableHeaderRowProps) {
   const colMap = new Map(columns.map((c) => [c.key, c]));
 
-  const HEADER_BG = "var(--secondary)";
+  const HEADER_BG = "#f8fafc";
 
   /* ── Resize handler ── */
   const handleResizeStart = useCallback(
@@ -487,11 +487,12 @@ export function TableHeaderRow({
                 )}
 
                 <span
-                  className="leading-none"
+                  className="leading-none text-[13px]"
                   style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-base-second)",
+                    fontWeight: 500 as any,
+                    color: isActive
+                      ? "#0A77FF"
+                      : undefined,
                   }}
                 >
                   {hdr.label}
@@ -597,9 +598,9 @@ export function TableRow({
   const colMap = new Map(columns.map((c) => [c.key, c]));
 
   const ROW_BG = hovered
-    ? "var(--surface-hover)"
+    ? "#F0F7FF"
     : selected
-      ? "var(--primary-surface)"
+      ? "#EDF4FF"
       : "var(--card)";
 
   const cellPad = getCellPadding(density);
