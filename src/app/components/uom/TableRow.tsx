@@ -1,12 +1,7 @@
 /**
  * UOM Module — Table Header Row & Table Data Row
  *
- * Renders <thead>/<tr>/<th> and <tr>/<td> for a standard HTML <table>.
- * All drag-to-reorder logic lives in DraggableColumnSystem.tsx — this file
- * only handles rendering, sort, resize, and cell content.
- *
- * All colors use CSS custom properties from theme.css.
- * Typography uses var(--font-family) defined in theme.css (inherited globally).
+ * Uses shadcn Table components to match Partner Management styling.
  */
 
 import React, {
@@ -24,6 +19,8 @@ import { UOM_ICONS } from "./design-tokens";
 import { Files, FilePenLine, Archive, GripVertical, MoreHorizontal, Eye } from "lucide-react";
 import type { ColumnDef } from "./ColumnsDropdown";
 import { type DensityMode } from "./DensityDropdown";
+import { TableHeader, TableRow as ShadcnTableRow, TableHead, TableBody, TableCell } from "../ui/table";
+import { Checkbox } from "../ui/checkbox";
 
 /* ══════════════════════════════════════════════
    Search highlight helper

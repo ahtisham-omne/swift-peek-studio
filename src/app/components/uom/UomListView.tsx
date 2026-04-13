@@ -1396,15 +1396,10 @@ function ModuleHeader({
       </div>
 
       {/* Right side — action button */}
-      <button
-        type="button"
-        onClick={onNewUnit}
-        className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-primary/90 transition-colors shrink-0"
-        style={{ fontWeight: 500 }}
-      >
+      <Button className="bg-primary text-primary-foreground shrink-0" onClick={onNewUnit}>
         <Plus className="w-4 h-4" />
         Create New Unit
-      </button>
+      </Button>
     </div>
   );
 }
