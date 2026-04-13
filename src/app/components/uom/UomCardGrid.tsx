@@ -85,7 +85,6 @@ interface UomCardProps {
 
 function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
   const icon = CATEGORY_ICON_MAP[unit.category] || <Atom size={16} />;
-  const iconBg = CATEGORY_BG[unit.category] || "#F1F5F9";
 
   return (
     <div
@@ -97,7 +96,7 @@ function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
         <div className="flex items-center gap-3 min-w-0">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0"
-            style={{ backgroundColor: iconBg, color: "#0A77FF" }}
+            style={{ backgroundColor: ICON_BG, color: "#0A77FF" }}
           >
             {icon}
           </div>
