@@ -49,11 +49,11 @@ export function InUseBadge({ inUse, count, className = "" }: InUseBadgeProps) {
           fontWeight: "var(--font-weight-normal)" as any,
           lineHeight: "normal",
           backgroundColor: inUse
-            ? "var(--accent)"
-            : "var(--border)",
+            ? "hsl(var(--primary))"
+            : "hsl(var(--border))",
           color: inUse
-            ? "var(--accent-foreground)"
-            : "var(--text-subtle)",
+            ? "hsl(var(--primary-foreground))"
+            : "hsl(var(--muted-foreground))",
         }}
       >
         {displayCount}
