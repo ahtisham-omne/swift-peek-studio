@@ -9,7 +9,7 @@ import React, { useState, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Table, TableBody } from "../ui/table";
+import { Table, TableBody, TableRow as ShadcnTR, TableCell as ShadcnTD } from "../ui/table";
 
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { FilterPill } from "./FilterPill";
@@ -522,7 +522,7 @@ export function UomListView({
         <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
           {/* Left — Search + Filters button */}
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
-            <div className="relative flex-1 max-w-sm">
+            <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70 pointer-events-none" />
               <Input
                 type="text"
@@ -564,8 +564,8 @@ export function UomListView({
           </div>
 
           {/* Right — Count + Controls */}
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-sm tabular-nums font-medium hidden sm:inline">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="text-sm tabular-nums mr-1 hidden sm:inline" style={{ fontWeight: 500 }}>
               {filteredUnits.length !== allUnits.length ? (
                 <>
                   <span className="text-foreground">{filteredUnits.length}</span>
@@ -691,12 +691,11 @@ export function UomListView({
               style={{ overflowX: "auto" }}
               className="scrollbar-overlay"
             >
-              <table
+              <Table
                 style={{
                   width: "100%",
                   minWidth: tableWidth,
                   tableLayout: "fixed",
-                  borderCollapse: "collapse",
                 }}
               >
                 {/* Colgroup defines column widths for table-layout: fixed */}
@@ -743,22 +742,16 @@ export function UomListView({
                   onDragPointerDown={onHeaderPointerDown}
                 />
 
-                <tbody>
+                <TableBody>
                   {pagedUnits.length === 0 ? (
-                    <tr>
-                      <td
+                    <ShadcnTR>
+                      <ShadcnTD
                         colSpan={visibleKeys.length + 1}
-                        style={{
-                          padding: "48px 20px",
-                          color: "var(--text-muted)",
-                          fontSize: "var(--text-label)",
-                          fontWeight: "var(--font-weight-normal)" as any,
-                          textAlign: "center",
-                        }}
+                        className="h-32 text-center text-sm text-muted-foreground"
                       >
                         No units match your filters.
-                      </td>
-                    </tr>
+                      </ShadcnTD>
+                    </ShadcnTR>
                   ) : (
                     pagedUnits.map((unit) => (
                       <TableRow
@@ -798,8 +791,8 @@ export function UomListView({
                       />
                     ))
                   )}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
 
             {/* ── Drag preview (floating pill near cursor) ── */}
