@@ -402,7 +402,7 @@ export function UomDetailView() {
                     />
                   ) : (
                     <div className="flex items-center flex-wrap gap-2">
-                      <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 700, lineHeight: "22px" }}>
+                      <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 600, lineHeight: "22px" }}>
                         {displayName}
                       </h1>
 
@@ -412,7 +412,7 @@ export function UomDetailView() {
                         style={{
                           padding: "2px 8px",
                           fontSize: 11,
-                          fontWeight: 600,
+                          fontWeight: 500,
                           backgroundColor: displayType === "Standard" ? "#DBEAFE" : "#F1F5F9",
                           borderColor: displayType === "Standard" ? "#BFDBFE" : "#E2E8F0",
                           color: displayType === "Standard" ? "#2563EB" : "#475569",
@@ -424,7 +424,7 @@ export function UomDetailView() {
                       {/* Category badge - blue */}
                       <span
                         className="inline-flex items-center rounded-md border border-[#BFDBFE] bg-[#DBEAFE] text-[#2563EB]"
-                        style={{ padding: "2px 8px", fontSize: 11, fontWeight: 600 }}
+                        style={{ padding: "2px 8px", fontSize: 11, fontWeight: 500 }}
                       >
                         {displayCategory}
                       </span>
@@ -451,7 +451,7 @@ export function UomDetailView() {
                       style={{ maxWidth: 500 }}
                     />
                   ) : (
-                    <p className="text-[12px] text-[#64748B] leading-[1.6]">
+                    <p className="text-[12px] text-[#94A3B8] leading-[1.6]">
                       {displayDescription}
                     </p>
                   )}
@@ -466,14 +466,14 @@ export function UomDetailView() {
                   <button
                     onClick={handleEditSave}
                     className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
-                    style={{ fontWeight: 600 }}
+                    style={{ fontWeight: 500 }}
                   >
                     <Check size={14} /> Save
                   </button>
                   <button
                     onClick={handleEditCancel}
                     className="rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[#334155] inline-flex items-center gap-1.5 h-9 px-3.5 text-[13px] transition-all duration-200 cursor-pointer shadow-sm"
-                    style={{ fontWeight: 500 }}
+                    style={{ fontWeight: 400 }}
                   >
                     Cancel
                   </button>
@@ -500,7 +500,7 @@ export function UomDetailView() {
                     <button
                       onClick={() => setEditModalOpen(true)}
                       className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
-                      style={{ fontWeight: 600 }}
+                      style={{ fontWeight: 500 }}
                     >
                       <Pencil className="w-3.5 h-3.5" />
                       Edit Unit
@@ -597,7 +597,7 @@ export function UomDetailView() {
                   style={{
                     padding: "10px 14px",
                     fontSize: 13,
-                    fontWeight: isActive ? 600 : 400,
+                    fontWeight: isActive ? 500 : 400,
                     backgroundColor: "transparent",
                     borderTopWidth: 0,
                     borderLeftWidth: 0,
@@ -728,11 +728,11 @@ export function UomDetailView() {
                       <div className="flex items-start justify-between" style={{ marginBottom: 16, gap: 12 }}>
                         <div>
                           <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
-                            <span style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-semibold)" as any, color: "var(--foreground)", lineHeight: "1.2" }}>
+                            <span style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)", lineHeight: "1.2" }}>
                               {sectionTitle}
                             </span>
                           </div>
-                          <span style={{ fontSize: "var(--text-label)", color: "var(--text-muted)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.3" }}>
+                          <span style={{ fontSize: "var(--text-label)", color: "var(--text-subtle)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.3" }}>
                             {conversionSection === "same"
                               ? `Only one same-category conversion is allowed. This applies to all units in the ${unit?.category || "this"} category.`
                               : `Define how ${displaySymbol} converts to a unit in another category.`
@@ -986,7 +986,7 @@ export function UomDetailView() {
                             {/* Units — symbol (name) */}
                             <TableCell>
                               <div className="flex items-center gap-2 text-sm">
-                                <span style={{ fontWeight: 500, color: "#0F172A" }}>
+                                <span style={{ fontWeight: 500, color: "#334155" }}>
                                   {row.unitSymbol}
                                 </span>
                                 <span className="text-muted-foreground">
@@ -1328,7 +1328,7 @@ export function UomDetailView() {
                             backgroundColor: isSubActive ? "var(--card)" : "rgba(0,0,0,0)",
                             color: isSubActive ? "var(--foreground)" : "var(--text-muted)",
                             fontSize: "var(--text-label)",
-                            fontWeight: isSubActive ? ("var(--font-weight-semibold)" as any) : ("var(--font-weight-medium)" as any),
+                            fontWeight: isSubActive ? ("var(--font-weight-medium)" as any) : ("var(--font-weight-normal)" as any),
                             lineHeight: "1",
                             transition: "all 0.15s ease",
                             boxShadow: isSubActive ? "var(--elevation-xs)" : "none",
@@ -1367,72 +1367,51 @@ export function UomDetailView() {
                   </div>
 
                   {whereUsedSubTab === "items" && (
-                    <div
-                      className="overflow-x-auto"
-                      style={{
-                        borderWidth: 1,
-                        borderStyle: "solid",
-                        borderColor: "var(--border)",
-                        borderRadius: "var(--radius-md)",
-                      }}
-                    >
-                      <div style={{ minWidth: 480 }}>
-                        <TableHeader cols={["#", "PART NUMBER", "DESCRIPTION", "STATUS"]} template="40px minmax(100px, 140px) 1fr minmax(80px, 100px)" />
-                        {WHERE_USED_ITEMS.map((item, idx) => (
-                          <motion.div
-                            key={item.sku}
-                            initial={{ opacity: 0, y: 4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.04 * idx, duration: 0.22 }}
-                            className="grid items-center transition-colors"
-                            style={{
-                              gridTemplateColumns: "40px minmax(100px, 140px) 1fr minmax(80px, 100px)",
-                              borderColor: "var(--border-subtle)",
-                              borderBottomWidth: idx < WHERE_USED_ITEMS.length - 1 ? 1 : 0,
-                              borderBottomStyle: "solid" as const,
-                              backgroundColor: "rgba(0,0,0,0)",
-                              transition: "background-color 0.12s ease",
-                            }}
-                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--surface-hover)"; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)"; }}
-                          >
-                            <Cell muted>{idx + 1}</Cell>
-                            <div
-                              onClick={() => handleSkuClick(item.sku)}
-                              style={{
-                                padding: "11px 16px",
-                                fontSize: "var(--text-label)",
-                                lineHeight: "1",
-                                fontWeight: "var(--font-weight-medium)" as any,
-                                color: "var(--primary)",
-                                cursor: "pointer",
-                              }}
+                    <div className="overflow-hidden border border-border rounded-lg">
+                      <ShadcnTable>
+                        <ShadcnTableHeader className="sticky top-0 z-20 bg-card">
+                          <ShadcnTableRow className="bg-muted/30 hover:bg-muted/30 [&>th]:h-10">
+                            <TableHead className="whitespace-nowrap w-[40px]">#</TableHead>
+                            <TableHead className="whitespace-nowrap">PART NUMBER</TableHead>
+                            <TableHead className="whitespace-nowrap">DESCRIPTION</TableHead>
+                            <TableHead className="whitespace-nowrap">STATUS</TableHead>
+                          </ShadcnTableRow>
+                        </ShadcnTableHeader>
+                        <TableBody>
+                          {WHERE_USED_ITEMS.map((item, idx) => (
+                            <ShadcnTableRow
+                              key={item.sku}
+                              className="group transition-colors hover:bg-[#F0F7FF]"
                             >
-                              <span className="flex items-center gap-[4px]">
-                                {item.sku}
-                                <ExternalLink size={10} style={{ opacity: 0.6 }} />
-                              </span>
-                            </div>
-                            <Cell className="truncate">{item.name}</Cell>
-                            <div style={{ padding: "11px 16px" }}>
-                              <span
-                                className="inline-flex items-center"
-                                style={{
-                                  fontSize: 11,
-                                  lineHeight: "1",
-                                  padding: "3px 8px",
-                                  borderRadius: 6,
-                                  fontWeight: "var(--font-weight-medium)" as any,
-                                  backgroundColor: item.status === "Active" ? "var(--accent-surface)" : "var(--surface-raised)",
-                                  color: item.status === "Active" ? "var(--accent-text-strong)" : "var(--text-muted)",
-                                }}
-                              >
-                                {item.status}
-                              </span>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
+                              <TableCell className="text-sm text-muted-foreground">{idx + 1}</TableCell>
+                              <TableCell>
+                                <span
+                                  onClick={() => handleSkuClick(item.sku)}
+                                  className="flex items-center gap-1 text-sm cursor-pointer text-primary hover:underline"
+                                  style={{ fontWeight: 500 }}
+                                >
+                                  {item.sku}
+                                  <ExternalLink size={10} className="opacity-60" />
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-sm text-muted-foreground truncate max-w-[300px]">{item.name}</TableCell>
+                              <TableCell>
+                                <span
+                                  className="inline-flex items-center text-[11px] px-2 py-0.5 rounded-md border"
+                                  style={{
+                                    fontWeight: 500,
+                                    backgroundColor: item.status === "Active" ? "#ECFDF5" : "#F1F5F9",
+                                    borderColor: item.status === "Active" ? "#A7F3D0" : "#E2E8F0",
+                                    color: item.status === "Active" ? "#065F46" : "#64748B",
+                                  }}
+                                >
+                                  {item.status}
+                                </span>
+                              </TableCell>
+                            </ShadcnTableRow>
+                          ))}
+                        </TableBody>
+                      </ShadcnTable>
                     </div>
                   )}
 
