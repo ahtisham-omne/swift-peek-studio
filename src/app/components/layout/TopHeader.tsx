@@ -44,7 +44,6 @@ function getBreadcrumbs(pathname: string): BreadcrumbSegment[] {
     const unitId = pathname.split("/unit/")[1];
     const unit = SAMPLE_UNITS.find((u) => u.id === unitId);
     const unitLabel = unit ? unit.name : "Unit Detail";
-    const unitLabel = unit ? unit.name : "Unit Detail";
     return [
       { label: "Company Setup", path: "/" },
       { label: "Items & Inventory" },
