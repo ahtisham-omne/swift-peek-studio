@@ -23,7 +23,7 @@ import { InUseBadge } from "./InUseBadge";
 import { UOM_ICONS } from "./design-tokens";
 import { Files, FilePenLine, Archive, GripVertical, MoreHorizontal, Eye } from "lucide-react";
 import type { ColumnDef } from "./ColumnsDropdown";
-import { DENSITY_PADDING, type DensityMode } from "./DensityDropdown";
+import { type DensityMode } from "./DensityDropdown";
 
 /* ══════════════════════════════════════════════
    Search highlight helper
@@ -220,9 +220,9 @@ const CELL_PADDING: React.CSSProperties = {
   paddingRight: 16,
 };
 
-function getCellPadding(density?: DensityMode): React.CSSProperties {
-  if (!density || density === "card") return CELL_PADDING;
-  return DENSITY_PADDING[density];
+function getCellPadding(_density?: DensityMode): React.CSSProperties {
+  // Density is now handled via Tailwind classes on <tr>, not inline padding
+  return CELL_PADDING;
 }
 
 /* ═══════════════════════════════════════════════
@@ -291,7 +291,8 @@ export function TableHeaderRow({
 }: TableHeaderRowProps) {
   const colMap = new Map(columns.map((c) => [c.key, c]));
 
-  const HEADER_BG = "#f8fafc";
+  /* Density classes matching Partner Management */
+  const headerDensityClass = density === "condensed" ? "[&>th]:h-8" : "";
 
   /* ── Resize handler ── */
   const handleResizeStart = useCallback(
@@ -332,11 +333,7 @@ export function TableHeaderRow({
   return (
     <thead>
       <tr
-        className={className}
-        style={{
-          height: 40,
-          backgroundColor: HEADER_BG,
-        }}
+        className={`bg-muted/30 hover:bg-muted/30 ${headerDensityClass} ${className}`}
       >
         {/* ── Checkbox cell (select-all) ── */}
         {onSelectAll && (
@@ -346,14 +343,9 @@ export function TableHeaderRow({
               minWidth: 40,
               maxWidth: 40,
               padding: 0,
-              backgroundColor: HEADER_BG,
-              borderColor: "var(--border)",
-              borderBottomWidth: 1,
-              borderBottomStyle: "solid",
-              borderRightWidth: 1,
-              borderRightStyle: "solid",
               textAlign: "center",
             }}
+            className="border-b border-r border-border bg-muted/30"
           >
             <button
               type="button"
@@ -412,28 +404,19 @@ export function TableHeaderRow({
           return (
             <th
               key={key}
-              className={`relative select-none ${
-                isSortable ? "cursor-pointer" : ""
-              } ${canDrag ? "group/col" : ""}`}
+              className={`relative select-none bg-muted/30 border-b border-border ${
+                key !== PINNED_RIGHT ? "border-r" : ""
+              } ${isSortable ? "cursor-pointer" : ""} ${canDrag ? "group/col" : ""} ${
+                isDragged ? "!bg-transparent opacity-35" : ""
+              }`}
               style={{
                 width: colW,
                 minWidth: key === PINNED_RIGHT ? colW : Math.min(colW, 80),
                 padding: 0,
                 boxSizing: "border-box",
-                borderColor: "var(--border)",
-                borderBottomWidth: 1,
-                borderBottomStyle: "solid",
-                borderRightWidth: key !== PINNED_RIGHT ? 1 : 0,
-                borderRightStyle: "solid",
-                // Always use non-shorthand properties to avoid conflict with
-                // global CSS `* { @apply border-border }` which sets backgroundColor
-                backgroundColor: isDragged ? "transparent" : HEADER_BG,
-                backgroundImage: isDragged
-                  ? "repeating-linear-gradient(45deg, transparent, transparent 4px, var(--border) 4px, var(--border) 5px)"
-                  : "none",
                 ...(isDragged
                   ? {
-                      opacity: 0.35,
+                      backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 4px, var(--border) 4px, var(--border) 5px)",
                       borderRadius: "var(--radius-sm)",
                       outline: "2px dashed var(--primary-border)",
                       outlineOffset: -2,
@@ -441,7 +424,6 @@ export function TableHeaderRow({
                   : {}),
                 transition: "opacity 200ms ease, outline 200ms ease",
                 textAlign: "left",
-                fontWeight: "var(--font-weight-normal)" as any,
               }}
               onPointerDown={
                 canDrag
@@ -591,6 +573,11 @@ export function TableRow({
   const q = searchQuery.trim();
 
   const colMap = new Map(columns.map((c) => [c.key, c]));
+
+  /* Density classes matching Partner Management */
+  const densityClass = density === "condensed"
+    ? "[&>td]:py-1 [&>td]:px-2"
+    : "";
 
   const ROW_BG = hovered
     ? "#F0F7FF"
@@ -891,7 +878,7 @@ export function TableRow({
 
   return (
     <tr
-      className={`group transition-colors ${
+      className={`group transition-colors hover:bg-muted/20 ${densityClass} ${
         onClick ? "cursor-pointer" : ""
       } ${className}`}
       data-row-id={unit.id}
@@ -905,19 +892,13 @@ export function TableRow({
       {/* ── Checkbox cell ── */}
       {onToggleSelect && (
         <td
+          className="border-b border-r border-border text-center"
           style={{
             width: 40,
             minWidth: 40,
             maxWidth: 40,
             padding: 0,
             backgroundColor: ROW_BG,
-            borderColor: "var(--border-subtle)",
-            borderBottomWidth: 1,
-            borderBottomStyle: "solid",
-            borderRightWidth: 1,
-            borderRightStyle: "solid",
-            borderRightColor: "var(--border-subtle)",
-            textAlign: "center",
           }}
           onClick={(e) => {
             e.stopPropagation();
@@ -958,18 +939,12 @@ export function TableRow({
         return (
           <td
             key={key}
+            className={`border-b border-border ${key !== PINNED_RIGHT ? "border-r" : ""} ${isDragged ? "opacity-35" : ""}`}
             style={{
               width: colW,
               minWidth: key === PINNED_RIGHT ? colW : Math.min(colW, 80),
               padding: 0,
               boxSizing: "border-box",
-              borderColor: "var(--border-subtle)",
-              borderBottomWidth: 1,
-              borderBottomStyle: "solid",
-              borderRightWidth: key !== PINNED_RIGHT ? 1 : 0,
-              borderRightStyle: "solid",
-              borderRightColor: "var(--border-subtle)",
-              ...(isDragged ? { opacity: 0.35 } : {}),
               transition: "opacity 200ms ease",
             }}
           >
