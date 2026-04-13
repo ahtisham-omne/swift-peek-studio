@@ -1,20 +1,26 @@
 /**
  * UOM Module — Card Grid View
- *
- * Compact card layout for unit-of-measure records.
- * Cards follow the Figma reference: rounded-[12px] borders,
- * icon badges with rounded-[8px], hover effects.
- * All colors use CSS custom properties from theme.css.
+ * Matches Partners card view design exactly.
  */
 
-import React, { useState } from "react";
+import React from "react";
 import type { UomUnit } from "./sample-data";
 import { CategoryBadge } from "./CategoryBadge";
 import { TypeLabel } from "./TypeLabel";
 import { InUseBadge } from "./InUseBadge";
-import { ArrowRight, Ruler, Square, Cylinder, Weight, Hash, Clock, Thermometer, MoveVertical, Gauge, Zap, Activity, Plug, Waves, Atom } from "lucide-react";
+import {
+  MoreHorizontal, Eye, Pencil,
+  Ruler, Square, Cylinder, Weight, Hash, Clock,
+  Thermometer, MoveVertical, Gauge, Zap, Activity, Plug, Waves, Atom,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "../ui/dropdown-menu";
 
-/* ── Category icon mapping (Lucide icons) ── */
+/* ── Category icon mapping ── */
 const CATEGORY_ICON_MAP: Record<string, React.ReactNode> = {
   Length: <Ruler size={16} />,
   Area: <Square size={16} />,
@@ -32,6 +38,24 @@ const CATEGORY_ICON_MAP: Record<string, React.ReactNode> = {
   "Other SI": <Atom size={16} />,
 };
 
+/* ── Category background colors for icon tile ── */
+const CATEGORY_BG: Record<string, string> = {
+  Length: "#EDF4FF",
+  Area: "#F0FDF4",
+  Volume: "#FFF7ED",
+  Mass: "#FEF2F2",
+  Quantity: "#F5F3FF",
+  Time: "#FFFBEB",
+  Temperature: "#FFF1F2",
+  Force: "#F0F9FF",
+  Pressure: "#F8FAFC",
+  Energy: "#FEFCE8",
+  Power: "#FDF4FF",
+  Electrical: "#ECFDF5",
+  Frequency: "#EFF6FF",
+  "Other SI": "#F1F5F9",
+};
+
 interface UomCardGridProps {
   units: UomUnit[];
   searchQuery?: string;
@@ -44,40 +68,24 @@ export function UomCardGrid({
   onCardClick,
 }: UomCardGridProps) {
   return (
-    <div
-      style={{ padding: "16px 16px 24px" }}
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-          gap: 14,
-        }}
-      >
-        {units.length === 0 ? (
-          <div
-            style={{
-              gridColumn: "1 / -1",
-              padding: "48px 20px",
-              textAlign: "center",
-              color: "var(--text-muted)",
-              fontSize: "var(--text-label)",
-              fontWeight: "var(--font-weight-normal)" as any,
-            }}
-          >
-            No units match your filters.
-          </div>
-        ) : (
-          units.map((unit) => (
+    <div className="p-4">
+      {units.length === 0 ? (
+        <div className="flex flex-col items-center gap-2 py-16 text-muted-foreground">
+          <Atom className="w-8 h-8" />
+          <p className="text-sm">No units match your filters.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {units.map((unit) => (
             <UomCard
               key={unit.id}
               unit={unit}
               searchQuery={searchQuery}
               onClick={() => onCardClick?.(unit)}
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -91,124 +99,77 @@ interface UomCardProps {
 }
 
 function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
-  const [hovered, setHovered] = useState(false);
   const icon = CATEGORY_ICON_MAP[unit.category] || <Atom size={16} />;
+  const iconBg = CATEGORY_BG[unit.category] || "#F1F5F9";
 
   return (
-    <button
-      type="button"
+    <div
+      className="bg-card border border-border rounded-xl p-4 cursor-pointer hover:shadow-md hover:border-primary/20 transition-all"
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="cursor-pointer text-left w-full"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 12,
-        padding: 16,
-        borderRadius: 12,
-        border: hovered
-          ? "1px solid var(--primary-border)"
-          : "1px solid var(--border)",
-        backgroundColor: hovered
-          ? "var(--surface-hover)"
-          : "var(--card)",
-        boxShadow: hovered
-          ? "var(--elevation-pill)"
-          : "none",
-        transition: "all 150ms ease",
-      }}
     >
-      {/* Top row: icon badge + symbol tag */}
-      <div className="flex items-center justify-between">
-        {/* Icon badge */}
-        <div
-          className="flex items-center justify-center shrink-0"
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 8,
-            backgroundColor: "var(--primary-surface)",
-            color: "var(--primary-soft)",
-          }}
-        >
-          {icon}
+      {/* Card header: icon tile + name/symbol + actions menu */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0"
+            style={{ backgroundColor: iconBg, color: "#0A77FF" }}
+          >
+            {icon}
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm truncate" style={{ fontWeight: 500 }}>
+              <HighlightText text={unit.name} query={searchQuery} />
+            </p>
+            <p className="text-xs text-muted-foreground">{unit.symbol}</p>
+          </div>
         </div>
-
-        {/* Symbol badge */}
-        <span
-          style={{
-            fontSize: "var(--text-label)",
-            fontWeight: "var(--font-weight-normal)" as any,
-            color: "var(--text-muted)",
-            backgroundColor: "var(--surface-raised)",
-            border: "1px solid var(--border-subtle)",
-            padding: "2px 8px",
-            borderRadius: 6,
-            lineHeight: 1.4,
-          }}
-        >
-          {unit.symbol}
-        </span>
-      </div>
-
-      {/* Name — prominent */}
-      <div className="min-w-0">
-        <span
-          className="block truncate"
-          style={{
-            fontSize: "var(--text-base)",
-            fontWeight: "var(--font-weight-medium)" as any,
-            color: "var(--foreground)",
-            lineHeight: 1.3,
-          }}
-        >
-          <HighlightText text={unit.name} query={searchQuery} />
-        </span>
-        <p
-          className="truncate"
-          style={{
-            margin: 0,
-            marginTop: 4,
-            fontSize: "var(--text-label)",
-            fontWeight: "var(--font-weight-normal)" as any,
-            color: "var(--text-muted)",
-            lineHeight: 1.4,
-          }}
-        >
-          {unit.description}
-        </p>
-      </div>
-
-      {/* Bottom row: badges + hover arrow */}
-      <div className="flex items-center gap-1.5" style={{ flexWrap: "nowrap", overflow: "hidden" }}>
-        <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
-          <CategoryBadge category={unit.category} />
-          <TypeLabel type={unit.type} />
-        </div>
-        <div className="flex-1 shrink" style={{ minWidth: 0 }} />
-        <div className="shrink-0">
-          {hovered ? (
-            <span
-              className="flex items-center gap-1 whitespace-nowrap"
-              style={{
-                fontSize: "var(--text-label)",
-                fontWeight: "var(--font-weight-medium)" as any,
-                color: "var(--primary)",
-                lineHeight: 1,
-              }}
+        {/* Actions dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors cursor-pointer shrink-0"
+              onClick={(e) => e.stopPropagation()}
             >
-              Open <ArrowRight size={13} />
-            </span>
-          ) : (
-            <InUseBadge
-              inUse={unit.inUse}
-              count={unit.inUseCount}
-            />
-          )}
+              <MoreHorizontal className="w-3.5 h-3.5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem><Eye className="w-4 h-4 mr-2" /> View Details</DropdownMenuItem>
+            <DropdownMenuItem><Pencil className="w-4 h-4 mr-2" /> Edit</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Badges row */}
+      <div className="flex items-center gap-1.5 mb-3 flex-wrap">
+        <CategoryBadge category={unit.category} />
+        <TypeLabel type={unit.type} />
+        <InUseBadge inUse={unit.inUse} count={unit.inUseCount} />
+      </div>
+
+      {/* KPI rows: label left, value right */}
+      <div className="space-y-1.5 text-xs text-muted-foreground">
+        <div className="flex justify-between">
+          <span>Category</span>
+          <span className="text-foreground" style={{ fontWeight: 500 }}>
+            {unit.category}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>System</span>
+          <span className="text-foreground">
+            {unit.system || "SI"}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>Description</span>
+          <span className="text-foreground truncate max-w-[140px]" title={unit.description}>
+            {unit.description || "—"}
+          </span>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -225,12 +186,7 @@ function HighlightText({ text, query }: { text: string; query: string }) {
   return (
     <>
       {text.slice(0, idx)}
-      <span
-        style={{
-          backgroundColor: "var(--highlight-bg)",
-          borderRadius: 2,
-        }}
-      >
+      <span className="bg-yellow-100 rounded-sm">
         {text.slice(idx, idx + q.length)}
       </span>
       {text.slice(idx + q.length)}
