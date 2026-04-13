@@ -508,97 +508,26 @@ export function UomDetailView() {
             </div>
           </div>
 
-          {/* ── Row 2: Meta info — Type · Category · Symbol ── */}
-          <div className="border-t border-[#F1F5F9] px-4 lg:px-5 py-2.5">
-            <div
-              className="flex items-center flex-wrap"
-              style={{
-                gap: "6px 0",
-                fontSize: "var(--text-label)",
-                fontWeight: "var(--font-weight-normal)" as any,
-                color: "var(--text-muted)",
-                lineHeight: "1",
-              }}
-            >
-              {/* Type badge */}
-              <TypeLabel type={displayType as any} />
-
-              <MetaDot />
-
-              {/* Category badge */}
+          {/* In-use notice */}
+          {isInUse && (
+            <div className="border-t border-[#F1F5F9] px-4 lg:px-5 py-2.5">
               <span
-                className="inline-flex items-center shrink-0"
+                className="inline-flex items-center"
                 style={{
-                  fontSize: 12,
-                  lineHeight: "1",
                   padding: "4px 10px",
                   borderRadius: 6,
-                  backgroundColor: "var(--primary-surface)",
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "var(--primary-border)",
-                  color: "var(--primary-text-strong)",
-                  fontWeight: "var(--font-weight-normal)" as any,
+                  backgroundColor: "var(--surface-raised)",
+                  border: "1px solid var(--border-subtle)",
+                  fontSize: 12,
+                  fontWeight: 400,
+                  color: "var(--text-muted)",
+                  lineHeight: 1.35,
                 }}
               >
-                {displayCategory}
+                This UOM is in active use, so editing is locked to protect existing items and transactions.
               </span>
-
-              <MetaDot />
-
-              {/* Symbol */}
-              <span style={{ color: "var(--text-muted)" }}>
-                Symbol:{" "}
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editSymbol}
-                    onChange={(e) => setEditSymbol(e.target.value)}
-                    className="outline-none"
-                    style={{
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      color: "var(--text-strong)",
-                      backgroundColor: "var(--input-background)",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--primary)",
-                      borderRadius: "var(--radius-sm)",
-                      padding: "2px 8px",
-                      width: 54,
-                      boxSizing: "border-box",
-                    }}
-                  />
-                ) : (
-                  <span style={{ fontWeight: "var(--font-weight-medium)" as any, color: "var(--text-strong)" }}>
-                    {displaySymbol}
-                  </span>
-                )}
-              </span>
-
-              {isInUse && (
-                <>
-                  <MetaDot />
-                  <span
-                    className="inline-flex items-center"
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 6,
-                      backgroundColor: "var(--surface-raised)",
-                      border: "1px solid var(--border-subtle)",
-                      fontSize: 12,
-                      fontWeight: 400,
-                      color: "var(--text-muted)",
-                      lineHeight: 1.35,
-                    }}
-                  >
-                    This UOM is in active use, so editing is locked to protect existing items and transactions.
-                  </span>
-                </>
-              )}
-
             </div>
-          </div>
+          )}
 
           {/* Editing Banner */}
           <AnimatePresence>
