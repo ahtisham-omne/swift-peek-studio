@@ -157,9 +157,9 @@ function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
           </span>
         </div>
         <div className="flex justify-between">
-          <span>System</span>
+          <span>Type</span>
           <span className="text-foreground">
-            {unit.system || "SI"}
+            {unit.type}
           </span>
         </div>
         <div className="flex justify-between">
@@ -186,7 +186,7 @@ function HighlightText({ text, query }: { text: string; query: string }) {
   return (
     <>
       {text.slice(0, idx)}
-      <span className="bg-yellow-100 rounded-sm">
+      <span className="bg-accent rounded-sm">
         {text.slice(idx, idx + q.length)}
       </span>
       {text.slice(idx + q.length)}
