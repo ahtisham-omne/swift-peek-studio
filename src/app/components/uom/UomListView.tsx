@@ -1640,8 +1640,8 @@ function ModuleHeader({
           <ArrowLeftRight className="w-4 h-4" />
         </div>
         <div>
-          <h1 className="font-bold text-[20px] text-foreground">Unit of Measure</h1>
-          <p className="text-xs text-muted-foreground">
+          <h1 className="text-foreground" style={{ fontSize: "20px", fontWeight: 600 }}>Unit of Measure</h1>
+          <p className="text-muted-foreground mt-1" style={{ fontSize: "13px" }}>
             Organize standard, custom, and item-linked units — all in one place.
           </p>
         </div>
