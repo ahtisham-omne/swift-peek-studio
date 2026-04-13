@@ -1328,7 +1328,7 @@ export function UomDetailView() {
                             backgroundColor: isSubActive ? "var(--card)" : "rgba(0,0,0,0)",
                             color: isSubActive ? "var(--foreground)" : "var(--text-muted)",
                             fontSize: "var(--text-label)",
-                            fontWeight: isSubActive ? ("var(--font-weight-semibold)" as any) : ("var(--font-weight-medium)" as any),
+                            fontWeight: isSubActive ? ("var(--font-weight-medium)" as any) : ("var(--font-weight-normal)" as any),
                             lineHeight: "1",
                             transition: "all 0.15s ease",
                             boxShadow: isSubActive ? "var(--elevation-xs)" : "none",
