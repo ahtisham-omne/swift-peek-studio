@@ -6,6 +6,8 @@
  */
 
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
