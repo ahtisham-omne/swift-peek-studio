@@ -1011,6 +1011,8 @@ export function UomDetailView() {
                           </ShadcnTableRow>
                           );
                         })}
+                          </TableBody>
+                        </ShadcnTable>
 
                         {/* ── Inline add conversion row ── */}
                         <AnimatePresence>
