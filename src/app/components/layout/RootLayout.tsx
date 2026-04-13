@@ -7,12 +7,14 @@
  */
 
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
 
 export function RootLayout() {
   const [sidebarPinned, setSidebarPinned] = useState(false);
+  const location = useLocation();
+  const hideTopHeader = location.pathname === "/uom" || location.pathname.startsWith("/uom/");
 
   return (
     <div
@@ -30,7 +32,7 @@ export function RootLayout() {
       {/* ── Main content area ── */}
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">
         {/* ── Top header ── */}
-        <TopHeader />
+        {!hideTopHeader && <TopHeader />}
 
         {/* ── Page content ── */}
         <main

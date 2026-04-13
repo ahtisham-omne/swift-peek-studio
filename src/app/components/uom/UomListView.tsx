@@ -45,7 +45,7 @@ import { useToast } from "./Toast";
 import { DensityDropdown, type DensityMode } from "./DensityDropdown";
 import { UomColumnHeaderMenu } from "./UomColumnHeaderMenu";
 import { UomNotionFilterBar, type ColumnFilterMap } from "./UomNotionFilterBar";
-import { Plus, SlidersHorizontal, AlertTriangle, Archive, Search, X, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Plus, SlidersHorizontal, AlertTriangle, Archive, Search, X, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowLeftRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { BulkActionsBar } from "./BulkActionsBar";
 import {
@@ -141,6 +141,7 @@ export function UomListView({
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [columnsPanelOpen, setColumnsPanelOpen] = useState(false);
   const [density, setDensity] = useState<DensityMode>("condensed");
+  const [topBarSearch, setTopBarSearch] = useState("");
 
   /* ── Edit modal state ── */
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -516,13 +517,50 @@ export function UomListView({
 
   return (
     <div className="flex flex-col h-full bg-[#F8FAFC]">
-      {/* ── MODULE HEADER ── */}
-      <ModuleHeader
-        onNewUnit={() => setCreateModalOpen(true)}
-      />
+      <div className="flex items-center justify-between px-6 lg:px-8 h-12 border-b border-border bg-card shrink-0">
+        <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
+          <button
+            type="button"
+            onClick={() => navigate("/items")}
+            className="hover:text-foreground transition-colors cursor-pointer"
+            style={{ fontWeight: 500 }}
+          >
+            Items & Inventory
+          </button>
+          <span className="text-muted-foreground">/</span>
+          <span className="text-foreground" style={{ fontWeight: 500 }}>
+            Unit of Measure
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="relative hidden md:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
+            <Input
+              placeholder="Search"
+              value={topBarSearch}
+              onChange={(e) => setTopBarSearch(e.target.value)}
+              className="pl-9 w-[260px] h-8 bg-white border-border/60 text-[13px] placeholder:text-muted-foreground/50"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary/10 border border-primary/20">
+              <span className="text-[11px] text-primary" style={{ fontWeight: 600 }}>AA</span>
+            </div>
+            <div className="hidden sm:block">
+              <p className="text-[13px] text-foreground" style={{ fontWeight: 500 }}>Ahtisham Ahmad</p>
+              <p className="text-[11px] text-muted-foreground leading-tight">Sr. Product Designer</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* ── CONTENT AREA — card container ── */}
-      <div className="flex-1 overflow-hidden flex flex-col min-h-0 px-6 lg:px-8 py-6">
+      <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+        <div className="px-6 lg:px-8 py-6 flex-1 min-h-0 flex flex-col">
+        <ModuleHeader
+          onNewUnit={() => setCreateModalOpen(true)}
+        />
         <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col">
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
         <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
@@ -911,6 +949,7 @@ export function UomListView({
           </AnimatePresence>
         </div>
         )}
+        </div>
         </div>
       </div>
 
@@ -1402,12 +1441,12 @@ function ModuleHeader({
 }) {
   return (
     <div
-      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 lg:px-8 pt-3.5 pb-3.5 bg-white border-b border-border shrink-0"
+      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 -mx-6 lg:-mx-8 -mt-6 px-6 lg:px-8 pt-3.5 pb-3.5 bg-white border-b border-border shrink-0"
     >
       {/* Left side */}
       <div className="flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
-          <span style={{ fontSize: 16, lineHeight: 1 }}>⇄</span>
+          <ArrowLeftRight className="w-4 h-4" />
         </div>
         <div>
           <h1 className="font-bold text-[20px]">Units of Measures</h1>
@@ -1419,7 +1458,7 @@ function ModuleHeader({
 
       {/* Right side — action button */}
       <Button className="bg-primary text-primary-foreground shrink-0" onClick={onNewUnit}>
-        <Plus className="w-4 h-4" />
+        <Plus className="w-4 h-4 mr-1.5" />
         Create New Unit
       </Button>
     </div>
