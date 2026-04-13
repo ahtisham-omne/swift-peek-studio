@@ -2041,10 +2041,10 @@ export function UomDetailView() {
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.div>
+    </div>
 
     {/* ── EDIT MODAL ── */}
     <CreateUomModal
