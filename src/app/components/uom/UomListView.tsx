@@ -503,26 +503,15 @@ export function UomListView({
      ══════════════════════════════════════════════ */
 
   return (
-    <div
-      style={{ backgroundColor: "var(--secondary)", minHeight: "100%" }}
-    >
+    <div className="flex flex-col h-full bg-[#F8FAFC]">
       {/* ── MODULE HEADER ── */}
       <ModuleHeader
         onNewUnit={() => setCreateModalOpen(true)}
       />
 
       {/* ── CONTENT AREA — card container ── */}
-      <div
-        className="px-5"
-        style={{ paddingTop: 24, paddingBottom: 32 }}
-      >
-        <div
-          style={{
-            backgroundColor: "var(--card)",
-            borderRadius: "var(--radius-lg)",
-            border: "1px solid var(--border)",
-            boxShadow: "var(--elevation-xs)",
-          }}
+      <div className="flex-1 overflow-hidden flex flex-col min-h-0 px-6 lg:px-8 py-6">
+        <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip">
         >
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
         <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
