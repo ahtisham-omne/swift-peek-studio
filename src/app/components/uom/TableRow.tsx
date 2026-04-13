@@ -405,8 +405,8 @@ export function TableHeaderRow({
             <th
               key={key}
               className={`relative select-none bg-muted/30 border-b border-border ${
-                key !== PINNED_RIGHT ? "border-r" : ""
-              } ${isSortable ? "cursor-pointer" : ""} ${canDrag ? "group/col" : ""} ${
+                isSortable ? "cursor-pointer" : ""
+              } ${canDrag ? "group/col" : ""} ${
                 isDragged ? "!bg-transparent opacity-35" : ""
               }`}
               style={{
