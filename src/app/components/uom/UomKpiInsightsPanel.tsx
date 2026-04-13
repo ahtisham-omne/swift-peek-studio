@@ -118,11 +118,6 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     iconBg: "#ECFDF5",
     iconColor: "#059669",
     subtitle: "Mass & weight",
-  },
-    iconBg: "#ECFDF5",
-    iconColor: "#059669",
-    subtitle: "Mass & weight",
-  },
   {
     key: "cat_volume",
     label: "Volume Units",
