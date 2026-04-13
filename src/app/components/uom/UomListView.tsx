@@ -629,44 +629,90 @@ export function UomListView({
         <ModuleHeader
           onNewUnit={() => setCreateModalOpen(true)}
         />
+        {/* KPI Insights -- collapsible section */}
+        {showInsights && activeKpiDefs.length > 0 && (
         <div className="mb-4 shrink-0">
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground" style={{ fontWeight: 500 }}>
                 Performance Insights
               </span>
-              <button
-                type="button"
-                onClick={() => showToast("info", "Insight customization is coming soon")}
-                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors cursor-pointer"
-              >
-                <Calendar className="w-3 h-3" />
-                <span style={{ fontWeight: 500 }}>Last 30 days</span>
-                <ChevronDown className="w-2.5 h-2.5" />
-              </button>
+              {/* Date Range Filter */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors cursor-pointer">
+                    <Calendar className="w-3 h-3" />
+                    <span style={{ fontWeight: 500 }}>
+                      {insightsDateRange === "last_7" && "Last 7 days"}
+                      {insightsDateRange === "last_30" && "Last 30 days"}
+                      {insightsDateRange === "last_90" && "Last 90 days"}
+                      {insightsDateRange === "last_365" && "Last 12 months"}
+                      {insightsDateRange === "all_time" && "All time"}
+                    </span>
+                    <ChevronDown className="w-2.5 h-2.5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-[170px]">
+                  {[
+                    { key: "last_7", label: "Last 7 days" },
+                    { key: "last_30", label: "Last 30 days" },
+                    { key: "last_90", label: "Last 90 days" },
+                    { key: "last_365", label: "Last 12 months" },
+                    { key: "all_time", label: "All time" },
+                  ].map((opt) => (
+                    <DropdownMenuItem
+                      key={opt.key}
+                      className="flex items-center justify-between cursor-pointer"
+                      onClick={() => setInsightsDateRange(opt.key)}
+                    >
+                      <span className="text-sm">{opt.label}</span>
+                      {insightsDateRange === opt.key && (
+                        <Check className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <button
               type="button"
-              onClick={() => showToast("info", "Insight customization is coming soon")}
-              className="inline-flex items-center gap-1 text-[11px] text-primary hover:bg-muted/50 px-2 py-0.5 rounded-md transition-colors cursor-pointer"
-              style={{ fontWeight: 500 }}
+              onClick={() => setInsightsPanelOpen(true)}
+              className="inline-flex items-center gap-1 text-[11px] hover:bg-muted/50 px-2 py-0.5 rounded-md transition-colors cursor-pointer"
+              style={{ fontWeight: 500, color: "#0A77FF" }}
             >
               <Plus className="w-3 h-3" />
               Add Insights
             </button>
           </div>
 
+          {/* KPI Cards — responsive grid */}
           <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))" }}>
-            {insightCards.map((card) => (
-              <UomInsightCard
-                key={card.label}
-                label={card.label}
-                value={card.value}
-                icon={card.icon}
-              />
-            ))}
+            {activeKpiDefs.map((kpi) => {
+              const value = computeUomKpiValue(kpi.key, allUnits);
+              return (
+                <UomInsightCard
+                  key={kpi.key}
+                  label={kpi.label}
+                  value={value}
+                  iconName={kpi.iconName}
+                  iconBg={kpi.iconBg}
+                  iconColor={kpi.iconColor}
+                  onRemove={() => handleToggleKpi(kpi.key)}
+                />
+              );
+            })}
           </div>
         </div>
+        )}
+
+        {/* KPI Insights Panel (drawer) */}
+        <UomKpiInsightsPanel
+          open={insightsPanelOpen}
+          onOpenChange={setInsightsPanelOpen}
+          activeKpis={activeKpis}
+          onToggleKpi={handleToggleKpi}
+          units={allUnits}
+        />
 
         <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col">
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
