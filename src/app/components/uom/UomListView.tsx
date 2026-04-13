@@ -523,12 +523,12 @@ export function UomListView({
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70 pointer-events-none" />
-              <input
+              <Input
                 type="text"
                 placeholder="Search by name, symbol, or category..."
                 value={filters.search}
                 onChange={(e) => updateFilter({ search: e.target.value })}
-                className="w-full pl-9 pr-8 h-9 text-sm bg-white border border-border/80 rounded-lg shadow-sm outline-none placeholder:text-muted-foreground/50 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 transition-all"
+                className="pl-9 pr-8 h-9 text-sm bg-white border-border/80 shadow-sm placeholder:text-muted-foreground/50 focus-visible:border-primary focus-visible:ring-primary/20"
               />
               {filters.search && (
                 <button
@@ -551,11 +551,10 @@ export function UomListView({
               }`}
             >
               <SlidersHorizontal className={`w-3.5 h-3.5 ${activeAdvFilterCount > 0 ? "text-primary" : "text-muted-foreground"}`} />
-              <span className="text-sm" style={{ fontWeight: 500 }}>Filters</span>
+              <span className="text-sm font-medium">Filters</span>
               {activeAdvFilterCount > 0 && (
                 <span
-                  className="ml-0.5 min-w-[18px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white"
-                  style={{ backgroundColor: "#0A77FF", fontWeight: 600 }}
+                  className="ml-0.5 min-w-[18px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white bg-primary font-semibold"
                 >
                   {activeAdvFilterCount}
                 </span>
@@ -565,10 +564,20 @@ export function UomListView({
 
           {/* Right — Count + Controls */}
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-sm tabular-nums hidden sm:inline text-muted-foreground" style={{ fontWeight: 500 }}>
-              {filteredUnits.length !== allUnits.length
-                ? `${filteredUnits.length} of ${allUnits.length} units`
-                : `${allUnits.length} units`}
+            <span className="text-sm tabular-nums font-medium hidden sm:inline">
+              {filteredUnits.length !== allUnits.length ? (
+                <>
+                  <span className="text-foreground">{filteredUnits.length}</span>
+                  <span className="text-muted-foreground/60"> of </span>
+                  <span className="text-muted-foreground">{allUnits.length}</span>
+                  <span className="text-muted-foreground/70"> units</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-foreground">{allUnits.length}</span>
+                  <span className="text-muted-foreground/70"> units</span>
+                </>
+              )}
             </span>
 
             <DensityDropdown
