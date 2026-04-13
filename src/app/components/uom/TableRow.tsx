@@ -574,6 +574,11 @@ export function TableRow({
 
   const colMap = new Map(columns.map((c) => [c.key, c]));
 
+  /* Density classes matching Partner Management */
+  const densityClass = density === "condensed"
+    ? "[&>td]:py-1 [&>td]:px-2"
+    : "";
+
   const ROW_BG = hovered
     ? "#F0F7FF"
     : selected
@@ -873,7 +878,7 @@ export function TableRow({
 
   return (
     <tr
-      className={`group transition-colors ${
+      className={`group transition-colors hover:bg-muted/20 ${densityClass} ${
         onClick ? "cursor-pointer" : ""
       } ${className}`}
       data-row-id={unit.id}
@@ -887,19 +892,13 @@ export function TableRow({
       {/* ── Checkbox cell ── */}
       {onToggleSelect && (
         <td
+          className="border-b border-r border-border text-center"
           style={{
             width: 40,
             minWidth: 40,
             maxWidth: 40,
             padding: 0,
             backgroundColor: ROW_BG,
-            borderColor: "var(--border-subtle)",
-            borderBottomWidth: 1,
-            borderBottomStyle: "solid",
-            borderRightWidth: 1,
-            borderRightStyle: "solid",
-            borderRightColor: "var(--border-subtle)",
-            textAlign: "center",
           }}
           onClick={(e) => {
             e.stopPropagation();
