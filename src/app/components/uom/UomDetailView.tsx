@@ -363,50 +363,26 @@ export function UomDetailView() {
         >
           {/* ── Row 1: Back + Icon + Name/Desc + Actions ── */}
           <div
-            className="flex items-center justify-between flex-wrap"
-            style={{ padding: "14px 20px", gap: 10 }}
+            className="flex items-center justify-between gap-4 px-4 lg:px-5"
+            style={{ padding: "12px 16px" }}
           >
-            {/* Left cluster: back, divider, icon, name+desc */}
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              {/* Back button */}
-              <motion.button
-                whileHover={{ backgroundColor: "var(--surface-hover)" }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
+            {/* Left cluster: back, icon, name+desc */}
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              {/* Back button — square like vendor */}
+              <button
                 onClick={() => navigate("/uom")}
-                className="inline-flex items-center gap-[3px] cursor-pointer border-none shrink-0"
-                style={{
-                  padding: "6px 10px 6px 6px",
-                  borderRadius: "var(--radius)",
-                  backgroundColor: "rgba(0,0,0,0)",
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-normal)" as any,
-                  color: "var(--text-muted)",
-                  transition: "all 0.12s",
-                  lineHeight: "1",
-                }}
+                className="rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] flex items-center justify-center shrink-0 cursor-pointer shadow-[0_1px_3px_0_rgba(0,0,0,0.04),0_1px_2px_-1px_rgba(0,0,0,0.03)] transition-all duration-250"
+                style={{ width: 44, height: 44 }}
               >
-                <ChevronLeft size={14} strokeWidth={1.8} />
-                Back
-              </motion.button>
-
-              {/* Vertical divider */}
-              <div style={{ width: 1, height: 28, backgroundColor: "var(--border)", flexShrink: 0 }} />
+                <ChevronLeft className="text-[#94A3B8]" style={{ width: 20, height: 20 }} />
+              </button>
 
               {/* Icon badge */}
               <div
-                className="inline-flex items-center justify-center shrink-0"
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "var(--radius)",
-                  backgroundColor: "var(--surface-raised)",
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "var(--border)",
-                }}
+                className="rounded-xl flex items-center justify-center shrink-0 border border-[#E2E8F0] shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]"
+                style={{ width: 44, height: 44, backgroundColor: "#EDF4FF" }}
               >
-                <Layers size={15} style={{ color: "var(--primary-soft)" }} strokeWidth={1.6} />
+                <Layers size={18} style={{ color: "#0A77FF" }} strokeWidth={1.6} />
               </div>
 
               {/* Name + description stacked */}
