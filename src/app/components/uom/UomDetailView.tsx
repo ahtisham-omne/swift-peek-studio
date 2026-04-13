@@ -398,9 +398,42 @@ export function UomDetailView() {
                       autoFocus
                     />
                   ) : (
-                    <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 700, lineHeight: "22px" }}>
-                      {displayName}
-                    </h1>
+                    <div className="flex items-center flex-wrap gap-2">
+                      <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 700, lineHeight: "22px" }}>
+                        {displayName}
+                      </h1>
+
+                      {/* Type badge */}
+                      <span
+                        className="inline-flex items-center rounded-md border"
+                        style={{
+                          padding: "2px 8px",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          backgroundColor: displayType === "Standard" ? "#DBEAFE" : "#F1F5F9",
+                          borderColor: displayType === "Standard" ? "#BFDBFE" : "#E2E8F0",
+                          color: displayType === "Standard" ? "#2563EB" : "#475569",
+                        }}
+                      >
+                        {displayType}
+                      </span>
+
+                      {/* Category badge */}
+                      <span
+                        className="inline-flex items-center rounded-md border border-[#C4B5FD] bg-[#EDE9FE] text-[#7C3AED]"
+                        style={{ padding: "2px 8px", fontSize: 11, fontWeight: 600 }}
+                      >
+                        {displayCategory}
+                      </span>
+
+                      {/* Symbol tag */}
+                      <span
+                        className="inline-flex items-center rounded-md border border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
+                        style={{ padding: "2px 8px", fontSize: 11, fontWeight: 500 }}
+                      >
+                        {displaySymbol}
+                      </span>
+                    </div>
                   )}
                 </div>
 
