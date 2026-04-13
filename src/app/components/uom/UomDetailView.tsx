@@ -15,6 +15,8 @@
 
 import React, { useState, useCallback, useRef } from "react";
 import { Table as ShadcnTable, TableHeader as ShadcnTableHeader, TableRow as ShadcnTableRow, TableHead, TableBody, TableCell } from "../ui/table";
+import { Button } from "../ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import ReactDOM from "react-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
@@ -1208,101 +1210,83 @@ export function UomDetailView() {
                         </AnimatePresence>
                       </div>
 
-                      {/* Pagination bar */}
-                      <div
-                        className="flex items-center justify-between flex-wrap"
-                        style={{ marginTop: "auto", paddingTop: 16, gap: 10 }}
-                      >
-                        {/* Records per page */}
-                        <div className="flex items-center gap-2">
-                          <span style={{ fontSize: "var(--text-label)", color: "var(--text-muted)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1" }}>
-                            Records per page
-                          </span>
-                          <select
-                            value={conversionPerPage}
-                            onChange={(e) => { setConversionPerPage(Number(e.target.value)); setConversionPage(1); }}
-                            className="outline-none cursor-pointer"
-                            style={{
-                              fontSize: "var(--text-label)",
-                              fontWeight: "var(--font-weight-normal)" as any,
-                              color: "var(--foreground)",
-                              backgroundColor: "var(--card)",
-                              borderWidth: 1,
-                              borderStyle: "solid",
-                              borderColor: "var(--border)",
-                              borderRadius: "var(--radius-sm)",
-                              padding: "4px 8px",
-                              lineHeight: "1.2",
+                      {/* Pagination bar — matches UOM listing */}
+                      <div className="flex flex-col sm:flex-row items-center justify-center px-4 py-3 border-t border-border gap-3 shrink-0 mt-auto">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <span>Records per page</span>
+                          <Select
+                            value={String(conversionPerPage)}
+                            onValueChange={(value) => {
+                              setConversionPerPage(Number(value));
+                              setConversionPage(1);
                             }}
                           >
-                            {[5, 10, 20].map((n) => (
-                              <option key={n} value={n}>{n}</option>
-                            ))}
-                          </select>
+                            <SelectTrigger className="w-[70px] h-8 border-border bg-card text-foreground shadow-none [&_svg]:text-muted-foreground">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="5">5</SelectItem>
+                              <SelectItem value="10">10</SelectItem>
+                              <SelectItem value="20">20</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
-
-                        {/* Page navigation */}
-                        <div className="flex items-center" style={{ gap: 2 }}>
-                          <PaginationBtn
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             disabled={safePage <= 1}
                             onClick={() => setConversionPage(1)}
-                            aria-label="First page"
+                            className="h-8 w-8 p-0"
                           >
-                            <ChevronsLeft size={14} />
-                          </PaginationBtn>
-                          <PaginationBtn
+                            <ChevronsLeft className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             disabled={safePage <= 1}
                             onClick={() => setConversionPage((p) => Math.max(1, p - 1))}
-                            aria-label="Previous page"
+                            className="h-8 gap-1 text-sm text-muted-foreground"
                           >
-                            <ChevronLeft size={14} />
-                            <span style={{ fontSize: "var(--text-label)", lineHeight: "1" }}>Prev</span>
-                          </PaginationBtn>
+                            <ChevronLeft className="w-3.5 h-3.5" />
+                            Prev
+                          </Button>
 
-                          {/* Page numbers */}
                           {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => (
-                            <button
+                            <Button
                               key={pg}
-                              type="button"
+                              variant={safePage === pg ? "default" : "ghost"}
+                              size="sm"
                               onClick={() => setConversionPage(pg)}
-                              className="inline-flex items-center justify-center cursor-pointer border-none outline-none"
-                              style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: "var(--radius-sm)",
-                                fontSize: "var(--text-label)",
-                                fontWeight: "var(--font-weight-medium)" as any,
-                                lineHeight: "1",
-                                color: pg === safePage ? "var(--primary-foreground)" : "var(--text-muted)",
-                                backgroundColor: pg === safePage ? "var(--primary)" : "rgba(0,0,0,0)",
-                                transition: "all 0.12s ease",
-                              }}
-                              onMouseEnter={(e) => {
-                                if (pg !== safePage) e.currentTarget.style.backgroundColor = "var(--surface-hover)";
-                              }}
-                              onMouseLeave={(e) => {
-                                if (pg !== safePage) e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
-                              }}
+                              className={`h-8 w-8 p-0 text-sm ${
+                                safePage === pg
+                                  ? "bg-primary text-primary-foreground"
+                                  : "text-muted-foreground"
+                              }`}
                             >
                               {pg}
-                            </button>
+                            </Button>
                           ))}
 
-                          <PaginationBtn
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             disabled={safePage >= totalPages}
                             onClick={() => setConversionPage((p) => Math.min(totalPages, p + 1))}
-                            aria-label="Next page"
+                            className="h-8 gap-1 text-sm text-muted-foreground"
                           >
-                            <span style={{ fontSize: "var(--text-label)", lineHeight: "1" }}>Next</span>
-                            <ChevronRight size={14} />
-                          </PaginationBtn>
-                          <PaginationBtn
+                            Next
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             disabled={safePage >= totalPages}
                             onClick={() => setConversionPage(totalPages)}
-                            aria-label="Last page"
+                            className="h-8 w-8 p-0"
                           >
-                            <ChevronsRight size={14} />
-                          </PaginationBtn>
+                            <ChevronsRight className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
                           </>
