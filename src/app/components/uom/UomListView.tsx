@@ -783,7 +783,10 @@ export function UomListView({
 
             <button
               type="button"
-              onClick={() => showToast("info", "Insight customization is coming soon")}
+              onClick={() => {
+                if (!showInsights) setShowInsights(true);
+                setInsightsPanelOpen(true);
+              }}
               className="inline-flex items-center justify-center h-9 gap-2 px-3 rounded-lg border border-border bg-white text-foreground shadow-sm hover:bg-muted/40 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
             >
               <BarChart3 className="w-[18px] h-[18px] text-muted-foreground/80" />
@@ -794,7 +797,7 @@ export function UomListView({
                   className="inline-flex items-center justify-center h-5 px-1.5 rounded-full text-[11px] bg-primary-surface text-primary"
                 style={{ fontWeight: 600 }}
               >
-                {insightCards.length}
+                {activeKpis.length}
               </span>
             </button>
 
