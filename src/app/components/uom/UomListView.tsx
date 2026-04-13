@@ -1393,14 +1393,6 @@ function ModuleHeader({
 }) {
   return (
     <div
-      className="w-full"
-      style={{
-        backgroundColor: "var(--background)",
-        borderBottom: "1px solid var(--border-subtle)",
-        boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
-      }}
-    >
-      <div
       className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 lg:px-8 pt-3.5 pb-3.5 bg-white border-b border-border shrink-0"
     >
       {/* Left side */}
