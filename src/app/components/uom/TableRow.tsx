@@ -401,9 +401,8 @@ export function TableHeaderRow({
                 )}
 
                 <span
-                  className={`leading-none text-[13px] font-medium ${
-                    isActive ? "text-primary" : "text-foreground"
-                  }`}
+                  className="leading-none text-[13px]"
+                  style={isActive ? { fontWeight: 500, color: "#0A77FF" } : { fontWeight: 500 }}
                 >
                   {hdr.label}
                 </span>
