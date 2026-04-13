@@ -386,77 +386,40 @@ export function UomDetailView() {
               </div>
 
               {/* Name + description stacked */}
-              <div className="min-w-0 flex flex-col" style={{ gap: 3 }}>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className="outline-none"
-                    style={{
-                      fontSize: "var(--text-base)",
-                      fontWeight: "var(--font-weight-semibold)" as any,
-                      color: "var(--foreground)",
-                      backgroundColor: "var(--input-background)",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--primary)",
-                      borderRadius: "var(--radius-sm)",
-                      height: "var(--input-height)",
-                      padding: "0 12px",
-                      boxSizing: "border-box",
-                      minWidth: 200,
-                      lineHeight: "1",
-                    }}
-                    autoFocus
-                  />
-                ) : (
-                  <span
-                    style={{
-                      fontSize: "var(--text-base)",
-                      fontWeight: "var(--font-weight-semibold)" as any,
-                      color: "var(--foreground)",
-                      lineHeight: "1.2",
-                    }}
-                  >
-                    {displayName}
-                  </span>
-                )}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center flex-wrap gap-1.5">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="outline-none rounded-lg border border-[#0A77FF] h-9 px-3 text-[16px]"
+                      style={{ fontWeight: 700, color: "#0F172A", minWidth: 200, lineHeight: "22px" }}
+                      autoFocus
+                    />
+                  ) : (
+                    <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 700, lineHeight: "22px" }}>
+                      {displayName}
+                    </h1>
+                  )}
+                </div>
 
-                {/* Description — directly under name */}
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editDescription}
-                    onChange={(e) => setEditDescription(e.target.value)}
-                    className="outline-none w-full"
-                    style={{
-                      fontSize: "var(--text-label)",
-                      color: "var(--foreground)",
-                      maxWidth: 500,
-                      backgroundColor: "var(--input-background)",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--primary)",
-                      borderRadius: "var(--radius-sm)",
-                      height: "var(--input-height)",
-                      padding: "0 12px",
-                      boxSizing: "border-box",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                    }}
-                  />
-                ) : (
-                  <span
-                    style={{
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-normal)" as any,
-                      color: "var(--text-muted)",
-                      lineHeight: "1.4",
-                    }}
-                  >
-                    {displayDescription}
-                  </span>
-                )}
+                {/* Description */}
+                <div className="mt-1.5 max-w-3xl">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      className="outline-none w-full rounded-lg border border-[#0A77FF] h-8 px-3 text-[12px] text-[#64748B]"
+                      style={{ maxWidth: 500 }}
+                    />
+                  ) : (
+                    <p className="text-[12px] text-[#64748B] leading-[1.6]">
+                      {displayDescription}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
