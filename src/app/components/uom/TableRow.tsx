@@ -499,21 +499,16 @@ export function TableHeaderRow({
                 </span>
 
                 {/* Sort arrow */}
-                {isSortable && (
-                  <span
-                    className="leading-none"
-                    style={{
-                      fontSize: 10,
-                      color: isActive
-                        ? "var(--primary)"
-                        : "var(--text-base-second)",
-                    }}
-                  >
-                    {isActive
-                      ? activeSort!.direction === "asc"
-                        ? UOM_ICONS.sortAsc
-                        : UOM_ICONS.sortDesc
-                      : UOM_ICONS.sortNeutral}
+                {isSortable && isActive && (
+                  <span className="leading-none" style={{ color: "#0A77FF" }}>
+                    {activeSort!.direction === "asc"
+                      ? UOM_ICONS.sortAsc
+                      : UOM_ICONS.sortDesc}
+                  </span>
+                )}
+                {isSortable && !isActive && (
+                  <span className="leading-none opacity-0 group-hover/col:opacity-100 transition-opacity" style={{ color: "var(--text-muted)" }}>
+                    {UOM_ICONS.sortNeutral}
                   </span>
                 )}
               </div>
