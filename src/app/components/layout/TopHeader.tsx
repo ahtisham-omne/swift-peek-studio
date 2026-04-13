@@ -11,6 +11,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Search, Plus, MessageSquare } from "lucide-react";
+import { SAMPLE_UNITS } from "../uom/sample-data";
 
 /* ═══════════════════════════════════════════════
    Breadcrumb helpers
@@ -40,11 +41,14 @@ function getBreadcrumbs(pathname: string): BreadcrumbSegment[] {
     ];
   }
   if (pathname.startsWith("/unit/")) {
+    const unitId = pathname.split("/unit/")[1];
+    const unit = SAMPLE_UNITS.find((u) => u.id === unitId);
+    const unitLabel = unit ? unit.name : "Unit Detail";
     return [
       { label: "Company Setup", path: "/" },
       { label: "Items & Inventory" },
       { label: "Unit of Measure", path: "/uom" },
-      { label: "Unit Detail" },
+      { label: unitLabel },
     ];
   }
   if (pathname === "/items") {
