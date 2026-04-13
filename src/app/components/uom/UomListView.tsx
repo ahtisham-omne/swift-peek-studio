@@ -525,98 +525,45 @@ export function UomListView({
           }}
         >
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
-        <div
-          className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
-          style={{
-            padding: "16px 16px 12px",
-            borderColor: "var(--border-subtle)",
-            borderBottomWidth: 1,
-            borderBottomStyle: "solid" as const,
-          }}
-        >
+        <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
           {/* Left — Search + Filters button */}
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="relative flex-1" style={{ maxWidth: 500 }}>
-              <span
-                className="absolute left-[12px] top-1/2 -translate-y-1/2"
-                style={{ color: "var(--text-subtle)" }}
-              >
-                {UOM_ICONS.search}
-              </span>
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <div className="relative flex-1 max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70 pointer-events-none" />
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search by name, symbol, or category..."
                 value={filters.search}
                 onChange={(e) => updateFilter({ search: e.target.value })}
-                className="outline-none w-full"
-                style={{
-                  height: "var(--input-height)",
-                  padding: "0 12px 0 32px",
-                  boxSizing: "border-box",
-                  backgroundColor: "var(--input-background)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "var(--radius-md)",
-                  color: "var(--foreground)",
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-normal)" as any,
-                  lineHeight: "normal",
-                  boxShadow: "var(--elevation-btn-light)",
-                  transition: "border-color 150ms ease, box-shadow 150ms ease",
-                }}
+                className="w-full pl-9 pr-8 h-9 text-sm bg-white border border-border/80 rounded-lg shadow-sm outline-none placeholder:text-muted-foreground/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                style={{ color: "var(--foreground)" }}
               />
+              {filters.search && (
+                <button
+                  onClick={() => updateFilter({ search: "" })}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                >
+                  <X size={14} />
+                </button>
+              )}
             </div>
 
             {/* Filters button */}
             <button
               type="button"
               onClick={() => setAdvFiltersOpen(true)}
-              className="flex items-center gap-1.5 cursor-pointer shrink-0"
-              style={{
-                padding: "8px 12px",
-                borderRadius: "var(--radius-sm)",
-                border: activeAdvFilterCount > 0
-                  ? "1px solid var(--primary-border)"
-                  : "1px solid var(--border)",
-                backgroundColor: activeAdvFilterCount > 0
-                  ? "var(--primary-surface)"
-                  : "var(--card)",
-                color: activeAdvFilterCount > 0
-                  ? "var(--primary)"
-                  : "var(--foreground)",
-                fontSize: "var(--text-label)",
-                fontWeight: "var(--font-weight-semibold)" as any,
-                lineHeight: "20px",
-                transition: "border-color 150ms, background-color 150ms",
-              }}
-              onMouseEnter={(e) => {
-                if (activeAdvFilterCount === 0) {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong)";
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "var(--surface-raised)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeAdvFilterCount === 0) {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "var(--card)";
-                }
-              }}
+              className={`inline-flex items-center justify-center h-9 gap-1.5 px-3 rounded-lg border bg-white shadow-sm hover:bg-muted/50 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 shrink-0 ${
+                activeAdvFilterCount > 0
+                  ? "text-primary border-primary/30"
+                  : "text-foreground border-border/80"
+              }`}
             >
-              <SlidersHorizontal size={16} />
-              <span>Filters</span>
+              <SlidersHorizontal className={`w-3.5 h-3.5 ${activeAdvFilterCount > 0 ? "text-primary" : "text-muted-foreground"}`} />
+              <span className="text-sm" style={{ fontWeight: 500 }}>Filters</span>
               {activeAdvFilterCount > 0 && (
                 <span
-                  className="inline-flex items-center justify-center"
-                  style={{
-                    minWidth: 18,
-                    height: 18,
-                    padding: "0 5px",
-                    borderRadius: 9,
-                    backgroundColor: "var(--primary)",
-                    color: "var(--primary-foreground)",
-                    fontSize: 11,
-                    fontWeight: "var(--font-weight-medium)" as any,
-                    lineHeight: 1,
-                  }}
+                  className="ml-0.5 min-w-[18px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white"
+                  style={{ backgroundColor: "#0A77FF", fontWeight: 600 }}
                 >
                   {activeAdvFilterCount}
                 </span>
@@ -624,8 +571,26 @@ export function UomListView({
             </button>
           </div>
 
-          {/* Right — Controls: Column selector + Density */}
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Right — Count + Controls */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="text-sm tabular-nums mr-1 hidden sm:inline" style={{ fontWeight: 500 }}>
+              {filteredUnits.length !== allUnits.length ? (
+                <>
+                  <span className="text-foreground">{filteredUnits.length}</span>
+                  <span className="text-muted-foreground/60"> of </span>
+                  <span className="text-muted-foreground">{allUnits.length}</span>
+                  <span className="text-muted-foreground/70"> units</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-foreground">{allUnits.length}</span>
+                  <span className="text-muted-foreground/70"> units</span>
+                </>
+              )}
+            </span>
+
+            <div className="w-px h-5 bg-border/60 mx-1 hidden sm:block" />
+
             <DensityDropdown
               density={density}
               onDensityChange={setDensity}
@@ -644,110 +609,65 @@ export function UomListView({
         </div>
 
         {/* ── FILTERS — unified row: categories + type + status ── */}
-        <div
-          style={{
-            borderColor: "var(--border-subtle)",
-            borderBottomWidth: 1,
-            borderBottomStyle: "solid" as const,
-          }}
-        >
-          {/* Filter pills row */}
-          <div
-            className="flex flex-col gap-3 md:flex-row md:items-center"
-            style={{ padding: "10px 24px" }}
-          >
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Category dropdown */}
-              <CategoryDropdown
-                selected={filters.categories}
-                categoryCounts={categoryCounts}
-                onToggle={toggleCategory}
-                onClear={() => updateFilter({ categories: new Set() })}
-                defaultOpen={false}
-              />
+        <div className="flex items-center gap-1.5 overflow-x-auto px-4 pb-3 shrink-0">
+          {/* Category dropdown */}
+          <CategoryDropdown
+            selected={filters.categories}
+            categoryCounts={categoryCounts}
+            onToggle={toggleCategory}
+            onClear={() => updateFilter({ categories: new Set() })}
+            defaultOpen={false}
+          />
 
-              {/* Type pills */}
-              <FilterPill
-                label="Standard"
-                count={standardCount}
-                active={filters.type === "Standard"}
-                onClick={() => toggleType("Standard")}
-              />
-              <FilterPill
-                label="Custom"
-                count={customCount}
-                active={filters.type === "Custom"}
-                onClick={() => toggleType("Custom")}
-              />
+          {/* Separator */}
+          <div className="w-px h-5 bg-border shrink-0" />
 
-              {/* Divider between type and status pills */}
-              <span
-                className="hidden md:block"
-                style={{
-                  width: 1,
-                  height: 20,
-                  borderRadius: "100px",
-                  backgroundColor: "var(--border)",
-                }}
-              />
+          {/* Type pills */}
+          <FilterPill
+            label="Standard"
+            count={standardCount}
+            active={filters.type === "Standard"}
+            onClick={() => toggleType("Standard")}
+          />
+          <FilterPill
+            label="Custom"
+            count={customCount}
+            active={filters.type === "Custom"}
+            onClick={() => toggleType("Custom")}
+          />
 
-              {/* Status pills */}
-              <FilterPill
-                label="In Use"
-                count={inUseCount}
-                dot="var(--accent)"
-                active={filters.inUse === true}
-                onClick={() => toggleInUse(true)}
-              />
-              <FilterPill
-                label="Unused"
-                count={unusedCount}
-                dot="var(--text-disabled)"
-                active={filters.inUse === false}
-                onClick={() => toggleInUse(false)}
-              />
+          {/* Separator */}
+          <div className="w-px h-5 bg-border shrink-0" />
 
-              {active && (
-                <>
-                  <span
-                    className="hidden md:block"
-                    style={{
-                      width: 2,
-                      height: 20,
-                      borderRadius: "100px",
-                      backgroundColor: "var(--border)",
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={clearAll}
-                    className="cursor-pointer transition-colors"
-                    style={{
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      color: "var(--text-muted)",
-                      lineHeight: 1,
-                      padding: "4px 8px",
-                      borderRadius: "var(--radius-sm)",
-                      border: "none",
-                      backgroundColor: "transparent",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "var(--destructive)";
-                      e.currentTarget.style.backgroundColor = "var(--destructive-surface)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "var(--text-muted)";
-                      e.currentTarget.style.backgroundColor = "transparent";
-                    }}
-                  >
-                    Clear All
-                  </button>
-                </>
-              )}
-            </div>
+          {/* Status pills */}
+          <FilterPill
+            label="In Use"
+            count={inUseCount}
+            dot="#22C55E"
+            active={filters.inUse === true}
+            onClick={() => toggleInUse(true)}
+          />
+          <FilterPill
+            label="Unused"
+            count={unusedCount}
+            dot="#94A3B8"
+            active={filters.inUse === false}
+            onClick={() => toggleInUse(false)}
+          />
 
-          </div>
+          {active && (
+            <>
+              <div className="w-px h-5 bg-border shrink-0" />
+              <button
+                type="button"
+                onClick={clearAll}
+                className="inline-flex items-center px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer whitespace-nowrap shrink-0"
+                style={{ fontWeight: 500 }}
+              >
+                Clear All
+              </button>
+            </>
+          )}
         </div>
 
         {/* ── DATA TABLE or CARD VIEW ── */}
