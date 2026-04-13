@@ -92,9 +92,9 @@ function StepTab({
   let labelWeight = "var(--font-weight-medium)" as any;
 
   if (disabled) {
-    dotBg = "var(--border)";
-    dotColor = "var(--text-disabled)";
-    labelColor = "var(--text-disabled)";
+    dotBg = "#E2E8F0";
+    dotColor = "#94A3B8";
+    labelColor = "#94A3B8";
     labelWeight = "var(--font-weight-normal)" as any;
   } else if (isActive) {
     dotBg = "var(--primary)";
@@ -120,8 +120,8 @@ function StepTab({
           ? "2px solid var(--primary)"
           : "2px solid transparent",
         marginBottom: -1,
-        cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.45 : 1,
+        cursor: disabled ? "default" : "pointer",
+        opacity: disabled ? 0.7 : 1,
         fontFamily: "var(--font-family)",
         transition: "all 0.15s ease",
       }}
@@ -713,8 +713,8 @@ export function CreateUomModal({ open, onClose, onCreated, editUnit, onEdited }:
           style={{
             borderRadius: "var(--radius-lg)",
             backgroundColor: "var(--card)",
-            boxShadow: "var(--elevation-xl)",
-            maxHeight: "90vh",
+            boxShadow: "0 24px 48px -12px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.05)",
+            height: "min(680px, 90vh)",
             fontFamily: "var(--font-family)",
           }}
         >
