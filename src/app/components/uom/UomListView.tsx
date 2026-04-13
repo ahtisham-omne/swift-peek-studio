@@ -691,12 +691,11 @@ export function UomListView({
               style={{ overflowX: "auto" }}
               className="scrollbar-overlay"
             >
-              <table
+              <Table
                 style={{
                   width: "100%",
                   minWidth: tableWidth,
                   tableLayout: "fixed",
-                  borderCollapse: "collapse",
                 }}
               >
                 {/* Colgroup defines column widths for table-layout: fixed */}
@@ -743,7 +742,7 @@ export function UomListView({
                   onDragPointerDown={onHeaderPointerDown}
                 />
 
-                <tbody>
+                <TableBody>
                   {pagedUnits.length === 0 ? (
                     <tr>
                       <td
@@ -798,8 +797,8 @@ export function UomListView({
                       />
                     ))
                   )}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
 
             {/* ── Drag preview (floating pill near cursor) ── */}
