@@ -150,7 +150,7 @@ export function UomListView({
     direction: "asc",
   });
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(25);
+  const [pageSize, setPageSize] = useState(20);
   const [columns, setColumns] = useState<ColumnDef[]>(() => loadColumns());
   const [columnOrder, setColumnOrder] = useState<string[]>(() => {
     return loadColumnOrder() ?? DEFAULT_COLUMNS.map((c) => c.key);
