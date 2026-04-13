@@ -1401,128 +1401,31 @@ function ModuleHeader({
       }}
     >
       <div
-        className="flex flex-col gap-4 px-5 py-5 md:flex-row md:items-center md:justify-between"
-      >
-        {/* Left side */}
-        <div className="flex items-center gap-3 min-w-0">
-          <div
-            className="flex items-center justify-center shrink-0"
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "var(--radius-sm)",
-              backgroundColor: "var(--primary-surface)",
-              border: "none",
-            }}
-          >
-            <span
-              style={{
-                color: "var(--primary-soft)",
-                fontSize: 16,
-                lineHeight: 1,
-              }}
-            >
-              ⇄
-            </span>
-          </div>
-
-          <div className="min-w-0">
-            <h4 className="text-[20px]"
-              style={{
-                color: "var(--foreground)",
-                margin: 0,
-                lineHeight: 1.3,
-              }}
-            >
-              Units of Measures
-            </h4>
-            <p
-              style={{
-                margin: 0,
-                marginTop: 1,
-                fontSize: "var(--text-label)",
-                fontWeight: "var(--font-weight-normal)" as any,
-                color: "var(--text-muted)",
-                lineHeight: 1.4,
-              }}
-            >
-              Manage standard and custom units of measure and their conversions.
-            </p>
-          </div>
+      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 lg:px-8 pt-3.5 pb-3.5 bg-white border-b border-border shrink-0"
+    >
+      {/* Left side */}
+      <div className="flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#EDF4FF' }}>
+          <span style={{ color: '#0A77FF', fontSize: 16, lineHeight: 1 }}>⇄</span>
         </div>
-
-        {/* Right side — action buttons */}
-        <div className="flex items-center shrink-0">
-          <UomButton variant="primary" onClick={onNewUnit}>
-            <span className="flex items-center gap-1.5">
-              <Plus size={14} /> Create New Unit
-            </span>
-          </UomButton>
+        <div>
+          <h1 className="font-bold text-[20px]">Units of Measures</h1>
+          <p className="text-xs text-muted-foreground">
+            Manage standard and custom units of measure and their conversions.
+          </p>
         </div>
       </div>
+
+      {/* Right side — action button */}
+      <button
+        type="button"
+        onClick={onNewUnit}
+        className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-primary/90 transition-colors shrink-0"
+        style={{ fontWeight: 500 }}
+      >
+        <Plus className="w-4 h-4" />
+        Create New Unit
+      </button>
     </div>
-  );
-}
-
-/* ═════════════════════════════════════════════
-   Pagination button
-   ═══════════════════════════════════════════════ */
-
-function PageBtn({
-  active = false,
-  disabled = false,
-  onClick,
-  children,
-  showLabel,
-  iconPosition,
-}: {
-  active?: boolean;
-  disabled?: boolean;
-  onClick?: () => void;
-  children: React.ReactNode;
-  showLabel?: string;
-  iconPosition?: "left" | "right";
-}) {
-  const isTextBtn = !!showLabel;
-
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      className="inline-flex items-center justify-center transition-colors cursor-pointer"
-      style={{
-        minWidth: isTextBtn ? undefined : 36,
-        height: 36,
-        padding: isTextBtn ? "8px 14px" : "0",
-        gap: isTextBtn ? 6 : 0,
-        borderRadius: "var(--radius-sm)",
-        border: "none",
-        fontSize: "var(--text-label)",
-        fontWeight: "var(--font-weight-medium)" as any,
-        lineHeight: "normal",
-        color: disabled
-          ? "var(--text-disabled)"
-          : active
-            ? "var(--primary-foreground)"
-            : "var(--text-muted)",
-        backgroundColor: active
-          ? "var(--primary)"
-          : "transparent",
-        boxShadow: "var(--elevation-btn-light)",
-        transition: "border-color 150ms ease, box-shadow 150ms ease",
-      }}
-    >
-      {iconPosition === "left" && (
-        <span style={{ fontSize: 16, lineHeight: 1 }}>{children}</span>
-      )}
-      {showLabel && (
-        <span>{showLabel}</span>
-      )}
-      {iconPosition === "right" && (
-        <span style={{ fontSize: 16, lineHeight: 1 }}>{children}</span>
-      )}
-      {!showLabel && !iconPosition && children}
-    </button>
   );
 }
