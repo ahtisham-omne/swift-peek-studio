@@ -807,112 +807,80 @@ export function UomListView({
             />
 
             {/* ── PAGINATION BAR ── */}
-            <div
-              className="flex items-center justify-center"
-              style={{
-                borderTop: "1px solid var(--border-subtle)",
-                padding: "0 16px",
-                backgroundColor: "var(--card)",
-              }}
-            >
-              {/* Left — Records per page */}
-              <div className="flex items-center gap-2 shrink-0">
-                <span
-                  style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-muted)",
-                    lineHeight: "normal",
+            <div className="flex flex-col sm:flex-row items-center justify-center px-4 py-3 border-t border-border gap-3 shrink-0">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Records per page</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setPage(1);
                   }}
+                  className="h-8 w-[70px] rounded-md border border-border bg-white px-2 text-sm cursor-pointer outline-none focus:ring-2 focus:ring-primary/20"
                 >
-                  Records per page
-                </span>
-                <div
-                  className="relative"
-                  style={{
-                    border: "1px solid var(--border)",
-                    borderRadius: "var(--radius-sm)",
-                    backgroundColor: "var(--card)",
-                  }}
-                >
-                  <select
-                    value={pageSize}
-                    onChange={(e) => {
-                      setPageSize(Number(e.target.value));
-                      setPage(1);
-                    }}
-                    className="cursor-pointer outline-none appearance-none"
-                    style={{
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      color: "var(--text-strong)",
-                      padding: "4px 24px 4px 8px",
-                      border: "none",
-                      backgroundColor: "transparent",
-                      lineHeight: "normal",
-                    }}
-                  >
-                    <option value={10}>10</option>
-                    <option value={25}>25</option>
-                    <option value={50}>50</option>
-                    <option value={100}>100</option>
-                  </select>
-                  <span
-                    className="absolute right-[6px] top-1/2 -translate-y-1/2 pointer-events-none"
-                    style={{ color: "var(--text-subtle)", fontSize: 10 }}
-                  >
-                    ▾
-                  </span>
-                </div>
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
               </div>
-
-              {/* Center — Pagination controls */}
-              <div className="flex items-center">
-                {/* First page (double arrow) */}
-                <PageBtn disabled={safePage <= 1} onClick={() => setPage(1)}>
-                  «
-                </PageBtn>
-
-                {/* Prev */}
-                <PageBtn
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  disabled={safePage <= 1}
+                  onClick={() => setPage(1)}
+                  className="inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
                   disabled={safePage <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  showLabel="Prev"
-                  iconPosition="left"
+                  className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  ‹
-                </PageBtn>
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  Prev
+                </button>
 
-                {/* Page numbers */}
-                {pageNumbers.map((n) => (
-                  <PageBtn
-                    key={n}
-                    active={n === safePage}
-                    onClick={() => setPage(n)}
-                  >
-                    {n}
-                  </PageBtn>
-                ))}
+                {pageNumbers.map((pg, idx) =>
+                  pg === "..." ? (
+                    <span key={`dots-${idx}`} className="px-1 text-sm text-muted-foreground">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={pg}
+                      type="button"
+                      onClick={() => setPage(pg as number)}
+                      className={`inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm transition-colors cursor-pointer ${
+                        safePage === pg
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-muted/60"
+                      }`}
+                    >
+                      {pg}
+                    </button>
+                  )
+                )}
 
-                {/* Next */}
-                <PageBtn
+                <button
+                  type="button"
                   disabled={safePage >= totalPages}
-                  onClick={() =>
-                    setPage((p) => Math.min(totalPages, p + 1))
-                  }
-                  showLabel="Next"
-                  iconPosition="right"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  ›
-                </PageBtn>
-
-                {/* Last page (double arrow) */}
-                <PageBtn
+                  Next
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage(totalPages)}
+                  className="inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  »
-                </PageBtn>
+                  <ChevronsRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>
