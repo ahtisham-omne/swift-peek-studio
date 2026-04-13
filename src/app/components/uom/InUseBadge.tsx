@@ -49,10 +49,10 @@ export function InUseBadge({ inUse, count, className = "" }: InUseBadgeProps) {
           fontWeight: "var(--font-weight-normal)" as any,
           lineHeight: "normal",
           backgroundColor: inUse
-            ? "var(--primary)"
+            ? "rgba(10, 119, 255, 0.15)"
             : "rgba(100, 116, 139, 0.18)",
           color: inUse
-            ? "var(--primary-foreground)"
+            ? "var(--primary)"
             : "var(--muted-foreground)",
         }}
       >
