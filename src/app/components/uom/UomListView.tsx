@@ -45,7 +45,24 @@ import { useToast } from "./Toast";
 import { DensityDropdown, type DensityMode } from "./DensityDropdown";
 import { UomColumnHeaderMenu } from "./UomColumnHeaderMenu";
 import { UomNotionFilterBar, type ColumnFilterMap } from "./UomNotionFilterBar";
-import { Plus, SlidersHorizontal, AlertTriangle, Archive, Search, X, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowLeftRight } from "lucide-react";
+import {
+  Plus,
+  SlidersHorizontal,
+  AlertTriangle,
+  Archive,
+  Search,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  ArrowLeftRight,
+  Calendar,
+  ChevronDown,
+  CheckCircle2,
+  Package,
+  Ruler,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { BulkActionsBar } from "./BulkActionsBar";
 import {
@@ -184,6 +201,26 @@ export function UomListView({
   const customCount = allUnits.filter((u) => u.type === "Custom").length;
   const inUseCount = allUnits.filter((u) => isUnitInUse(u)).length;
   const unusedCount = allUnits.filter((u) => !isUnitInUse(u)).length;
+  const insightCards = useMemo(
+    () => [
+      {
+        label: "Total Units",
+        value: totalCount,
+        icon: <Package className="w-4 h-4" />,
+      },
+      {
+        label: "Standard Units",
+        value: standardCount,
+        icon: <Ruler className="w-4 h-4" />,
+      },
+      {
+        label: "Units In Use",
+        value: inUseCount,
+        icon: <CheckCircle2 className="w-4 h-4" />,
+      },
+    ],
+    [inUseCount, standardCount, totalCount],
+  );
 
   const categoryCounts = useMemo(() => {
     const counts = {} as Record<UomCategory, number>;
@@ -516,7 +553,7 @@ export function UomListView({
      ══════════════════════════════════════════════ */
 
   return (
-    <div className="flex flex-col h-full bg-[#F8FAFC]">
+    <div className="flex flex-col h-full" style={{ backgroundColor: "var(--secondary)" }}>
       <div className="flex items-center justify-between px-6 lg:px-8 h-12 border-b border-border bg-card shrink-0">
         <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
           <button
@@ -537,19 +574,19 @@ export function UomListView({
           <div className="relative hidden md:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
             <Input
-              placeholder="Search"
+              placeholder="Search units..."
               value={topBarSearch}
               onChange={(e) => setTopBarSearch(e.target.value)}
               className="pl-9 w-[260px] h-8 bg-white border-border/60 text-[13px] placeholder:text-muted-foreground/50"
             />
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary/10 border border-primary/20">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary/10">
               <span className="text-[11px] text-primary" style={{ fontWeight: 600 }}>AA</span>
             </div>
             <div className="hidden sm:block">
               <p className="text-[13px] text-foreground" style={{ fontWeight: 500 }}>Ahtisham Ahmad</p>
-              <p className="text-[11px] text-muted-foreground leading-tight">Sr. Product Designer</p>
+              <p className="text-[11px] text-muted-foreground leading-tight">Product Designer</p>
             </div>
           </div>
         </div>
@@ -561,7 +598,46 @@ export function UomListView({
         <ModuleHeader
           onNewUnit={() => setCreateModalOpen(true)}
         />
-        <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col">
+        <div className="mb-4 shrink-0">
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground" style={{ fontWeight: 500 }}>
+                Performance Insights
+              </span>
+              <button
+                type="button"
+                onClick={() => showToast("info", "Insight customization is coming soon")}
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors cursor-pointer"
+              >
+                <Calendar className="w-3 h-3" />
+                <span style={{ fontWeight: 500 }}>Last 30 days</span>
+                <ChevronDown className="w-2.5 h-2.5" />
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => showToast("info", "Insight customization is coming soon")}
+              className="inline-flex items-center gap-1 text-[11px] text-primary hover:bg-muted/50 px-2 py-0.5 rounded-md transition-colors cursor-pointer"
+              style={{ fontWeight: 500 }}
+            >
+              <Plus className="w-3 h-3" />
+              Add Insights
+            </button>
+          </div>
+
+          <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))" }}>
+            {insightCards.map((card) => (
+              <UomInsightCard
+                key={card.label}
+                label={card.label}
+                value={card.value}
+                icon={card.icon}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col shadow-sm">
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
         <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
           {/* Left — Search + Filters button */}
@@ -680,14 +756,14 @@ export function UomListView({
           <FilterPill
             label="In Use"
             count={inUseCount}
-            dot="#22C55E"
+            dot="var(--accent)"
             active={filters.inUse === true}
             onClick={() => toggleInUse(true)}
           />
           <FilterPill
             label="Unused"
             count={unusedCount}
-            dot="#94A3B8"
+            dot="var(--text-subtle)"
             active={filters.inUse === false}
             onClick={() => toggleInUse(false)}
           />
@@ -1449,18 +1525,47 @@ function ModuleHeader({
           <ArrowLeftRight className="w-4 h-4" />
         </div>
         <div>
-          <h1 className="font-bold text-[20px]">Units of Measures</h1>
-          <p className="text-xs text-muted-foreground">
-            Manage standard and custom units of measure and their conversions.
+          <h1 className="font-bold text-[20px] text-foreground">Units of Measure</h1>
+          <p className="text-sm text-muted-foreground">
+            Organize standard, custom, and item-linked units in one place.
           </p>
         </div>
       </div>
 
       {/* Right side — action button */}
-      <Button className="bg-primary text-primary-foreground shrink-0" onClick={onNewUnit}>
+      <Button size="lg" className="shrink-0 shadow-sm" onClick={onNewUnit}>
         <Plus className="w-4 h-4 mr-1.5" />
         Create New Unit
       </Button>
+    </div>
+  );
+}
+
+function UomInsightCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div
+      className="rounded-xl border border-border bg-card px-4 py-3.5"
+      style={{ boxShadow: "var(--elevation-btn-light)" }}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm text-muted-foreground">{label}</p>
+          <p className="mt-2 text-[18px] leading-none text-foreground" style={{ fontWeight: 600 }}>
+            {value}
+          </p>
+        </div>
+        <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          {icon}
+        </div>
+      </div>
     </div>
   );
 }
