@@ -522,7 +522,7 @@ export function UomListView({
         <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
           {/* Left — Search + Filters button */}
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
-            <div className="relative flex-1 max-w-sm">
+            <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70 pointer-events-none" />
               <Input
                 type="text"
@@ -564,8 +564,8 @@ export function UomListView({
           </div>
 
           {/* Right — Count + Controls */}
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-sm tabular-nums font-medium hidden sm:inline">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="text-sm tabular-nums mr-1 hidden sm:inline" style={{ fontWeight: 500 }}>
               {filteredUnits.length !== allUnits.length ? (
                 <>
                   <span className="text-foreground">{filteredUnits.length}</span>
