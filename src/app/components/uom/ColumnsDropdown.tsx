@@ -3,10 +3,10 @@
  *
  * Unified panel managing column visibility and ordering
  * with smooth pointer-based drag-and-drop via window listeners.
- * All colors use CSS custom properties from theme.css.
+ * Design matches the Partners ColumnSelector exactly.
  */
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -16,9 +16,29 @@ import {
   RotateCcw,
   Columns3,
   X,
-  Pin,
+  Lock,
   Search,
 } from "lucide-react";
+import { Input } from "../ui/input";
+
+/* ═══════════════════════════════════════════════
+   Highlight helper
+   ═══════════════════════════════════════════════ */
+
+function highlightMatch(text: string, query: string): React.ReactNode {
+  if (!query || query.trim().length === 0) return text;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`(${escaped})`, "gi");
+  const parts = text.split(regex);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    regex.test(part) ? (
+      <mark key={i} className="bg-transparent px-0.5 rounded-sm" style={{ backgroundColor: "#FEFCE8", color: "#854D0E", fontWeight: 500 }}>{part}</mark>
+    ) : (
+      part
+    )
+  );
+}
 
 /* ═══════════════════════════════════════════════
    Column definition
@@ -136,72 +156,28 @@ export function ColumnsDropdown({
 
   return (
     <div className={className}>
-      {/* Trigger button — aligned with vendor listing controls */}
       <button
         type="button"
         onClick={toggleOpen}
-        className={`inline-flex items-center justify-center h-9 gap-2 px-3 rounded-lg border bg-white shadow-sm transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
+        className={`inline-flex items-center justify-center h-9 gap-2 px-3 rounded-lg border shadow-sm transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
           open
-            ? "border-primary/30 text-primary bg-primary/10"
-            : "border-border text-foreground hover:bg-muted/40"
+            ? "border-primary/30 bg-primary/[0.04] text-foreground"
+            : "border-border bg-white text-foreground hover:bg-muted/40"
         }`}
+        title="Manage columns"
       >
-        <Columns3 size={18} style={{ color: open ? "var(--primary)" : "var(--text-muted)" }} />
+        <Columns3 className="w-[18px] h-[18px] text-muted-foreground/80" />
         <span className="text-sm hidden md:inline" style={{ fontWeight: 500 }}>
           Columns
         </span>
-        <span className="inline-flex min-w-[22px] h-5 items-center justify-center rounded-full bg-primary/10 px-1.5 text-[11px] text-primary" style={{ fontWeight: 600 }}>
+        <span
+          className="inline-flex items-center justify-center h-5 px-1.5 rounded-full text-[11px]"
+          style={{ backgroundColor: "#EDF4FF", color: "#0A77FF", fontWeight: 600 }}
+        >
           {visibleCount}
         </span>
       </button>
     </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   Drag Ghost — portal-based floating label
-   ═══════════════════════════════════════════════ */
-
-function SidePanelDragGhost({ label, y }: { label: string; y: number }) {
-  return createPortal(
-    <div
-      style={{
-        position: "fixed",
-        right: 56,
-        top: y - 14,
-        zIndex: 99999,
-        pointerEvents: "none",
-      }}
-    >
-      <div
-        className="flex items-center gap-[6px]"
-        style={{
-          padding: "6px 12px",
-          borderRadius: "var(--radius-md)",
-          backgroundColor: "var(--card)",
-          border: "1.5px solid var(--primary-border)",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)",
-          fontFamily: "'Inter', sans-serif",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <GripVertical
-          size={12}
-          style={{ color: "var(--primary-icon)", flexShrink: 0 }}
-        />
-        <span
-          style={{
-            fontSize: 12,
-            lineHeight: "1",
-            fontWeight: "var(--font-weight-semibold)" as any,
-            color: "var(--primary)",
-          }}
-        >
-          {label}
-        </span>
-      </div>
-    </div>,
-    document.body,
   );
 }
 
@@ -217,13 +193,9 @@ export interface ColumnsSidePanelProps {
   onClose: () => void;
 }
 
-interface DragSession {
-  key: string;
-  startY: number;
-  mouseY: number;
-  isDragging: boolean;
-}
-
+/* ─── Auto-scroll constants ─── */
+const AUTO_SCROLL_ZONE = 40;
+const AUTO_SCROLL_MAX_SPEED = 12;
 const DRAG_DEADZONE = 5;
 
 export function ColumnsSidePanel({
@@ -233,160 +205,453 @@ export function ColumnsSidePanel({
   setColumnOrder,
   onClose,
 }: ColumnsSidePanelProps) {
-  const [drag, setDrag] = useState<DragSession | null>(null);
-  const [overKey, setOverKey] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [draggingKey, setDraggingKey] = useState<string | null>(null);
+  const [liveOrder, setLiveOrder] = useState<string[] | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const liveOrderRef = useRef<string[] | null>(null);
+  const draggingKeyRef = useRef<string | null>(null);
+  const autoScrollRaf = useRef<number | null>(null);
+  const pointerYRef = useRef<number>(0);
 
-  const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const dragRef = useRef<DragSession | null>(null);
-  const overKeyRef = useRef<string | null>(null);
+  liveOrderRef.current = liveOrder;
+  draggingKeyRef.current = draggingKey;
+
+  const lockedColumns = useMemo(() => columns.filter((c) => c.required).map((c) => c.key), [columns]);
 
   const visibleCount = columns.filter((c) => c.visible).length;
-  const toggleableCount = columns.filter((c) => !c.required).length;
-  const visibleToggleable = columns.filter((c) => !c.required && c.visible).length;
-  const allToggleableVisible = visibleToggleable === toggleableCount;
+  const totalCount = columns.filter((c) => c.key !== "actions").length;
+
+  const currentOrder = liveOrder ?? columnOrder;
 
   const colMap = new Map(columns.map((c) => [c.key, c]));
-  const orderedCols = columnOrder
-    .map((k) => colMap.get(k))
-    .filter(Boolean) as ColumnDef[];
+  const orderedColumns = currentOrder
+    .map((key) => colMap.get(key))
+    .filter((c): c is ColumnDef => !!c && c.key !== "actions");
 
-  // Separate pinned from draggable columns
-  const pinnedTopCols = orderedCols.filter((c) => c.key === "name");
-  // Actions column is permanently locked right — not shown in this panel
-  const draggableCols = orderedCols.filter(
-    (c) => c.key !== "name" && c.key !== "actions"
-  );
+  const pinnedColumns = useMemo(() => {
+    return orderedColumns.filter((c) => lockedColumns.includes(c.key));
+  }, [orderedColumns, lockedColumns]);
 
-  // Apply search filter for display
-  const filteredDraggable = searchQuery
-    ? draggableCols.filter((c) =>
+  const reorderableColumns = useMemo(() => {
+    const base = orderedColumns.filter((c) => !lockedColumns.includes(c.key));
+    if (searchQuery) {
+      return base.filter((c) =>
         c.label.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : draggableCols;
+      );
+    }
+    return base;
+  }, [orderedColumns, searchQuery, lockedColumns]);
 
   /* ── Toggle visibility ── */
-  const toggleVis = useCallback(
-    (key: string) => {
-      setColumns((prev) => {
-        const next = prev.map((c) =>
-          c.key === key && !c.required ? { ...c, visible: !c.visible } : c
-        );
-        saveColumns(next);
-        return next;
-      });
-    },
-    [setColumns],
-  );
-
-  /* ── Toggle all visibility ── */
-  const toggleAll = useCallback(() => {
+  const toggleVisibility = useCallback((key: string) => {
+    if (lockedColumns.includes(key)) return;
     setColumns((prev) => {
-      const targetState = !allToggleableVisible;
       const next = prev.map((c) =>
-        c.required ? c : { ...c, visible: targetState }
+        c.key === key && !c.required ? { ...c, visible: !c.visible } : c
       );
       saveColumns(next);
       return next;
     });
-  }, [setColumns, allToggleableVisible]);
+  }, [lockedColumns, setColumns]);
 
-  /* ── Reset to defaults ── */
-  const handleReset = useCallback(() => {
+  const selectAll = () => {
+    setColumns((prev) => {
+      const next = prev.map((c) => ({ ...c, visible: true }));
+      saveColumns(next);
+      return next;
+    });
+  };
+
+  const deselectAll = () => {
+    setColumns((prev) => {
+      const next = prev.map((c) =>
+        lockedColumns.includes(c.key) ? c : { ...c, visible: false }
+      );
+      saveColumns(next);
+      return next;
+    });
+  };
+
+  const resetColumns = () => {
     const fresh = DEFAULT_COLUMNS.map((c) => ({ ...c }));
     setColumns(fresh);
     const defaultOrder = DEFAULT_COLUMNS.map((c) => c.key);
     setColumnOrder(defaultOrder);
     saveColumns(fresh);
     saveColumnOrder(defaultOrder);
+    setLiveOrder(null);
     setSearchQuery("");
-  }, [setColumns, setColumnOrder]);
+  };
 
-  /* ── Register item refs ── */
-  const setItemRef = useCallback((key: string, el: HTMLDivElement | null) => {
-    if (el) itemRefs.current.set(key, el);
-    else itemRefs.current.delete(key);
+  /* ── Stable refs ── */
+  const lockedColumnsRef = useRef(lockedColumns);
+  lockedColumnsRef.current = lockedColumns;
+  const searchQueryRef = useRef(searchQuery);
+  searchQueryRef.current = searchQuery;
+  const columnsRef = useRef(columns);
+  columnsRef.current = columns;
+  const onColumnOrderChangeRef = useRef(setColumnOrder);
+  onColumnOrderChangeRef.current = setColumnOrder;
+
+  /* ── Auto-scroll loop ── */
+  const startAutoScroll = useCallback(() => {
+    const tick = () => {
+      const listEl = listRef.current;
+      if (!listEl || !draggingKeyRef.current) {
+        autoScrollRaf.current = null;
+        return;
+      }
+      const listRect = listEl.getBoundingClientRect();
+      const y = pointerYRef.current;
+      const distFromTop = y - listRect.top;
+      const distFromBottom = listRect.bottom - y;
+      if (distFromTop < AUTO_SCROLL_ZONE && distFromTop > 0) {
+        const intensity = 1 - distFromTop / AUTO_SCROLL_ZONE;
+        listEl.scrollTop -= Math.round(AUTO_SCROLL_MAX_SPEED * intensity);
+      } else if (distFromBottom < AUTO_SCROLL_ZONE && distFromBottom > 0) {
+        const intensity = 1 - distFromBottom / AUTO_SCROLL_ZONE;
+        listEl.scrollTop += Math.round(AUTO_SCROLL_MAX_SPEED * intensity);
+      }
+      autoScrollRaf.current = requestAnimationFrame(tick);
+    };
+    if (autoScrollRaf.current) cancelAnimationFrame(autoScrollRaf.current);
+    autoScrollRaf.current = requestAnimationFrame(tick);
   }, []);
 
-  /* ══════════════════════════════════════════════
-     Pointer-based drag — uses window listeners
-     ══════════════════════════════════════════════ */
+  const stopAutoScroll = useCallback(() => {
+    if (autoScrollRaf.current) {
+      cancelAnimationFrame(autoScrollRaf.current);
+      autoScrollRaf.current = null;
+    }
+  }, []);
 
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent, key: string) => {
-      const col = colMap.get(key);
-      if (!col || col.required) return;
-      if (e.button !== 0) return;
+  /* ── Reorder helper ── */
+  const performReorder = useCallback((clientY: number) => {
+    const listEl = listRef.current;
+    if (!listEl) return;
+    const rows = Array.from(listEl.querySelectorAll<HTMLElement>("[data-col-key]"));
+    const currentKey = draggingKeyRef.current;
+    if (!currentKey) return;
 
-      e.preventDefault();
+    let targetIdx = -1;
+    for (let i = 0; i < rows.length; i++) {
+      const rect = rows[i].getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (clientY < midY) { targetIdx = i; break; }
+    }
+    if (targetIdx === -1) targetIdx = rows.length - 1;
 
-      const session: DragSession = {
-        key,
-        startY: e.clientY,
-        mouseY: e.clientY,
-        isDragging: false,
-      };
-      dragRef.current = session;
-      setDrag(session);
-    },
-    [colMap],
-  );
+    const currentIdx = rows.findIndex((r) => r.getAttribute("data-col-key") === currentKey);
+    if (currentIdx === -1 || currentIdx === targetIdx) return;
 
-  useEffect(() => {
-    if (!dragRef.current) return;
-
-    const onMove = (e: PointerEvent) => {
-      const d = dragRef.current;
-      if (!d) return;
-
-      const dy = Math.abs(e.clientY - d.startY);
-      if (!d.isDragging && dy < DRAG_DEADZONE) return;
-
-      const updated: DragSession = {
-        ...d,
-        mouseY: e.clientY,
-        isDragging: true,
-      };
-      dragRef.current = updated;
-      setDrag({ ...updated });
-
-      // Find closest item by y position
-      let closestKey: string | null = null;
-      let closestDist = Infinity;
-
-      draggableCols.forEach((col) => {
-        if (col.required || col.key === d.key) return;
-        const el = itemRefs.current.get(col.key);
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const mid = rect.top + rect.height / 2;
-        const dist = Math.abs(e.clientY - mid);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closestKey = col.key;
-        }
-      });
-
-      overKeyRef.current = closestKey;
-      setOverKey(closestKey);
-    };
-
-    const onUp = () => {
-      const d = dragRef.current;
-      const target = overKeyRef.current;
-
-      if (d && d.isDragging && target && target !== d.key) {
-        setColumnOrder((prev) => {
-          const newOrder = [...prev];
-          const fromIdx = newOrder.indexOf(d.key);
-          const toIdx = newOrder.indexOf(target);
-          if (fromIdx === -1 || toIdx === -1) return prev;
-          newOrder.splice(fromIdx, 1);
-          newOrder.splice(toIdx, 0, d.key);
-          saveColumnOrder(newOrder);
-          return newOrder;
+    setLiveOrder((prevOrder) => {
+      if (!prevOrder) return prevOrder;
+      const locked = lockedColumnsRef.current;
+      const reorderableKeys = prevOrder.filter((k) => !locked.includes(k));
+      const lockedKeys = prevOrder.filter((k) => locked.includes(k));
+      const sq = searchQueryRef.current;
+      let filteredKeys = reorderableKeys;
+      if (sq) {
+        filteredKeys = reorderableKeys.filter((k) => {
+          const col = columnsRef.current.find((c) => c.key === k);
+          return col && col.label.toLowerCase().includes(sq.toLowerCase());
         });
       }
+      const fromIdx = filteredKeys.indexOf(currentKey);
+      if (fromIdx === -1) return prevOrder;
+      const clampedTarget = Math.max(0, Math.min(targetIdx, filteredKeys.length - 1));
+      if (fromIdx === clampedTarget) return prevOrder;
+      if (sq) {
+        const targetKey = filteredKeys[clampedTarget];
+        const realFrom = reorderableKeys.indexOf(currentKey);
+        const realTo = reorderableKeys.indexOf(targetKey);
+        if (realFrom === -1 || realTo === -1) return prevOrder;
+        const newReorderable = [...reorderableKeys];
+        newReorderable.splice(realFrom, 1);
+        newReorderable.splice(realTo, 0, currentKey);
+        return [...lockedKeys, ...newReorderable];
+      }
+      const newReorderable = [...reorderableKeys];
+      newReorderable.splice(fromIdx, 1);
+      newReorderable.splice(clampedTarget, 0, currentKey);
+      return [...lockedKeys, ...newReorderable];
+    });
+  }, []);
+
+  /* ── Pointer-based drag logic ── */
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent, key: string) => {
+      if (searchQueryRef.current) return;
+      if (lockedColumnsRef.current.includes(key)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const row = rowRefs.current.get(key);
+      if (!row) return;
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      setDraggingKey(key);
+      setLiveOrder(columnOrder);
+      pointerYRef.current = e.clientY;
+      startAutoScroll();
+
+      const handleMove = (ev: PointerEvent) => {
+        pointerYRef.current = ev.clientY;
+        performReorder(ev.clientY);
+      };
+      const handleUp = () => {
+        const finalOrder = liveOrderRef.current;
+        if (finalOrder) {
+          onColumnOrderChangeRef.current(finalOrder);
+          saveColumnOrder(finalOrder);
+        }
+        setDraggingKey(null);
+        setLiveOrder(null);
+        stopAutoScroll();
+        window.removeEventListener("pointermove", handleMove);
+        window.removeEventListener("pointerup", handleUp);
+      };
+      window.addEventListener("pointermove", handleMove);
+      window.addEventListener("pointerup", handleUp);
+    },
+    [columnOrder, startAutoScroll, stopAutoScroll, performReorder]
+  );
+
+  /* ── Disable text selection during drag ── */
+  useEffect(() => {
+    if (draggingKey) {
+      document.body.style.userSelect = "none";
+      document.body.style.cursor = "grabbing";
+      return () => {
+        document.body.style.userSelect = "";
+        document.body.style.cursor = "";
+      };
+    }
+  }, [draggingKey]);
+
+  return (
+    <motion.div
+      initial={{ width: 0, opacity: 0 }}
+      animate={{ width: 280, opacity: 1 }}
+      exit={{ width: 0, opacity: 0 }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      className="h-full border-l border-border bg-white flex flex-col shrink-0 overflow-hidden"
+    >
+      <div style={{ width: 280 }} className="flex flex-col h-full">
+        {/* ── Header ── */}
+        <div className="px-3.5 pt-3 pb-3 border-b border-border/50 shrink-0 bg-[#fafbfc]">
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center gap-2">
+              <div
+                className="w-6 h-6 rounded-md flex items-center justify-center"
+                style={{ backgroundColor: "#EDF4FF" }}
+              >
+                <Columns3 className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+              </div>
+              <span className="text-[13px] text-foreground" style={{ fontWeight: 600 }}>
+                Columns
+              </span>
+              <span
+                className="inline-flex items-center text-[11px] tabular-nums px-2 py-[2px] rounded-full"
+                style={{ fontWeight: 600, color: "#0A77FF", backgroundColor: "#EDF4FF" }}
+              >
+                {visibleCount}/{totalCount}
+              </span>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-1 rounded-md hover:bg-muted/60 text-muted-foreground/60 hover:text-foreground transition-colors cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Search */}
+          <div className="relative mb-2.5">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/50 pointer-events-none" />
+            <Input
+              placeholder="Search columns…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8 pr-8 h-[30px] text-xs bg-white border-border/60 shadow-xs placeholder:text-muted-foreground/40 rounded-md"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-muted/60 text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-pointer"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={selectAll}
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-[3px] rounded-md hover:bg-[#EDF4FF] transition-colors cursor-pointer"
+              style={{ fontWeight: 500, color: "#0A77FF" }}
+            >
+              <Eye className="w-3 h-3" />
+              Show All
+            </button>
+            <button
+              onClick={deselectAll}
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-[3px] rounded-md hover:bg-muted/60 text-muted-foreground transition-colors cursor-pointer"
+              style={{ fontWeight: 500 }}
+            >
+              <EyeOff className="w-3 h-3" />
+              Hide All
+            </button>
+            <div className="flex-1" />
+            <button
+              onClick={resetColumns}
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-[3px] rounded-md hover:bg-muted/60 text-muted-foreground transition-colors cursor-pointer"
+              style={{ fontWeight: 500 }}
+            >
+              <RotateCcw className="w-3 h-3" />
+              Reset
+            </button>
+          </div>
+        </div>
+
+        {/* ── Column list ── */}
+        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide" ref={listRef}>
+          {/* Pinned columns section */}
+          {pinnedColumns.length > 0 && !searchQuery && (
+            <>
+              <div className="px-3.5 pt-2.5 pb-1">
+                <span
+                  className="text-[10px] uppercase tracking-widest text-muted-foreground/50"
+                  style={{ fontWeight: 600 }}
+                >
+                  Pinned
+                </span>
+              </div>
+              {pinnedColumns.map((col) => (
+                <div
+                  key={col.key}
+                  className="flex items-center gap-2 px-2 py-[7px] mx-1.5 rounded-md select-none"
+                >
+                  <div
+                    title="Pinned column — always visible"
+                    className="shrink-0 w-6 h-6 rounded-md flex items-center justify-center bg-[#EDF4FF]"
+                  >
+                    <Eye className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                  </div>
+                  <span
+                    className="flex-1 text-[12.5px] text-foreground truncate"
+                    style={{ fontWeight: 450 }}
+                  >
+                    {col.label}
+                  </span>
+                  <Lock className="w-3.5 h-3.5 text-muted-foreground/40 shrink-0" />
+                </div>
+              ))}
+              <div className="my-1 border-t border-border/30 mx-3.5" />
+            </>
+          )}
+
+          {/* Reorderable columns section header */}
+          {!searchQuery && (
+            <div className="px-3.5 pt-2 pb-1">
+              <span
+                className="text-[10px] uppercase tracking-widest text-muted-foreground/50"
+                style={{ fontWeight: 600 }}
+              >
+                Columns
+              </span>
+            </div>
+          )}
+
+          {searchQuery && reorderableColumns.length > 0 && (
+            <div className="px-3.5 pt-2 pb-1">
+              <span className="text-[11px] text-muted-foreground/50" style={{ fontWeight: 500 }}>
+                {reorderableColumns.length} result{reorderableColumns.length !== 1 ? "s" : ""}
+              </span>
+            </div>
+          )}
+
+          {reorderableColumns.map((col, idx) => {
+            const isVisible = col.visible;
+            const isDragging = draggingKey === col.key;
+
+            return (
+              <div
+                key={col.key}
+                data-col-key={col.key}
+                ref={(el) => {
+                  if (el) rowRefs.current.set(col.key, el);
+                  else rowRefs.current.delete(col.key);
+                }}
+                className="mx-1.5 select-none"
+              >
+                <div
+                  className={`group/item flex items-center gap-2 px-2 py-[7px] rounded-md transition-all duration-150 ${
+                    isDragging
+                      ? "bg-[#0A77FF]/[0.04] border border-dashed border-[#0A77FF]/25 opacity-40 scale-[0.97]"
+                      : "hover:bg-muted/30 border border-transparent"
+                  }`}
+                >
+                  {/* Drag handle */}
+                  <div
+                    onPointerDown={(e) => handlePointerDown(e, col.key)}
+                    className={`shrink-0 transition-all duration-150 touch-none ${
+                      searchQuery
+                        ? "opacity-0 w-0 overflow-hidden"
+                        : isDragging
+                          ? "opacity-100 cursor-grabbing"
+                          : "opacity-0 group-hover/item:opacity-100 cursor-grab active:cursor-grabbing"
+                    }`}
+                  >
+                    <GripVertical className="w-3.5 h-3.5 text-muted-foreground/40" />
+                  </div>
+
+                  {/* Visibility toggle — eye icon in a light blue rounded square */}
+                  <button
+                    type="button"
+                    onClick={() => toggleVisibility(col.key)}
+                    title={isVisible ? "Hide column" : "Show column"}
+                    className={`shrink-0 w-6 h-6 rounded-md flex items-center justify-center transition-colors cursor-pointer ${
+                      isVisible
+                        ? "bg-[#EDF4FF] hover:bg-[#DBEAFE]"
+                        : "bg-muted/40 hover:bg-muted/60"
+                    }`}
+                  >
+                    {isVisible ? (
+                      <Eye className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                    ) : (
+                      <EyeOff className="w-3.5 h-3.5 text-muted-foreground/50" />
+                    )}
+                  </button>
+
+                  {/* Label */}
+                  <span
+                    className={`flex-1 text-[12.5px] truncate transition-colors duration-100 ${
+                      isVisible ? "text-foreground" : "text-muted-foreground/40"
+                    }`}
+                    style={{ fontWeight: isVisible ? 450 : 400 }}
+                  >
+                    {highlightMatch(col.label, searchQuery)}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+
+          {reorderableColumns.length === 0 && searchQuery && (
+            <div className="px-4 py-8 text-center">
+              <Search className="w-5 h-5 text-muted-foreground/20 mx-auto mb-2" />
+              <p className="text-[12px] text-muted-foreground/50" style={{ fontWeight: 500 }}>
+                No columns match "{searchQuery}"
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
       dragRef.current = null;
       overKeyRef.current = null;
