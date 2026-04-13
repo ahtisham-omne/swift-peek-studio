@@ -952,7 +952,7 @@ export function UomListView({
                     setPage(1);
                   }}
                 >
-                  <SelectTrigger className="w-[70px] h-8">
+                  <SelectTrigger className="w-[70px] h-8 border-border bg-card text-foreground shadow-none [&_svg]:text-muted-foreground">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
