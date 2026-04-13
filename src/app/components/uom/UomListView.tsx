@@ -65,6 +65,8 @@ import {
   Package,
   Ruler,
   BarChart3,
+  GripVertical,
+  Trash2,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { BulkActionsBar } from "./BulkActionsBar";
