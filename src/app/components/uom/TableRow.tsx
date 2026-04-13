@@ -325,15 +325,13 @@ export function TableHeaderRow({
         {/* ── Checkbox cell (select-all) ── */}
         {onSelectAll && (
             <TableHead
-              className="w-10 min-w-[40px] max-w-[40px] p-0 text-center bg-background"
+              className="sticky left-0 z-20 bg-[#f8fafc] w-[40px] min-w-[40px] max-w-[40px] !pl-2 !pr-0"
             >
-            <div className="flex items-center justify-center">
               <Checkbox
                 checked={allSelected ? true : someSelected ? "indeterminate" : false}
                 onCheckedChange={() => onSelectAll()}
                 aria-label="Select all rows"
               />
-            </div>
           </TableHead>
         )}
 
@@ -414,14 +412,12 @@ export function TableHeaderRow({
                 {isSortable && isActive && (
                   <span className="leading-none text-primary">
                     {activeSort!.direction === "asc"
-                      ? UOM_ICONS.sortAsc
-                      : UOM_ICONS.sortDesc}
+                      ? <ArrowUp className="w-3 h-3 shrink-0" style={{ color: "#0A77FF" }} />
+                      : <ArrowDown className="w-3 h-3 shrink-0" style={{ color: "#0A77FF" }} />}
                   </span>
                 )}
                 {isSortable && !isActive && (
-                  <span className="leading-none opacity-0 group-hover/col:opacity-100 transition-opacity text-muted-foreground">
-                    {UOM_ICONS.sortNeutral}
-                  </span>
+                  <ArrowUpDown className="w-3 h-3 shrink-0 text-muted-foreground opacity-0 group-hover/col:opacity-100 transition-opacity" />
                 )}
               </div>
 
