@@ -773,12 +773,16 @@ export function TableRow({
         return (
           <TableCell
             key={key}
-            className={`${isDragged ? "opacity-35" : ""} ${key === "actions" ? "p-0" : ""}`}
+            className={`${key === "actions" ? "p-0" : ""}`}
             style={{
               width: colW,
               minWidth: key === PINNED_RIGHT ? colW : Math.min(colW, 80),
               boxSizing: "border-box",
-              transition: "opacity 200ms ease",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              ...(isDragged ? {
+                backgroundColor: "rgba(10,119,255,0.035)",
+              } : {}),
             }}
           >
             {renderCell(key)}
