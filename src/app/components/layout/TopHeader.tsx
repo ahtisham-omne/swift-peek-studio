@@ -42,9 +42,8 @@ function getBreadcrumbs(pathname: string): BreadcrumbSegment[] {
   }
   if (pathname.startsWith("/unit/")) {
     const unitId = pathname.split("/unit/")[1];
-    // Import unit name from sample data
-    const { SAMPLE_UNITS } = require("../uom/sample-data");
-    const unit = SAMPLE_UNITS.find((u: any) => u.id === unitId);
+    const unit = SAMPLE_UNITS.find((u) => u.id === unitId);
+    const unitLabel = unit ? unit.name : "Unit Detail";
     const unitLabel = unit ? unit.name : "Unit Detail";
     return [
       { label: "Company Setup", path: "/" },
