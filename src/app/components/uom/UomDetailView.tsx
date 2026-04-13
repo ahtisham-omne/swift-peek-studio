@@ -732,99 +732,60 @@ export function UomDetailView() {
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div>
+          {/* Tab bar — inside header card bottom */}
+          <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide border-t border-[#F1F5F9] px-4 lg:px-5">
+            {DETAIL_TABS.map((tab) => {
+              const isActive = tab.id === activeTab;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-3.5 border-b-2 transition-all duration-200 whitespace-nowrap cursor-pointer outline-none border-0 ${
+                    isActive
+                      ? "border-[#0A77FF] text-[#0A77FF]"
+                      : "border-transparent text-[#64748B] hover:text-[#334155] hover:border-[#CBD5E1]"
+                  }`}
+                  style={{
+                    padding: "10px 14px",
+                    fontSize: 13,
+                    fontWeight: isActive ? 600 : 400,
+                    backgroundColor: "transparent",
+                    borderTopWidth: 0,
+                    borderLeftWidth: 0,
+                    borderRightWidth: 0,
+                  }}
+                >
+                  <tab.icon size={14} strokeWidth={isActive ? 2 : 1.6} />
+                  {tab.label}
+                  {tab.count !== null && (
+                    <span
+                      className="inline-flex items-center justify-center"
+                      style={{
+                        fontSize: 11,
+                        padding: "2px 6px",
+                        borderRadius: 4,
+                        backgroundColor: isActive ? "#EDF4FF" : "#F1F5F9",
+                        color: isActive ? "#0A77FF" : "#64748B",
+                        fontWeight: 500,
+                        lineHeight: "1",
+                      }}
+                    >
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* ═══════════════════════════════════════
-         CONTENT: Tab bar + panels
+         CONTENT: Tab panels
          ═══════════════════════════════════════ */}
-      <div
-        className={containerCls}
-        style={{ ...containerMax, paddingTop: 20, paddingBottom: 48 }}
-      >
-        {/* Tab bar */}
-        <div
-          className="flex items-end overflow-x-auto no-scrollbar"
-          style={{
-            padding: "0 2px",
-            gap: 0,
-            position: "relative",
-            borderColor: "var(--border)",
-            borderBottomWidth: 1,
-            borderBottomStyle: "solid",
-          }}
-        >
-          {DETAIL_TABS.map((tab) => {
-            const isActive = tab.id === activeTab;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className="inline-flex items-center gap-[6px] cursor-pointer outline-none whitespace-nowrap shrink-0 border-0"
-                style={{
-                  padding: "10px 15px",
-                  fontSize: "var(--text-label)",
-                  fontWeight: isActive
-                    ? ("var(--font-weight-semibold)" as any)
-                    : ("var(--font-weight-medium)" as any),
-                  color: isActive ? "var(--foreground)" : "var(--text-muted)",
-                  backgroundColor: isActive ? "var(--card)" : "rgba(0,0,0,0)",
-                  borderTopWidth: isActive ? 1 : 0,
-                  borderLeftWidth: isActive ? 1 : 0,
-                  borderRightWidth: isActive ? 1 : 0,
-                  borderBottomWidth: 0,
-                  borderStyle: "solid",
-                  borderColor: isActive ? "var(--border)" : "rgba(0,0,0,0)",
-                  borderRadius: "var(--radius-md) var(--radius-md) 0 0",
-                  transition: "all 0.18s cubic-bezier(0.4, 0, 0.2, 1)",
-                  lineHeight: "1",
-                  position: "relative",
-                  zIndex: isActive ? 2 : 1,
-                  marginBottom: isActive ? -1 : 0,
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = "var(--text-strong)";
-                    e.currentTarget.style.backgroundColor = "var(--surface-hover)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = "var(--text-muted)";
-                    e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
-                  }
-                }}
-              >
-                <tab.icon size={14} strokeWidth={isActive ? 2 : 1.6} style={{ opacity: isActive ? 1 : 0.55 }} />
-                {tab.label}
-                {tab.count !== null && (
-                  <span
-                    className="inline-flex items-center justify-center"
-                    style={{
-                      fontSize: 11,
-                      padding: "2px 6px",
-                      borderRadius: 4,
-                      backgroundColor: isActive
-                        ? "var(--primary-surface)"
-                        : "var(--surface-raised)",
-                      color: isActive
-                        ? "var(--primary)"
-                        : "var(--text-subtle)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      lineHeight: "1",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: isActive ? "rgba(0,0,0,0)" : "var(--border)",
-                    }}
-                  >
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+      <div className="flex-1">
+        <div className="mx-auto px-4 lg:px-6 xl:px-8 pt-4 pb-8 w-full" style={{ maxWidth: 1440 }}>
 
         {/* Two-column layout */}
         <div
