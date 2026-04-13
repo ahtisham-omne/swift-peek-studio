@@ -93,62 +93,62 @@
      Semantic text colors for all UI text levels.
      ═══════════════════════════════════════════════ */
   /* Near-black body text for table cells, names (gray-700) */
-  --text-strong: rgba(55, 65, 81, 1);
-  /* Default body text for labels, secondary info (gray-600) */
-  --text-default: rgba(75, 85, 99, 1);
-  /* Muted text for descriptions, helper text (gray-500) */
-  --text-muted: rgba(107, 114, 128, 1);
-  /* Secondary base text for table secondary columns (gray-550) */
-  --text-base-second: rgba(90, 100, 116, 1);
-  /* Subtle text for placeholders, disabled states, captions (gray-400) */
-  --text-subtle: rgba(156, 163, 175, 1);
-  /* Very light text for disabled dividers, empty states (gray-300) */
-  --text-disabled: rgba(209, 213, 219, 1);
+  --text-strong: rgba(15, 23, 42, 1);
+  /* Default body text for labels, secondary info (slate-700) */
+  --text-default: rgba(51, 65, 85, 1);
+  /* Muted text for descriptions, helper text (slate-600) */
+  --text-muted: rgba(71, 85, 105, 1);
+  /* Secondary base text for table secondary columns */
+  --text-base-second: rgba(71, 85, 105, 1);
+  /* Subtle text for placeholders, disabled states, captions (slate-500) */
+  --text-subtle: rgba(100, 116, 139, 1);
+  /* Very light text for disabled dividers, empty states (slate-400) */
+  --text-disabled: rgba(148, 163, 184, 1);
 
   /* ═══════════════════════════════════════════════
      Extended UI Palette — Surfaces & Backgrounds
      ═══════════════════════════════════════════════ */
   /* Slightly raised surface for badges, keyboard hints (gray-100) */
-  --surface-raised: rgba(243, 244, 246, 1);
+  --surface-raised: rgba(241, 245, 249, 1);
   /* Row hover state background */
-  --surface-hover: rgba(239, 246, 255, 1);
+  --surface-hover: rgba(240, 247, 255, 1);
 
   /* ═══════════════════════════════════════════════
      Extended UI Palette — Border Variants
      ═══════════════════════════════════════════════ */
   /* Subtle divider between table rows (gray-100) */
-  --border-subtle: rgba(243, 244, 246, 1);
-  /* Stronger border for inputs and interactive elements (gray-300) */
-  --border-strong: rgba(209, 213, 219, 1);
+  --border-subtle: rgba(226, 232, 240, 1);
+  /* Stronger border for inputs and interactive elements */
+  --border-strong: rgba(203, 213, 225, 1);
 
   /* ═══════════════════════════════════════════════
      Extended UI Palette — Primary Shades
      For active states, selected filters, badges.
      ═══════════════════════════════════════════════ */
   /* Light primary background for active filters, hover (blue-50) */
-  --primary-surface: rgba(239, 246, 255, 1);
-  /* Stronger primary bg for count badges (blue-100) */
-  --primary-surface-strong: rgba(219, 234, 254, 1);
-  /* Lighter primary border for active elements (blue-200) */
-  --primary-border: rgba(191, 219, 254, 1);
-  /* Primary border on hover (blue-300) */
-  --primary-border-hover: rgba(147, 197, 253, 1);
-  /* Primary icon color (blue-400) */
-  --primary-icon: rgba(96, 165, 250, 1);
-  /* Soft primary for icon badges (blue-500) */
-  --primary-soft: rgba(59, 130, 246, 1);
-  /* Strong primary text on primary surfaces (blue-700) */
-  --primary-text-strong: rgba(29, 78, 216, 1);
+  --primary-surface: rgba(237, 244, 255, 1);
+  /* Stronger primary bg for count badges */
+  --primary-surface-strong: rgba(214, 232, 255, 1);
+  /* Lighter primary border for active elements */
+  --primary-border: rgba(173, 209, 255, 1);
+  /* Primary border on hover */
+  --primary-border-hover: rgba(10, 119, 255, 0.4);
+  /* Primary icon color */
+  --primary-icon: rgba(10, 119, 255, 1);
+  /* Soft primary for icon badges */
+  --primary-soft: rgba(10, 119, 255, 1);
+  /* Strong primary text on primary surfaces */
+  --primary-text-strong: rgba(8, 95, 204, 1);
 
   /* ═══════════════════════════════════════════════
      Extended UI Palette — Accent (Success/Green) Shades
      ═══════════════════════════════════════════════ */
   /* Light accent bg for success banners (green-50) */
-  --accent-surface: rgba(240, 253, 244, 1);
-  /* Accent border (emerald-200) */
-  --accent-border: rgba(167, 243, 208, 1);
-  /* Strong accent text for "In Use", success labels (green-700) */
-  --accent-text-strong: rgba(21, 128, 61, 1);
+  --accent-surface: rgba(237, 244, 255, 1);
+  /* Accent border */
+  --accent-border: rgba(173, 209, 255, 1);
+  /* Strong accent text for highlighted labels */
+  --accent-text-strong: rgba(8, 95, 204, 1);
 
   /* ═══════════════════════════════════════════════
      Extended UI Palette — Destructive Shades
@@ -316,9 +316,9 @@
   --primary-soft: rgba(59, 130, 246, 1);
   --primary-text-strong: rgba(147, 197, 253, 1);
 
-  --accent-surface: rgba(20, 51, 35, 1);
-  --accent-border: rgba(21, 128, 61, 1);
-  --accent-text-strong: rgba(74, 222, 128, 1);
+  --accent-surface: rgba(23, 37, 84, 1);
+  --accent-border: rgba(29, 78, 216, 1);
+  --accent-text-strong: rgba(147, 197, 253, 1);
 
   --destructive-surface: rgba(69, 10, 10, 1);
   --destructive-border: rgba(153, 27, 27, 1);
