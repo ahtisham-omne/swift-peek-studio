@@ -653,7 +653,6 @@ export function ColumnsSidePanel({
   );
 }
 
-      dragRef.current = null;
       overKeyRef.current = null;
       setDrag(null);
       setOverKey(null);
