@@ -1,13 +1,13 @@
 /**
  * UOM Module — Filter Pill
  *
- * Rounded pill toggle matching Figma reference:
- *   Default:  white bg, border token, subtle shadow, text-muted text
- *   Hover:    surface-raised bg
- *   Active:   primary-surface bg, primary border, primary text
+ * Rounded pill toggle matching Partners listing style:
+ *   Default:  border-border, text-muted-foreground
+ *   Hover:    bg-muted/60, text-foreground
+ *   Active:   border-primary, bg-[#EDF4FF], text-primary (#0A77FF)
  */
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export interface FilterPillProps {
   label: ReactNode;
@@ -26,47 +26,33 @@ export function FilterPill({
   onClick,
   className = "",
 }: FilterPillProps) {
-  const [hovered, setHovered] = useState(false);
-
   return (
     <button
       type="button"
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       className={`
-        inline-flex items-center gap-[6px] rounded-full
-        cursor-pointer select-none transition-all
+        inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs
+        transition-colors whitespace-nowrap shrink-0 cursor-pointer
+        ${
+          active
+            ? "border-primary bg-[#EDF4FF] hover:bg-[#D6E8FF] active:bg-[#ADD1FF]"
+            : "border-border text-muted-foreground hover:bg-muted/60 hover:text-foreground hover:border-muted-foreground/30 active:bg-muted"
+        }
         ${className}
       `}
       style={{
-        height: 30,
-        padding: count !== undefined ? "6px 6px 6px 12px" : "6px 12px",
-        fontSize: "var(--text-label)",
-        fontWeight: "var(--font-weight-normal)" as any,
-        lineHeight: "normal",
-        backgroundColor: active
-          ? "var(--primary-surface-strong)"
-          : hovered
-            ? "var(--surface-raised)"
-            : "var(--card)",
-        border: active
-          ? "1px solid var(--primary)"
-          : "1px solid var(--border)",
-        boxShadow: "var(--elevation-pill)",
-        color: active
-          ? "var(--primary)"
-          : "var(--text-muted)",
+        fontWeight: active ? 500 : 400,
+        color: active ? "#0A77FF" : undefined,
       }}
     >
       {/* Optional leading status dot */}
       {dot && (
         <span
-          className="inline-block shrink-0 rounded-full transition-colors"
+          className="inline-block shrink-0 rounded-full"
           style={{
-            width: 7,
-            height: 7,
-            backgroundColor: active ? "var(--primary)" : dot,
+            width: 6,
+            height: 6,
+            backgroundColor: active ? "#0A77FF" : dot,
           }}
         />
       )}
@@ -77,23 +63,12 @@ export function FilterPill({
       {/* Nested count badge */}
       {count !== undefined && (
         <span
-          className="inline-flex items-center justify-center rounded-full"
+          className={`text-[10px] rounded-full px-1.5 py-px min-w-[18px] text-center ${
+            active ? "bg-primary/10" : "bg-muted"
+          }`}
           style={{
-            height: 18,
-            minWidth: 18,
-            padding: "0 6px",
-            fontSize: 11,
-            lineHeight: "normal",
-            fontWeight: "var(--font-weight-normal)" as any,
-            backgroundColor: active
-              ? "var(--primary-surface-strong)"
-              : "var(--surface-raised)",
-            color: active
-              ? "var(--primary-text-strong)"
-              : "var(--text-muted)",
-            border: active
-              ? "none"
-              : "1px solid var(--border-subtle)",
+            fontWeight: 600,
+            color: active ? "#0A77FF" : "#475569",
           }}
         >
           {count}

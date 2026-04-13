@@ -7,7 +7,7 @@
 
 import React, { useState, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { UOM_ICONS } from "./design-tokens";
+
 import { UOM_CATEGORIES, type UomCategory } from "./CategoryBadge";
 import { FilterPill } from "./FilterPill";
 import { UomButton } from "./Button";
@@ -36,7 +36,7 @@ import { useToast } from "./Toast";
 import { DensityDropdown, type DensityMode } from "./DensityDropdown";
 import { UomColumnHeaderMenu } from "./UomColumnHeaderMenu";
 import { UomNotionFilterBar, type ColumnFilterMap } from "./UomNotionFilterBar";
-import { Plus, SlidersHorizontal, AlertTriangle, Archive } from "lucide-react";
+import { Plus, SlidersHorizontal, AlertTriangle, Archive, Search, X, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { BulkActionsBar } from "./BulkActionsBar";
 import {
@@ -432,15 +432,18 @@ export function UomListView({
   }, []);
 
   const pageNumbers = useMemo(() => {
-    const pages: number[] = [];
-    const maxVisible = 5;
-    let start = Math.max(1, safePage - Math.floor(maxVisible / 2));
-    let end = start + maxVisible - 1;
-    if (end > totalPages) {
-      end = totalPages;
-      start = Math.max(1, end - maxVisible + 1);
+    const pages: (number | "...")[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (safePage > 3) pages.push("...");
+      const start = Math.max(2, safePage - 1);
+      const end = Math.min(totalPages - 1, safePage + 1);
+      for (let i = start; i <= end; i++) pages.push(i);
+      if (safePage < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
     }
-    for (let i = start; i <= end; i++) pages.push(i);
     return pages;
   }, [safePage, totalPages]);
 
@@ -503,120 +506,55 @@ export function UomListView({
      ══════════════════════════════════════════════ */
 
   return (
-    <div
-      style={{ backgroundColor: "var(--secondary)", minHeight: "100%" }}
-    >
+    <div className="flex flex-col h-full bg-[#F8FAFC]">
       {/* ── MODULE HEADER ── */}
       <ModuleHeader
         onNewUnit={() => setCreateModalOpen(true)}
       />
 
       {/* ── CONTENT AREA — card container ── */}
-      <div
-        className="px-5"
-        style={{ paddingTop: 24, paddingBottom: 32 }}
-      >
-        <div
-          style={{
-            backgroundColor: "var(--card)",
-            borderRadius: "var(--radius-lg)",
-            border: "1px solid var(--border)",
-            boxShadow: "var(--elevation-xs)",
-          }}
-        >
+      <div className="flex-1 overflow-hidden flex flex-col min-h-0 px-6 lg:px-8 py-6">
+        <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col">
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
-        <div
-          className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
-          style={{
-            padding: "16px 16px 12px",
-            borderColor: "var(--border-subtle)",
-            borderBottomWidth: 1,
-            borderBottomStyle: "solid" as const,
-          }}
-        >
+        <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
           {/* Left — Search + Filters button */}
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="relative flex-1" style={{ maxWidth: 500 }}>
-              <span
-                className="absolute left-[12px] top-1/2 -translate-y-1/2"
-                style={{ color: "var(--text-subtle)" }}
-              >
-                {UOM_ICONS.search}
-              </span>
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <div className="relative flex-1 max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70 pointer-events-none" />
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search by name, symbol, or category..."
                 value={filters.search}
                 onChange={(e) => updateFilter({ search: e.target.value })}
-                className="outline-none w-full"
-                style={{
-                  height: "var(--input-height)",
-                  padding: "0 12px 0 32px",
-                  boxSizing: "border-box",
-                  backgroundColor: "var(--input-background)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "var(--radius-md)",
-                  color: "var(--foreground)",
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-normal)" as any,
-                  lineHeight: "normal",
-                  boxShadow: "var(--elevation-btn-light)",
-                  transition: "border-color 150ms ease, box-shadow 150ms ease",
-                }}
+                className="w-full pl-9 pr-8 h-9 text-sm bg-white border border-border/80 rounded-lg shadow-sm outline-none placeholder:text-muted-foreground/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                style={{ color: "var(--foreground)" }}
               />
+              {filters.search && (
+                <button
+                  onClick={() => updateFilter({ search: "" })}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                >
+                  <X size={14} />
+                </button>
+              )}
             </div>
 
             {/* Filters button */}
             <button
               type="button"
               onClick={() => setAdvFiltersOpen(true)}
-              className="flex items-center gap-1.5 cursor-pointer shrink-0"
-              style={{
-                padding: "8px 12px",
-                borderRadius: "var(--radius-sm)",
-                border: activeAdvFilterCount > 0
-                  ? "1px solid var(--primary-border)"
-                  : "1px solid var(--border)",
-                backgroundColor: activeAdvFilterCount > 0
-                  ? "var(--primary-surface)"
-                  : "var(--card)",
-                color: activeAdvFilterCount > 0
-                  ? "var(--primary)"
-                  : "var(--foreground)",
-                fontSize: "var(--text-label)",
-                fontWeight: "var(--font-weight-semibold)" as any,
-                lineHeight: "20px",
-                transition: "border-color 150ms, background-color 150ms",
-              }}
-              onMouseEnter={(e) => {
-                if (activeAdvFilterCount === 0) {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong)";
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "var(--surface-raised)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeAdvFilterCount === 0) {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "var(--card)";
-                }
-              }}
+              className={`inline-flex items-center justify-center h-9 gap-1.5 px-3 rounded-lg border bg-white shadow-sm hover:bg-muted/50 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 shrink-0 ${
+                activeAdvFilterCount > 0
+                  ? "text-primary border-primary/30"
+                  : "text-foreground border-border/80"
+              }`}
             >
-              <SlidersHorizontal size={16} />
-              <span>Filters</span>
+              <SlidersHorizontal className={`w-3.5 h-3.5 ${activeAdvFilterCount > 0 ? "text-primary" : "text-muted-foreground"}`} />
+              <span className="text-sm" style={{ fontWeight: 500 }}>Filters</span>
               {activeAdvFilterCount > 0 && (
                 <span
-                  className="inline-flex items-center justify-center"
-                  style={{
-                    minWidth: 18,
-                    height: 18,
-                    padding: "0 5px",
-                    borderRadius: 9,
-                    backgroundColor: "var(--primary)",
-                    color: "var(--primary-foreground)",
-                    fontSize: 11,
-                    fontWeight: "var(--font-weight-medium)" as any,
-                    lineHeight: 1,
-                  }}
+                  className="ml-0.5 min-w-[18px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white"
+                  style={{ backgroundColor: "#0A77FF", fontWeight: 600 }}
                 >
                   {activeAdvFilterCount}
                 </span>
@@ -624,8 +562,26 @@ export function UomListView({
             </button>
           </div>
 
-          {/* Right — Controls: Column selector + Density */}
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Right — Count + Controls */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="text-sm tabular-nums mr-1 hidden sm:inline" style={{ fontWeight: 500 }}>
+              {filteredUnits.length !== allUnits.length ? (
+                <>
+                  <span className="text-foreground">{filteredUnits.length}</span>
+                  <span className="text-muted-foreground/60"> of </span>
+                  <span className="text-muted-foreground">{allUnits.length}</span>
+                  <span className="text-muted-foreground/70"> units</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-foreground">{allUnits.length}</span>
+                  <span className="text-muted-foreground/70"> units</span>
+                </>
+              )}
+            </span>
+
+            <div className="w-px h-5 bg-border/60 mx-1 hidden sm:block" />
+
             <DensityDropdown
               density={density}
               onDensityChange={setDensity}
@@ -644,111 +600,69 @@ export function UomListView({
         </div>
 
         {/* ── FILTERS — unified row: categories + type + status ── */}
-        <div
-          style={{
-            borderColor: "var(--border-subtle)",
-            borderBottomWidth: 1,
-            borderBottomStyle: "solid" as const,
-          }}
-        >
-          {/* Filter pills row */}
-          <div
-            className="flex flex-col gap-3 md:flex-row md:items-center"
-            style={{ padding: "10px 24px" }}
-          >
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Category dropdown */}
-              <CategoryDropdown
-                selected={filters.categories}
-                categoryCounts={categoryCounts}
-                onToggle={toggleCategory}
-                onClear={() => updateFilter({ categories: new Set() })}
-                defaultOpen={false}
-              />
+        <div className="flex items-center gap-1.5 overflow-x-auto px-4 pb-3 shrink-0">
+          {/* Category dropdown */}
+          <CategoryDropdown
+            selected={filters.categories}
+            categoryCounts={categoryCounts}
+            onToggle={toggleCategory}
+            onClear={() => updateFilter({ categories: new Set() })}
+            defaultOpen={false}
+          />
 
-              {/* Type pills */}
-              <FilterPill
-                label="Standard"
-                count={standardCount}
-                active={filters.type === "Standard"}
-                onClick={() => toggleType("Standard")}
-              />
-              <FilterPill
-                label="Custom"
-                count={customCount}
-                active={filters.type === "Custom"}
-                onClick={() => toggleType("Custom")}
-              />
+          {/* Separator */}
+          <div className="w-px h-5 bg-border shrink-0" />
 
-              {/* Divider between type and status pills */}
-              <span
-                className="hidden md:block"
-                style={{
-                  width: 1,
-                  height: 20,
-                  borderRadius: "100px",
-                  backgroundColor: "var(--border)",
-                }}
-              />
+          {/* Type pills */}
+          <FilterPill
+            label="Standard"
+            count={standardCount}
+            active={filters.type === "Standard"}
+            onClick={() => toggleType("Standard")}
+          />
+          <FilterPill
+            label="Custom"
+            count={customCount}
+            active={filters.type === "Custom"}
+            onClick={() => toggleType("Custom")}
+          />
 
-              {/* Status pills */}
-              <FilterPill
-                label="In Use"
-                count={inUseCount}
-                dot="var(--accent)"
-                active={filters.inUse === true}
-                onClick={() => toggleInUse(true)}
-              />
-              <FilterPill
-                label="Unused"
-                count={unusedCount}
-                dot="var(--text-disabled)"
-                active={filters.inUse === false}
-                onClick={() => toggleInUse(false)}
-              />
+          {/* Separator */}
+          <div className="w-px h-5 bg-border shrink-0" />
 
-              {active && (
-                <>
-                  <span
-                    className="hidden md:block"
-                    style={{
-                      width: 2,
-                      height: 20,
-                      borderRadius: "100px",
-                      backgroundColor: "var(--border)",
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={clearAll}
-                    className="cursor-pointer transition-colors"
-                    style={{
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      color: "var(--text-muted)",
-                      lineHeight: 1,
-                      padding: "4px 8px",
-                      borderRadius: "var(--radius-sm)",
-                      border: "none",
-                      backgroundColor: "transparent",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "var(--destructive)";
-                      e.currentTarget.style.backgroundColor = "var(--destructive-surface)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "var(--text-muted)";
-                      e.currentTarget.style.backgroundColor = "transparent";
-                    }}
-                  >
-                    Clear All
-                  </button>
-                </>
-              )}
-            </div>
+          {/* Status pills */}
+          <FilterPill
+            label="In Use"
+            count={inUseCount}
+            dot="#22C55E"
+            active={filters.inUse === true}
+            onClick={() => toggleInUse(true)}
+          />
+          <FilterPill
+            label="Unused"
+            count={unusedCount}
+            dot="#94A3B8"
+            active={filters.inUse === false}
+            onClick={() => toggleInUse(false)}
+          />
 
-          </div>
+          {active && (
+            <>
+              <div className="w-px h-5 bg-border shrink-0" />
+              <button
+                type="button"
+                onClick={clearAll}
+                className="inline-flex items-center px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer whitespace-nowrap shrink-0"
+                style={{ fontWeight: 500 }}
+              >
+                Clear All
+              </button>
+            </>
+          )}
         </div>
+
+        {/* Divider between filters and table content */}
+        <div className="border-t border-border shrink-0" />
 
         {/* ── DATA TABLE or CARD VIEW ── */}
         {density === "card" ? (
@@ -758,9 +672,9 @@ export function UomListView({
             onCardClick={(u) => navigate(`/unit/${u.id}`)}
           />
         ) : (
-        <div className="flex">
+        <div className="flex min-h-0 overflow-auto flex-1">
           {/* Table content */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 flex flex-col">
             {/* ── Notion-style filter bar ── */}
             <UomNotionFilterBar
               columns={columns}
@@ -896,112 +810,80 @@ export function UomListView({
             />
 
             {/* ── PAGINATION BAR ── */}
-            <div
-              className="flex items-center justify-center"
-              style={{
-                borderTop: "1px solid var(--border-subtle)",
-                padding: "0 16px",
-                backgroundColor: "var(--card)",
-              }}
-            >
-              {/* Left — Records per page */}
-              <div className="flex items-center gap-2 shrink-0">
-                <span
-                  style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-muted)",
-                    lineHeight: "normal",
+            <div className="flex flex-col sm:flex-row items-center justify-center px-4 py-3 border-t border-border gap-3 shrink-0">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Records per page</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setPage(1);
                   }}
+                  className="h-8 w-[70px] rounded-md border border-border bg-white px-2 text-sm cursor-pointer outline-none focus:ring-2 focus:ring-primary/20"
                 >
-                  Records per page
-                </span>
-                <div
-                  className="relative"
-                  style={{
-                    border: "1px solid var(--border)",
-                    borderRadius: "var(--radius-sm)",
-                    backgroundColor: "var(--card)",
-                  }}
-                >
-                  <select
-                    value={pageSize}
-                    onChange={(e) => {
-                      setPageSize(Number(e.target.value));
-                      setPage(1);
-                    }}
-                    className="cursor-pointer outline-none appearance-none"
-                    style={{
-                      fontSize: "var(--text-label)",
-                      fontWeight: "var(--font-weight-medium)" as any,
-                      color: "var(--text-strong)",
-                      padding: "4px 24px 4px 8px",
-                      border: "none",
-                      backgroundColor: "transparent",
-                      lineHeight: "normal",
-                    }}
-                  >
-                    <option value={10}>10</option>
-                    <option value={25}>25</option>
-                    <option value={50}>50</option>
-                    <option value={100}>100</option>
-                  </select>
-                  <span
-                    className="absolute right-[6px] top-1/2 -translate-y-1/2 pointer-events-none"
-                    style={{ color: "var(--text-subtle)", fontSize: 10 }}
-                  >
-                    ▾
-                  </span>
-                </div>
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
               </div>
-
-              {/* Center — Pagination controls */}
-              <div className="flex items-center">
-                {/* First page (double arrow) */}
-                <PageBtn disabled={safePage <= 1} onClick={() => setPage(1)}>
-                  «
-                </PageBtn>
-
-                {/* Prev */}
-                <PageBtn
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  disabled={safePage <= 1}
+                  onClick={() => setPage(1)}
+                  className="inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
                   disabled={safePage <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  showLabel="Prev"
-                  iconPosition="left"
+                  className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  ‹
-                </PageBtn>
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  Prev
+                </button>
 
-                {/* Page numbers */}
-                {pageNumbers.map((n) => (
-                  <PageBtn
-                    key={n}
-                    active={n === safePage}
-                    onClick={() => setPage(n)}
-                  >
-                    {n}
-                  </PageBtn>
-                ))}
+                {pageNumbers.map((pg, idx) =>
+                  pg === "..." ? (
+                    <span key={`dots-${idx}`} className="px-1 text-sm text-muted-foreground">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={pg}
+                      type="button"
+                      onClick={() => setPage(pg as number)}
+                      className={`inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm transition-colors cursor-pointer ${
+                        safePage === pg
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-muted/60"
+                      }`}
+                    >
+                      {pg}
+                    </button>
+                  )
+                )}
 
-                {/* Next */}
-                <PageBtn
+                <button
+                  type="button"
                   disabled={safePage >= totalPages}
-                  onClick={() =>
-                    setPage((p) => Math.min(totalPages, p + 1))
-                  }
-                  showLabel="Next"
-                  iconPosition="right"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  ›
-                </PageBtn>
-
-                {/* Last page (double arrow) */}
-                <PageBtn
+                  Next
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage(totalPages)}
+                  className="inline-flex items-center justify-center h-8 w-8 p-0 rounded-md text-sm text-muted-foreground hover:bg-muted/60 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  »
-                </PageBtn>
+                  <ChevronsRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -1511,136 +1393,31 @@ function ModuleHeader({
 }) {
   return (
     <div
-      className="w-full"
-      style={{
-        backgroundColor: "var(--background)",
-        borderBottom: "1px solid var(--border-subtle)",
-        boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
-      }}
+      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 lg:px-8 pt-3.5 pb-3.5 bg-white border-b border-border shrink-0"
     >
-      <div
-        className="flex flex-col gap-4 px-5 py-5 md:flex-row md:items-center md:justify-between"
-      >
-        {/* Left side */}
-        <div className="flex items-center gap-3 min-w-0">
-          <div
-            className="flex items-center justify-center shrink-0"
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "var(--radius-sm)",
-              backgroundColor: "var(--primary-surface)",
-              border: "none",
-            }}
-          >
-            <span
-              style={{
-                color: "var(--primary-soft)",
-                fontSize: 16,
-                lineHeight: 1,
-              }}
-            >
-              ⇄
-            </span>
-          </div>
-
-          <div className="min-w-0">
-            <h4 className="text-[20px]"
-              style={{
-                color: "var(--foreground)",
-                margin: 0,
-                lineHeight: 1.3,
-              }}
-            >
-              Units of Measures
-            </h4>
-            <p
-              style={{
-                margin: 0,
-                marginTop: 1,
-                fontSize: "var(--text-label)",
-                fontWeight: "var(--font-weight-normal)" as any,
-                color: "var(--text-muted)",
-                lineHeight: 1.4,
-              }}
-            >
-              Manage standard and custom units of measure and their conversions.
-            </p>
-          </div>
+      {/* Left side */}
+      <div className="flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#EDF4FF' }}>
+          <span style={{ color: '#0A77FF', fontSize: 16, lineHeight: 1 }}>⇄</span>
         </div>
-
-        {/* Right side — action buttons */}
-        <div className="flex items-center shrink-0">
-          <UomButton variant="primary" onClick={onNewUnit}>
-            <span className="flex items-center gap-1.5">
-              <Plus size={14} /> Create New Unit
-            </span>
-          </UomButton>
+        <div>
+          <h1 className="font-bold text-[20px]">Units of Measures</h1>
+          <p className="text-xs text-muted-foreground">
+            Manage standard and custom units of measure and their conversions.
+          </p>
         </div>
       </div>
+
+      {/* Right side — action button */}
+      <button
+        type="button"
+        onClick={onNewUnit}
+        className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-primary/90 transition-colors shrink-0"
+        style={{ fontWeight: 500 }}
+      >
+        <Plus className="w-4 h-4" />
+        Create New Unit
+      </button>
     </div>
-  );
-}
-
-/* ═════════════════════════════════════════════
-   Pagination button
-   ═══════════════════════════════════════════════ */
-
-function PageBtn({
-  active = false,
-  disabled = false,
-  onClick,
-  children,
-  showLabel,
-  iconPosition,
-}: {
-  active?: boolean;
-  disabled?: boolean;
-  onClick?: () => void;
-  children: React.ReactNode;
-  showLabel?: string;
-  iconPosition?: "left" | "right";
-}) {
-  const isTextBtn = !!showLabel;
-
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      className="inline-flex items-center justify-center transition-colors cursor-pointer"
-      style={{
-        minWidth: isTextBtn ? undefined : 36,
-        height: 36,
-        padding: isTextBtn ? "8px 14px" : "0",
-        gap: isTextBtn ? 6 : 0,
-        borderRadius: "var(--radius-sm)",
-        border: "none",
-        fontSize: "var(--text-label)",
-        fontWeight: "var(--font-weight-medium)" as any,
-        lineHeight: "normal",
-        color: disabled
-          ? "var(--text-disabled)"
-          : active
-            ? "var(--primary-foreground)"
-            : "var(--text-muted)",
-        backgroundColor: active
-          ? "var(--primary)"
-          : "transparent",
-        boxShadow: "var(--elevation-btn-light)",
-        transition: "border-color 150ms ease, box-shadow 150ms ease",
-      }}
-    >
-      {iconPosition === "left" && (
-        <span style={{ fontSize: 16, lineHeight: 1 }}>{children}</span>
-      )}
-      {showLabel && (
-        <span>{showLabel}</span>
-      )}
-      {iconPosition === "right" && (
-        <span style={{ fontSize: 16, lineHeight: 1 }}>{children}</span>
-      )}
-      {!showLabel && !iconPosition && children}
-    </button>
   );
 }

@@ -291,7 +291,7 @@ export function TableHeaderRow({
 }: TableHeaderRowProps) {
   const colMap = new Map(columns.map((c) => [c.key, c]));
 
-  const HEADER_BG = "var(--secondary)";
+  const HEADER_BG = "#f8fafc";
 
   /* ── Resize handler ── */
   const handleResizeStart = useCallback(
@@ -487,32 +487,28 @@ export function TableHeaderRow({
                 )}
 
                 <span
-                  className="leading-none"
+                  className="leading-none text-[13px]"
                   style={{
-                    fontSize: "var(--text-label)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    color: "var(--text-base-second)",
+                    fontWeight: 500 as any,
+                    color: isActive
+                      ? "#0A77FF"
+                      : undefined,
                   }}
                 >
                   {hdr.label}
                 </span>
 
                 {/* Sort arrow */}
-                {isSortable && (
-                  <span
-                    className="leading-none"
-                    style={{
-                      fontSize: 10,
-                      color: isActive
-                        ? "var(--primary)"
-                        : "var(--text-base-second)",
-                    }}
-                  >
-                    {isActive
-                      ? activeSort!.direction === "asc"
-                        ? UOM_ICONS.sortAsc
-                        : UOM_ICONS.sortDesc
-                      : UOM_ICONS.sortNeutral}
+                {isSortable && isActive && (
+                  <span className="leading-none" style={{ color: "#0A77FF" }}>
+                    {activeSort!.direction === "asc"
+                      ? UOM_ICONS.sortAsc
+                      : UOM_ICONS.sortDesc}
+                  </span>
+                )}
+                {isSortable && !isActive && (
+                  <span className="leading-none opacity-0 group-hover/col:opacity-100 transition-opacity" style={{ color: "var(--text-muted)" }}>
+                    {UOM_ICONS.sortNeutral}
                   </span>
                 )}
               </div>
@@ -597,9 +593,9 @@ export function TableRow({
   const colMap = new Map(columns.map((c) => [c.key, c]));
 
   const ROW_BG = hovered
-    ? "var(--surface-hover)"
+    ? "#F0F7FF"
     : selected
-      ? "var(--primary-surface)"
+      ? "#EDF4FF"
       : "var(--card)";
 
   const cellPad = getCellPadding(density);
