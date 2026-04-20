@@ -190,8 +190,8 @@ const DETAIL_TABS_TEMPLATE: DetailTab[] = [
 ];
 
 const WHERE_USED_SUB_TABS = [
-  { id: "items", label: "Items They Sell", count: 4, icon: Tag, color: "#1E40AF", bg: "#EFF6FF", border: "#BFDBFE", hoverBg: "#DBEAFE" },
-  { id: "vendors", label: "Items They Purchase", count: WHERE_USED_VENDORS.length, icon: ShoppingCart, color: "#5B21B6", bg: "#F5F3FF", border: "#DDD6FE", hoverBg: "#EDE9FE" },
+  { id: "items", label: "Items", count: 4, icon: Package, color: "#1E40AF", bg: "#EFF6FF", border: "#BFDBFE", hoverBg: "#DBEAFE" },
+  { id: "vendors", label: "Vendors", count: WHERE_USED_VENDORS.length, icon: Building2, color: "#5B21B6", bg: "#F5F3FF", border: "#DDD6FE", hoverBg: "#EDE9FE" },
 ] as const;
 
 
