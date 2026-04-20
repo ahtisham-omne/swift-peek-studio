@@ -188,8 +188,8 @@ const DETAIL_TABS_TEMPLATE: DetailTab[] = [
 ];
 
 const WHERE_USED_SUB_TABS = [
-  { id: "items", label: "Items", count: 4 },
-  { id: "vendors", label: "Vendors", count: WHERE_USED_VENDORS.length },
+  { id: "items", label: "Items they sell", count: 4 },
+  { id: "vendors", label: "Items they purchase", count: WHERE_USED_VENDORS.length },
 ];
 
 
@@ -662,7 +662,7 @@ export function UomDetailView() {
                     borderRightWidth: 0,
                   }}
                 >
-                  <tab.icon size={14} strokeWidth={isActive ? 2 : 1.6} />
+                  {/* Icon removed — Partners detail tabs are text-only */}
                   {tab.label}
                   {tab.count !== null && (
                     <span
