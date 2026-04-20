@@ -12,7 +12,11 @@ import { TopHeader } from "./TopHeader";
 
 export function RootLayout() {
   const location = useLocation();
-  const hideTopHeader = location.pathname === "/uom" || location.pathname.startsWith("/uom/");
+  const hideTopHeader =
+    location.pathname === "/" ||
+    location.pathname === "/uom" ||
+    location.pathname.startsWith("/uom/") ||
+    location.pathname.startsWith("/unit/");
 
   return (
     <div
