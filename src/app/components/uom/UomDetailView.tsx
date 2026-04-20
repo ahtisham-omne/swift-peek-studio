@@ -25,6 +25,7 @@ import { TypeLabel } from "./TypeLabel";
 import { SAMPLE_UNITS, type UomUnit } from "./sample-data";
 import { useToast } from "./Toast";
 import { CreateUomModal } from "./CreateUomModal";
+import { Input } from "../ui/input";
 import {
   Copy,
   Pencil,
@@ -45,6 +46,7 @@ import {
   AlertTriangle,
   MapPin,
   Building2,
+  Search,
 } from "lucide-react";
 
 const ARCHIVE_BLOCKING_REFERENCES = [
