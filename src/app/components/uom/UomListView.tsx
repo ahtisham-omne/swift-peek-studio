@@ -1766,6 +1766,21 @@ function DraggableUomKpiCard({
   );
 }
 
+/* Inline KPI icon — matches Partners listing: w-3.5 h-3.5, neutral slate color, no background tile */
+function UomKpiIconInline({ name }: { name: string }) {
+  const cls = "w-3.5 h-3.5 shrink-0";
+  const style = { color: "#94A3B8" } as const;
+  switch (name) {
+    case "Package": return <Package className={cls} style={style} />;
+    case "Ruler": return <Ruler className={cls} style={style} />;
+    case "CheckCircle2": return <CheckCircle2 className={cls} style={style} />;
+    case "ArrowLeftRight": return <ArrowLeftRight className={cls} style={style} />;
+    case "BarChart3": return <BarChart3 className={cls} style={style} />;
+    case "Archive": return <Archive className={cls} style={style} />;
+    default: return <BarChart3 className={cls} style={style} />;
+  }
+}
+
 function UomKpiIconSmall({ name }: { name: string }) {
   const s = { width: 12, height: 12 };
   switch (name) {
