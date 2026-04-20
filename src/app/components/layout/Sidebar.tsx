@@ -427,11 +427,11 @@ export function Sidebar() {
             <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-muted transition-colors cursor-pointer">
               <div
                 className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-                style={{ backgroundColor: "hsl(var(--accent))" }}
+                style={{ backgroundColor: "var(--accent)" }}
               >
                 <span
                   className="text-[11px]"
-                  style={{ fontWeight: 600, color: "hsl(var(--primary))" }}
+                  style={{ fontWeight: 600, color: "var(--primary)" }}
                 >
                   AA
                 </span>
@@ -543,11 +543,11 @@ export function Sidebar() {
               <TooltipTrigger asChild>
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 cursor-pointer hover:ring-2 hover:ring-primary/20 transition-all"
-                  style={{ backgroundColor: "hsl(var(--accent))" }}
+                  style={{ backgroundColor: "var(--accent)" }}
                 >
                   <span
                     className="text-[11px]"
-                    style={{ fontWeight: 600, color: "hsl(var(--primary))" }}
+                    style={{ fontWeight: 600, color: "var(--primary)" }}
                   >
                     AA
                   </span>
