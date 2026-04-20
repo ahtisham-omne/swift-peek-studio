@@ -7,8 +7,6 @@
  */
 
 import React, { useState, useRef, useCallback, useEffect, useMemo } from "react";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "motion/react";
 import {
   GripVertical,
   Eye,
@@ -190,7 +188,8 @@ export interface ColumnsSidePanelProps {
   setColumns: React.Dispatch<React.SetStateAction<ColumnDef[]>>;
   columnOrder: string[];
   setColumnOrder: React.Dispatch<React.SetStateAction<string[]>>;
-  onClose: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 /* ─── Auto-scroll constants ─── */
@@ -203,7 +202,8 @@ export function ColumnsSidePanel({
   setColumns,
   columnOrder,
   setColumnOrder,
-  onClose,
+  open,
+  onOpenChange,
 }: ColumnsSidePanelProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [draggingKey, setDraggingKey] = useState<string | null>(null);
@@ -430,12 +430,14 @@ export function ColumnsSidePanel({
   }, [draggingKey]);
 
   return (
-    <motion.div
-      initial={{ width: 0, opacity: 0 }}
-      animate={{ width: 280, opacity: 1 }}
-      exit={{ width: 0, opacity: 0 }}
-      transition={{ duration: 0.2, ease: "easeInOut" }}
-      className="h-full border-l border-border bg-white flex flex-col shrink-0 overflow-hidden"
+    <div
+      className="h-full border-l border-border bg-white flex flex-col shrink-0 overflow-hidden transition-all duration-200 ease-in-out"
+      style={{
+        width: open ? 280 : 0,
+        minWidth: open ? 280 : 0,
+        opacity: open ? 1 : 0,
+        borderLeftWidth: open ? 1 : 0,
+      }}
     >
       <div style={{ width: 280 }} className="flex flex-col h-full">
         {/* ── Header ── */}
@@ -459,7 +461,7 @@ export function ColumnsSidePanel({
               </span>
             </div>
             <button
-              onClick={onClose}
+              onClick={() => onOpenChange(false)}
               className="p-1 rounded-md hover:bg-muted/60 text-muted-foreground/60 hover:text-foreground transition-colors cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
@@ -649,6 +651,6 @@ export function ColumnsSidePanel({
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -1130,17 +1130,14 @@ export function UomListView({
           </div>
 
           {/* ── COLUMNS SIDE PANEL ── */}
-          <AnimatePresence>
-            {columnsPanelOpen && (
-              <ColumnsSidePanel
-                columns={columns}
-                setColumns={setColumns}
-                columnOrder={columnOrder}
-                setColumnOrder={setColumnOrder}
-                onClose={() => setColumnsPanelOpen(false)}
-              />
-            )}
-          </AnimatePresence>
+          <ColumnsSidePanel
+            columns={columns}
+            setColumns={setColumns}
+            columnOrder={columnOrder}
+            setColumnOrder={setColumnOrder}
+            open={columnsPanelOpen}
+            onOpenChange={setColumnsPanelOpen}
+          />
         </div>
         )}
         </div>
