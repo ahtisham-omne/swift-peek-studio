@@ -6,13 +6,11 @@
  * All colors use CSS custom properties from theme.css.
  */
 
-import React, { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
 
 export function RootLayout() {
-  const [sidebarPinned, setSidebarPinned] = useState(false);
   const location = useLocation();
   const hideTopHeader = location.pathname === "/uom" || location.pathname.startsWith("/uom/");
 
@@ -24,10 +22,7 @@ export function RootLayout() {
       }}
     >
       {/* ── Sidebar ── */}
-      <Sidebar
-        pinned={sidebarPinned}
-        onTogglePin={() => setSidebarPinned((v) => !v)}
-      />
+      <Sidebar />
 
       {/* ── Main content area ── */}
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">

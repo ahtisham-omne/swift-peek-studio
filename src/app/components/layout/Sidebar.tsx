@@ -1,67 +1,59 @@
 /**
  * Omne ERP — Left Sidebar Navigation
  *
- * Hover-to-expand sidebar matching the Notion-style reference design.
- * Collapsed by default (icons only), expands on hover or can be pinned open.
- * All colors use CSS custom properties from theme.css.
- * Typography uses 'Inter' font family defined in fonts.css.
+ * Matches the Partner Management module sidebar exactly:
+ * - Wordmark logo + collapse/expand toggle
+ * - Resizable width with drag handle (220–420 px), persisted to localStorage
+ * - Collapsed icon-only mode (60 px) with tooltips
+ * - Hover-to-expand overlay when collapsed
+ * - Ctrl/Cmd+B keyboard shortcut to toggle
+ *
+ * Nav data is UOM-module specific (Items & Inventory active, others disabled stubs).
  */
 
-import React, { useState, useRef, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import type { ComponentType, MouseEvent as ReactMouseEvent } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import logoWordmark from "@/assets/omnesoft-wordmark.png";
+import logoIcon from "@/assets/omnesoft-icon.png";
 import {
-  Package,
+  ChevronDown,
+  ChevronsLeft,
+  ChevronsRight,
+  Boxes,
   Handshake,
   Truck,
   Factory,
   ShoppingCart,
   Calculator,
-  Users,
+  UsersRound,
   Building2,
-  Settings,
-  Bell,
   LogOut,
-  ChevronsRight,
-  ChevronDown,
+  Bell,
+  Settings,
 } from "lucide-react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 
-/* ═══════════════════════════════════════════════
-   Navigation Data
-   ═══════════════════════════════════════════════ */
-
-interface NavSubItem {
+interface NavChild {
   label: string;
   path: string;
 }
 
 interface NavItem {
-  key: string;
   label: string;
-  icon: React.ElementType;
-  path?: string;
-  children?: NavSubItem[];
+  icon: ComponentType<{ className?: string }>;
+  path: string;
+  disabled?: boolean;
+  children?: NavChild[];
 }
 
-const NAV_ITEMS: NavItem[] = [
+/* UOM-module nav. "Items & Inventory" is the active module; other modules are
+ * disabled stubs (matching Partners' pattern of greying-out non-current modules). */
+const navItems: NavItem[] = [
   {
-    key: "company",
-    label: "Company Setup",
-    icon: Building2,
-    path: "/",
-    children: [
-      { label: "Overview", path: "/" },
-      { label: "Buildings", path: "/company/buildings" },
-      { label: "Work Centers", path: "/company/work-centers" },
-      { label: "Shift Policies", path: "/company/shift-policies" },
-      { label: "Clock In / Clock Out", path: "/company/clock-policies" },
-      { label: "Overtime Policies", path: "/company/overtime-policies" },
-      { label: "Auth Policies", path: "/company/auth-policies" },
-    ],
-  },
-  {
-    key: "items",
     label: "Items & Inventory",
-    icon: Package,
+    icon: Boxes,
     path: "/items",
     children: [
       { label: "Overview", path: "/items" },
@@ -69,555 +61,580 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    key: "partners",
     label: "Partners Management",
     icon: Handshake,
     path: "/partners",
-    children: [
-      { label: "Overview", path: "/partners" },
-      { label: "Partners", path: "/partners/list" },
-      { label: "Partner Groups", path: "/partners/groups" },
-      { label: "Contacts Directory", path: "/partners/contacts" },
-      { label: "Credit Management", path: "/partners/credit" },
-      { label: "Carrier Management", path: "/partners/carrier" },
-      { label: "Partner Locations", path: "/partners/locations" },
-      { label: "Qualified Vendors", path: "/partners/vendors" },
-      { label: "Reports & Analytics", path: "/partners/reports" },
-    ],
+    disabled: true,
   },
   {
-    key: "supply",
     label: "Supply Chain Management",
     icon: Truck,
     path: "/supply-chain",
+    disabled: true,
   },
   {
-    key: "production",
     label: "Production & Planning",
     icon: Factory,
     path: "/production",
+    disabled: true,
   },
   {
-    key: "sales",
     label: "Sales",
     icon: ShoppingCart,
     path: "/sales",
-    children: [
-      { label: "Overview", path: "/sales" },
-      { label: "Quotes", path: "/quotes/view" },
-    ],
+    disabled: true,
   },
   {
-    key: "accounting",
     label: "Accounting & Finance",
     icon: Calculator,
     path: "/accounting",
+    disabled: true,
   },
   {
-    key: "people",
     label: "People Management",
-    icon: Users,
+    icon: UsersRound,
     path: "/people",
+    disabled: true,
+  },
+  {
+    label: "Company Setup",
+    icon: Building2,
+    path: "/company-setup",
+    disabled: true,
   },
 ];
 
-const SIDEBAR_EXPANDED = 260;
-const SIDEBAR_COLLAPSED = 60;
+const COLLAPSED_WIDTH = 60;
+const MIN_WIDTH = 220;
+const MAX_WIDTH = 420;
+const DEFAULT_WIDTH = 272;
+const STORAGE_KEY_COLLAPSED = "omnesoft:sidebar-collapsed";
+const STORAGE_KEY_WIDTH = "omnesoft:sidebar-width";
 
-/* ═══════════════════════════════════════════════
-   Sidebar Component
-   ═══════════════════════════════════════════════ */
-
-export interface SidebarProps {
-  pinned: boolean;
-  onTogglePin: () => void;
+function readStoredBoolean(key: string, fallback: boolean): boolean {
+  try {
+    const v = localStorage.getItem(key);
+    if (v === "true") return true;
+    if (v === "false") return false;
+  } catch { /* ignore */ }
+  return fallback;
 }
 
-export function Sidebar({ pinned, onTogglePin }: SidebarProps) {
-  const navigate = useNavigate();
+function readStoredNumber(key: string, fallback: number, min: number, max: number): number {
+  try {
+    const v = localStorage.getItem(key);
+    if (v !== null) {
+      const n = Number(v);
+      if (!Number.isNaN(n) && n >= min && n <= max) return n;
+    }
+  } catch { /* ignore */ }
+  return fallback;
+}
+
+export function Sidebar() {
   const location = useLocation();
-  const [hovered, setHovered] = useState(false);
-  const [expandedSection, setExpandedSection] = useState<string | null>(
-    getActiveSection(location.pathname)
-  );
+  const [expandedItems, setExpandedItems] = useState<string[]>([
+    "Items & Inventory",
+  ]);
+  const [collapsed, setCollapsed] = useState(() => readStoredBoolean(STORAGE_KEY_COLLAPSED, false));
+  const [sidebarWidth, setSidebarWidth] = useState(() => readStoredNumber(STORAGE_KEY_WIDTH, DEFAULT_WIDTH, MIN_WIDTH, MAX_WIDTH));
+  const [hoverExpanded, setHoverExpanded] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Suppress the CSS width transition on the very first render so the collapsed
+   *  sidebar doesn't visually animate from full-width to icon-width on page load. */
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => { requestAnimationFrame(() => setHasMounted(true)); }, []);
 
-  // Sidebar is visually expanded when pinned OR hovered
-  const isExpanded = pinned || hovered;
-  const sidebarWidth = isExpanded ? SIDEBAR_EXPANDED : SIDEBAR_COLLAPSED;
+  const actualWidth = collapsed ? COLLAPSED_WIDTH : sidebarWidth;
 
-  const handleMouseEnter = useCallback(() => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    hoverTimeoutRef.current = setTimeout(() => setHovered(true), 120);
+  /* ─── Persist sidebar state to localStorage ─── */
+  useEffect(() => {
+    try { localStorage.setItem(STORAGE_KEY_COLLAPSED, String(collapsed)); } catch { /* ignore */ }
+  }, [collapsed]);
+
+  useEffect(() => {
+    try { localStorage.setItem(STORAGE_KEY_WIDTH, String(sidebarWidth)); } catch { /* ignore */ }
+  }, [sidebarWidth]);
+
+  /* ─── Ctrl+B keyboard shortcut to toggle sidebar ─── */
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "b") {
+        e.preventDefault();
+        setCollapsed((prev) => !prev);
+        setHoverExpanded(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  const toggleExpand = (label: string) => {
+    setExpandedItems((prev) =>
+      prev.includes(label)
+        ? prev.filter((l) => l !== label)
+        : [...prev, label]
+    );
+  };
+
+  const isItemActive = (item: NavItem) => {
+    if (item.path === "/items") {
+      return (
+        location.pathname === "/items" ||
+        location.pathname.startsWith("/items/") ||
+        location.pathname === "/uom" ||
+        location.pathname.startsWith("/uom/")
+      );
+    }
+    return (
+      location.pathname === item.path ||
+      location.pathname.startsWith(item.path + "/")
+    );
+  };
+
+  /* ─── Resize ─── */
+  const startResize = useCallback(
+    (e: ReactMouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsResizing(true);
+      const startX = e.clientX;
+      const startWidth = sidebarWidth;
+
+      const onMouseMove = (moveEvent: MouseEvent) => {
+        const newWidth = Math.min(
+          MAX_WIDTH,
+          Math.max(MIN_WIDTH, startWidth + (moveEvent.clientX - startX))
+        );
+        setSidebarWidth(newWidth);
+      };
+
+      const onMouseUp = () => {
+        setIsResizing(false);
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+      };
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    },
+    [sidebarWidth]
+  );
+
+  const handleResizeDoubleClick = useCallback(() => {
+    setCollapsed(true);
+  }, []);
+
+  /* ─── Hover expand ─── */
+  const handleMouseEnter = useCallback(() => {
+    if (collapsed) {
+      hoverTimeoutRef.current = setTimeout(() => {
+        setHoverExpanded(true);
+      }, 200);
+    }
+  }, [collapsed]);
 
   const handleMouseLeave = useCallback(() => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    hoverTimeoutRef.current = setTimeout(() => setHovered(false), 200);
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setHoverExpanded(false);
   }, []);
 
-  function getActiveSection(pathname: string): string | null {
-    for (const item of NAV_ITEMS) {
-      if (item.children) {
-        for (const child of item.children) {
-          if (child.path === pathname) return item.key;
-        }
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
       }
-      if (item.path === pathname) return item.key;
-    }
-    return "items";
-  }
+    };
+  }, []);
 
-  function isItemActive(item: NavItem): boolean {
-    if (item.children) {
-      return item.children.some((c) => c.path === location.pathname);
-    }
-    return item.path === location.pathname;
-  }
-
-  function isSubItemActive(sub: NavSubItem): boolean {
-    return sub.path === location.pathname;
-  }
-
-  const handleItemClick = (item: NavItem) => {
-    if (item.children) {
-      if (!isExpanded) {
-        // If collapsed, expand via pin and open section
-        onTogglePin();
-        setExpandedSection(item.key);
-      } else {
-        setExpandedSection(expandedSection === item.key ? null : item.key);
-      }
-    } else if (item.path) {
-      navigate(item.path);
-    }
-  };
-
-  const handleSubItemClick = (sub: NavSubItem) => {
-    navigate(sub.path);
-  };
-
-  return (
-    <aside
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className="flex flex-col shrink-0 h-screen select-none"
-      style={{
-        width: sidebarWidth,
-        minWidth: sidebarWidth,
-        backgroundColor: "var(--sidebar)",
-        borderRight: "1px solid var(--sidebar-border)",
-        transition:
-          "width 220ms cubic-bezier(0.4, 0, 0.2, 1), min-width 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-        overflow: "hidden",
-        zIndex: 40,
-        position: "relative",
-      }}
-    >
-      {/* ── Brand header ── */}
-      <div
-        className="flex items-center shrink-0"
-        style={{
-          padding: isExpanded ? "16px 16px" : "16px 0",
-          minHeight: 60,
-          gap: isExpanded ? 10 : 0,
-          justifyContent: isExpanded ? "flex-start" : "center",
-        }}
-      >
-        {/* Logo mark */}
-        <div
-          className="flex items-center justify-center shrink-0"
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: "var(--radius-md)",
-            background:
-              "linear-gradient(135deg, var(--primary-icon) 0%, var(--primary) 100%)",
-            color: "var(--primary-foreground)",
-            fontWeight: "var(--font-weight-semibold)" as any,
-            fontSize: "var(--text-label)",
-            // fontFamily: "'Inter', sans-serif",
-          }}
-        >
-          O
-        </div>
-
-        {isExpanded && (
-          <>
-            <div className="flex-1 min-w-0 overflow-hidden">
-              <div
-                className="truncate"
-                style={{
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-semibold)" as any,
-                  color: "var(--sidebar-foreground)",
-                  lineHeight: "1.3",
-                  fontFamily: "'Inter', sans-serif",
-                }}
-              >
-                Omnesoft
-              </div>
-              <div
-                className="truncate"
-                style={{
-                  fontSize: 11,
-                  color: "var(--text-muted)",
-                  fontWeight: "var(--font-weight-normal)" as any,
-                  lineHeight: "1.3",
-                  fontFamily: "'Inter', sans-serif",
-                }}
-              >
-                Enterprise Resource Planni...
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={onTogglePin}
-              className="flex items-center justify-center shrink-0 cursor-pointer bg-transparent border-none transition-colors"
-              style={{
-                width: 26,
-                height: 26,
-                borderRadius: "var(--radius-sm)",
-                color: pinned ? "var(--sidebar-primary)" : "var(--text-muted)",
-                padding: 0,
-                opacity: pinned ? 1 : 0.7,
-              }}
-              aria-label={pinned ? "Unpin sidebar" : "Pin sidebar"}
-              title={pinned ? "Unpin sidebar" : "Pin sidebar"}
-            >
-              <ChevronsRight
-                size={16}
-                style={{
-                  transform: pinned ? "rotate(180deg)" : "none",
-                  transition: "transform 200ms ease",
-                }}
-              />
-            </button>
-          </>
-        )}
-      </div>
-
-      {/* ── Main navigation ── */}
-      <nav
-        className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-overlay"
-        style={{ padding: isExpanded ? "4px 10px" : "4px 8px" }}
-      >
-        {NAV_ITEMS.map((item) => {
-          const Icon = item.icon;
-          const active = isItemActive(item);
-          const expanded = expandedSection === item.key && !!item.children;
-
-          return (
-            <div key={item.key} style={{ marginBottom: 1 }}>
-              {/* Main nav item */}
-              <button
-                type="button"
-                onClick={() => handleItemClick(item)}
-                className="flex items-center w-full cursor-pointer bg-transparent border-none transition-all group"
-                style={{
-                  padding: isExpanded ? "8px 10px" : "8px 0",
-                  gap: isExpanded ? 10 : 0,
-                  borderRadius: "var(--radius-md)",
-                  backgroundColor: active
-                    ? "var(--primary-surface)"
-                    : "transparent",
-                  color: active
-                    ? "var(--sidebar-primary)"
-                    : "var(--text-default)",
-                  fontFamily: "'Inter', sans-serif",
-                  justifyContent: isExpanded ? "flex-start" : "center",
-                }}
-                title={!isExpanded ? item.label : undefined}
-                onMouseEnter={(e) => {
-                  if (!active) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor =
-                      "var(--surface-raised)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!active) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor =
-                      "transparent";
-                  }
-                }}
-              >
-                <Icon
-                  size={20}
-                  strokeWidth={1.8}
-                  style={{
-                    flexShrink: 0,
-                    color: active
-                      ? "var(--sidebar-primary)"
-                      : "var(--text-muted)",
-                    transition: "color 150ms ease",
-                  }}
-                />
-
-                {isExpanded && (
-                  <>
-                    <span
-                      className="flex-1 text-left truncate"
-                      style={{
-                        fontSize: "var(--text-label)",
-                        fontWeight: active
-                          ? ("var(--font-weight-semibold)" as any)
-                          : ("var(--font-weight-medium)" as any),
-                        transition: "color 150ms ease",
-                        lineHeight: "1.4",
-                        fontFamily: "'Inter', sans-serif",
-                      }}
-                    >
-                      {item.label}
-                    </span>
-
-                    {item.children && (
-                      <span
-                        style={{
-                          color: active
-                            ? "var(--sidebar-primary)"
-                            : "var(--text-subtle)",
-                          flexShrink: 0,
-                          transition: "transform 200ms ease",
-                          transform: expanded
-                            ? "rotate(0deg)"
-                            : "rotate(-90deg)",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <ChevronDown size={14} />
-                      </span>
-                    )}
-                  </>
-                )}
-              </button>
-
-              {/* Sub-navigation */}
-              {isExpanded && item.children && (
-                <div
-                  style={{
-                    overflow: "hidden",
-                    maxHeight: expanded ? item.children.length * 38 : 0,
-                    opacity: expanded ? 1 : 0,
-                    transition:
-                      "max-height 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease",
-                    paddingLeft: 38,
-                  }}
-                >
-                  {item.children.map((sub) => {
-                    const subActive = isSubItemActive(sub);
-                    return (
-                      <button
-                        key={sub.path}
-                        type="button"
-                        onClick={() => handleSubItemClick(sub)}
-                        className="flex items-center w-full cursor-pointer bg-transparent border-none transition-all"
-                        style={{
-                          padding: "6px 12px",
-                          borderRadius: "var(--radius-sm)",
-                          backgroundColor: subActive
-                            ? "var(--primary-surface)"
-                            : "transparent",
-                          color: subActive
-                            ? "var(--sidebar-primary)"
-                            : "var(--text-default)",
-                          fontFamily: "'Inter', sans-serif",
-                          marginBottom: 1,
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!subActive) {
-                            (
-                              e.currentTarget as HTMLElement
-                            ).style.backgroundColor = "var(--surface-raised)";
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!subActive) {
-                            (
-                              e.currentTarget as HTMLElement
-                            ).style.backgroundColor = "transparent";
-                          }
-                        }}
-                      >
-                        <span
-                          className="truncate"
-                          style={{
-                            fontSize: 13,
-                            fontWeight: subActive
-                              ? ("var(--font-weight-semibold)" as any)
-                              : ("var(--font-weight-normal)" as any),
-                            lineHeight: "1.5",
-                            fontFamily: "'Inter', sans-serif",
-                          }}
-                        >
-                          {sub.label}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </nav>
-
-      {/* ── Bottom section ── */}
-      <div
-        className="shrink-0"
-        style={{
-          borderTop: "1px solid var(--sidebar-border)",
-          padding: isExpanded ? "8px 10px" : "8px 8px",
-        }}
-      >
-        {/* Settings row */}
-        <div
-          className="flex items-center"
-          style={{
-            padding: isExpanded ? "8px 10px" : "8px 0",
-            gap: isExpanded ? 10 : 0,
-            justifyContent: isExpanded ? "flex-start" : "center",
-          }}
-        >
+  /* ─── Full sidebar content (reused for expanded & overlay) ─── */
+  function renderFullContent(isOverlay: boolean) {
+    return (
+      <>
+        {/* Logo header */}
+        <div className="h-12 px-3 flex items-center gap-2.5 border-b border-border shrink-0">
+          <img src={logoWordmark} alt="Omnesoft" className="h-5 shrink-0" />
+          <div className="flex-1 min-w-0" />
           <button
-            type="button"
-            className="flex items-center cursor-pointer bg-transparent border-none transition-colors"
-            style={{
-              gap: 10,
-              padding: 0,
-              color: "var(--text-default)",
-              fontFamily: "'Inter', sans-serif",
+            onClick={() => {
+              if (isOverlay) {
+                /* Pin sidebar open */
+                setCollapsed(false);
+                setHoverExpanded(false);
+              } else {
+                /* Collapse sidebar */
+                setCollapsed(true);
+                setHoverExpanded(false);
+              }
             }}
-            title="Settings"
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "0.7";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "1";
-            }}
+            className="w-7 h-7 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors shrink-0"
+            title={isOverlay ? "Pin sidebar open" : "Collapse sidebar"}
           >
-            <Settings
-              size={20}
-              strokeWidth={1.8}
-              style={{ color: "var(--text-muted)", flexShrink: 0 }}
-            />
-            {isExpanded && (
-              <span
-                style={{
-                  fontSize: "var(--text-label)",
-                  fontWeight: "var(--font-weight-medium)" as any,
-                  color: "var(--text-default)",
-                  lineHeight: "1.4",
-                  fontFamily: "'Inter', sans-serif",
-                }}
-              >
-                Settings
-              </span>
+            {isOverlay ? (
+              <ChevronsRight className="w-4 h-4" />
+            ) : (
+              <ChevronsLeft className="w-4 h-4" />
             )}
           </button>
-
-          {isExpanded && (
-            <button
-              type="button"
-              className="ml-auto flex items-center justify-center cursor-pointer bg-transparent border-none transition-colors"
-              style={{
-                padding: 0,
-                color: "var(--text-muted)",
-              }}
-              title="Notifications"
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.opacity = "0.7";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.opacity = "1";
-              }}
-            >
-              <Bell size={18} strokeWidth={1.8} />
-            </button>
-          )}
         </div>
 
-        {/* User profile row */}
-        <div
-          className="flex items-center"
-          style={{
-            padding: isExpanded ? "10px 10px" : "10px 0",
-            gap: isExpanded ? 10 : 0,
-            justifyContent: isExpanded ? "flex-start" : "center",
-            borderTop: "1px solid var(--sidebar-border)",
-            marginTop: 4,
-          }}
-        >
-          {/* Avatar */}
-          <div
-            className="flex items-center justify-center shrink-0"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              backgroundColor: "var(--primary-surface)",
-              border: "1.5px solid var(--primary-border)",
-              color: "var(--sidebar-primary)",
-              fontSize: 12,
-              fontWeight: "var(--font-weight-semibold)" as any,
-              fontFamily: "'Inter', sans-serif",
-              lineHeight: 1,
-            }}
-          >
-            AA
-          </div>
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-2 px-2">
+          <div className="space-y-px">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const hasChildren = item.children && item.children.length > 0;
+              const isExpanded = expandedItems.includes(item.label);
+              const active = isItemActive(item);
+              const disabled = item.disabled;
 
-          {isExpanded && (
-            <>
-              <div className="flex-1 min-w-0 overflow-hidden">
-                <div
-                  className="truncate"
-                  style={{
-                    fontSize: 13,
-                    fontWeight: "var(--font-weight-medium)" as any,
-                    color: "var(--sidebar-foreground)",
-                    lineHeight: "1.3",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
+              if (hasChildren) {
+                return (
+                  <div key={item.label}>
+                    <button
+                      onClick={() => toggleExpand(item.label)}
+                      className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] transition-all duration-150 ${
+                        active
+                          ? "text-primary"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      }`}
+                      style={{
+                        fontWeight: active ? 500 : 400,
+                        backgroundColor: active
+                          ? "rgba(10, 119, 255, 0.06)"
+                          : undefined,
+                      }}
+                    >
+                      <Icon
+                        className={`w-[18px] h-[18px] shrink-0 ${
+                          active ? "text-primary" : ""
+                        }`}
+                      />
+                      <span className="flex-1 text-left truncate">
+                        {item.label}
+                      </span>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          isExpanded ? "rotate-0" : "-rotate-90"
+                        } ${
+                          active
+                            ? "text-primary"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    </button>
+                    {isExpanded && (
+                      <div
+                        className="ml-[19px] mt-0.5 space-y-px border-l-[1.5px] pl-2.5 py-0.5"
+                        style={{ borderColor: "#D6E8FF" }}
+                      >
+                        {item.children!.map((child) => {
+                          const path = location.pathname;
+                          const linkActive =
+                            child.path === "/items"
+                              ? path === "/items"
+                              : path === child.path || path.startsWith(child.path + "/");
+                          return (
+                            <NavLink
+                              key={child.path}
+                              to={child.path}
+                              end={child.path === "/items" || child.path === "/uom"}
+                              className={`block px-2.5 py-1 rounded-md text-[13px] transition-all duration-150 ${
+                                linkActive
+                                  ? "text-primary"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                              }`}
+                              style={{
+                                fontWeight: linkActive ? 500 : 400,
+                                backgroundColor: linkActive
+                                  ? "rgba(10, 119, 255, 0.05)"
+                                  : undefined,
+                              }}
+                            >
+                              {child.label}
+                            </NavLink>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              if (disabled) {
+                return (
+                  <div
+                    key={item.label}
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] cursor-not-allowed"
+                    style={{ fontWeight: 400, color: "#64748B" }}
+                  >
+                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                );
+              }
+
+              return (
+                <NavLink
+                  key={item.label}
+                  to={item.path}
+                  className={({ isActive: linkActive }) =>
+                    `flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] transition-all duration-150 ${
+                      linkActive
+                        ? "text-primary"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`
+                  }
+                  style={({ isActive: linkActive }) => ({
+                    fontWeight: linkActive ? 500 : 400,
+                    backgroundColor: linkActive
+                      ? "rgba(10, 119, 255, 0.06)"
+                      : undefined,
+                  })}
+                >
+                  <Icon className="w-[18px] h-[18px] shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </div>
+        </nav>
+
+        {/* Bottom Section */}
+        <div className="border-t border-border shrink-0">
+          <div className="px-2 py-1.5 flex items-center gap-1">
+            <button
+              className="flex-1 flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              style={{ fontWeight: 400 }}
+            >
+              <Settings className="w-[16px] h-[16px] shrink-0" />
+              <span className="truncate">Settings</span>
+            </button>
+            <button className="p-1.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors shrink-0">
+              <Bell className="w-[16px] h-[16px]" />
+            </button>
+          </div>
+          <div className="px-2 pb-2">
+            <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-muted transition-colors cursor-pointer">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={{ backgroundColor: "hsl(var(--accent))" }}
+              >
+                <span
+                  className="text-[11px]"
+                  style={{ fontWeight: 600, color: "hsl(var(--primary))" }}
+                >
+                  AA
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className="text-[13px] text-foreground truncate"
+                  style={{ fontWeight: 500 }}
                 >
                   Ahtisham Ahmad
-                </div>
-                <div
-                  className="truncate"
-                  style={{
-                    fontSize: 11,
-                    color: "var(--text-muted)",
-                    fontWeight: "var(--font-weight-normal)" as any,
-                    lineHeight: "1.3",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                >
+                </p>
+                <p className="text-[11px] text-muted-foreground truncate leading-tight">
                   admin@omnesoft.com
-                </div>
+                </p>
               </div>
-
-              <button
-                type="button"
-                className="flex items-center justify-center shrink-0 cursor-pointer bg-transparent border-none transition-colors"
-                style={{
-                  padding: 0,
-                  color: "var(--text-muted)",
-                }}
-                title="Log out"
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.opacity = "0.7";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.opacity = "1";
-                }}
-              >
-                <LogOut size={16} strokeWidth={1.8} />
-              </button>
-            </>
-          )}
+              <LogOut className="w-4 h-4 text-muted-foreground shrink-0" />
+            </div>
+          </div>
         </div>
-      </div>
-    </aside>
+      </>
+    );
+  }
+
+  /* ─── Collapsed icon bar ─── */
+  function renderCollapsedBar() {
+    return (
+      <aside className="absolute inset-0 bg-card border-r border-border flex flex-col items-center z-10">
+        {/* Logo */}
+        <div className="h-12 flex items-center justify-center border-b border-border w-full shrink-0">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setCollapsed(false)}
+                className="w-9 h-9 rounded-lg flex items-center justify-center transition-all hover:ring-2 hover:ring-primary/20"
+                aria-label="Expand sidebar"
+              >
+                <img src={logoIcon} alt="Omnesoft" className="w-7 h-7" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={8}>
+              Expand sidebar
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
+        {/* Nav icons */}
+        <nav className="flex-1 overflow-y-auto py-3 w-full">
+          <div className="flex flex-col items-center gap-0.5 px-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const active = isItemActive(item);
+              const disabled = item.disabled;
+
+              return (
+                <Tooltip key={item.label}>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                        active
+                          ? "text-primary"
+                          : disabled
+                          ? "text-muted-foreground/50 cursor-not-allowed"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
+                      }`}
+                      style={{
+                        backgroundColor: active
+                          ? "rgba(10, 119, 255, 0.06)"
+                          : undefined,
+                      }}
+                    >
+                      <Icon className="w-[18px] h-[18px]" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" sideOffset={8}>
+                    {item.label}
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })}
+          </div>
+        </nav>
+
+        {/* Bottom icons */}
+        <div className="border-t border-border w-full shrink-0">
+          <div className="py-2 flex flex-col items-center gap-0.5 px-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button className="w-10 h-10 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+                  <Settings className="w-[16px] h-[16px]" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={8}>
+                Settings
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button className="w-10 h-10 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+                  <Bell className="w-[16px] h-[16px]" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={8}>
+                Notifications
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <div className="px-2 pb-3 flex justify-center">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 cursor-pointer hover:ring-2 hover:ring-primary/20 transition-all"
+                  style={{ backgroundColor: "hsl(var(--accent))" }}
+                >
+                  <span
+                    className="text-[11px]"
+                    style={{ fontWeight: 600, color: "hsl(var(--primary))" }}
+                  >
+                    AA
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={8}>
+                <div>
+                  <p style={{ fontWeight: 500 }}>Ahtisham Ahmad</p>
+                  <p className="opacity-70">admin@omnesoft.com</p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+      </aside>
+    );
+  }
+
+  return (
+    <div
+      ref={wrapperRef}
+      className="relative flex-shrink-0 h-full"
+      style={{
+        width: actualWidth,
+        transition: (!hasMounted || isResizing) ? "none" : "width 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Collapsed icon bar (visible when collapsed) */}
+      {collapsed && renderCollapsedBar()}
+
+      {/* Hover overlay (animated, visible when collapsed + hovering) */}
+      <AnimatePresence>
+        {collapsed && hoverExpanded && (
+          <motion.aside
+            key="sidebar-overlay"
+            initial={{ x: -8, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -8, opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute left-0 top-0 h-full bg-card border-r border-border flex flex-col z-50"
+            style={{
+              width: sidebarWidth,
+              borderTopRightRadius: 12,
+              borderBottomRightRadius: 12,
+              boxShadow:
+                "0 20px 60px -12px rgba(0,0,0,0.15), 0 8px 20px -8px rgba(0,0,0,0.1)",
+            }}
+          >
+            {renderFullContent(true)}
+          </motion.aside>
+        )}
+      </AnimatePresence>
+
+      {/* Normal expanded sidebar */}
+      {!collapsed && (
+        <aside className="h-full bg-card border-r border-border flex flex-col overflow-hidden">
+          {renderFullContent(false)}
+        </aside>
+      )}
+
+      {/* Resize handle (expanded mode only) */}
+      {!collapsed && (
+        <div
+          className="absolute right-0 top-0 bottom-0 w-[5px] cursor-col-resize z-30 group"
+          onMouseDown={startResize}
+          onDoubleClick={handleResizeDoubleClick}
+          title="Drag to resize · Double-click to collapse"
+        >
+          <div
+            className={`absolute inset-y-0 right-0 w-[2px] transition-colors duration-150 ${
+              isResizing
+                ? "bg-primary"
+                : "bg-transparent group-hover:bg-primary/40"
+            }`}
+          />
+        </div>
+      )}
+    </div>
   );
 }
+
+/* Backwards-compat alias — RootLayout previously imported `Sidebar` with
+ * `pinned`/`onTogglePin` props. The new sidebar self-manages collapse state,
+ * so those props are ignored. */
+export type SidebarProps = {
+  pinned?: boolean;
+  onTogglePin?: () => void;
+};
