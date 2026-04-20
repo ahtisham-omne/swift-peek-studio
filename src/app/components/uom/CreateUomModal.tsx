@@ -86,26 +86,29 @@ function StepTab({
   disabled?: boolean;
   onClick: () => void;
 }) {
-  let dotBg = "var(--border-strong)";
-  let dotColor = "var(--text-muted)";
-  let labelColor = "var(--text-subtle)";
-  let labelWeight = "var(--font-weight-medium)" as any;
+  // Match Partners CreatePartnerModal stepper exactly:
+  // - completed → emerald check on emerald background, emerald label + underline
+  // - active    → primary number on primary background, primary label + underline
+  // - default   → white circle with subtle border, slate label
+  let dotClasses = "border-[1.5px] border-slate-300 text-slate-500 bg-white";
+  let labelColor = "text-slate-700";
+  let labelWeight = 500;
+  let underlineColor: string | null = null;
 
   if (disabled) {
-    dotBg = "var(--border)";
-    dotColor = "#94A3B8";
-    labelColor = "#94A3B8";
-    labelWeight = "var(--font-weight-normal)" as any;
-  } else if (isActive) {
-    dotBg = "var(--primary)";
-    dotColor = "var(--primary-foreground)";
-    labelColor = "var(--primary)";
-    labelWeight = "var(--font-weight-semibold)" as any;
+    dotClasses = "border-[1.5px] border-slate-200 text-slate-300 bg-white";
+    labelColor = "text-slate-400";
+    labelWeight = 400;
   } else if (isDone) {
-    dotBg = "var(--accent)";
-    dotColor = "var(--accent-foreground)";
-    labelColor = "var(--accent-text-strong)";
-    labelWeight = "var(--font-weight-medium)" as any;
+    dotClasses = "bg-emerald-500 text-white";
+    labelColor = "text-emerald-500";
+    labelWeight = 600;
+    underlineColor = "bg-emerald-500";
+  } else if (isActive) {
+    dotClasses = "bg-primary text-primary-foreground";
+    labelColor = "text-primary";
+    labelWeight = 600;
+    underlineColor = "bg-primary";
   }
 
   return (
@@ -113,29 +116,24 @@ function StepTab({
       type="button"
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
-      className="flex items-center gap-[8px] bg-transparent border-none outline-none"
+      className="relative flex items-center gap-2 bg-transparent border-none outline-none"
       style={{
         padding: "12px 18px",
-        borderBottom: isActive
-          ? "2px solid var(--primary)"
-          : "2px solid transparent",
         marginBottom: -1,
         cursor: disabled ? "default" : "pointer",
         opacity: disabled ? 0.7 : 1,
         fontFamily: "var(--font-family)",
-        transition: "all 0.15s ease",
+        transition: "all 0.2s ease",
       }}
     >
       <span
-        className="inline-flex items-center justify-center rounded-full"
+        className={`inline-flex items-center justify-center rounded-full shrink-0 transition-all duration-200 ${dotClasses}`}
         style={{
           width: 24,
           height: 24,
-          fontSize: 11,
+          fontSize: 12,
           lineHeight: "1",
-          fontWeight: "var(--font-weight-semibold)" as any,
-          backgroundColor: dotBg,
-          color: dotColor,
+          fontWeight: 600,
           fontFamily: "var(--font-family)",
         }}
       >
@@ -143,16 +141,20 @@ function StepTab({
       </span>
 
       <span
+        className={`whitespace-nowrap transition-colors ${labelColor}`}
         style={{
-          fontSize: "var(--text-label)",
+          fontSize: 13,
           lineHeight: "1",
           fontWeight: labelWeight,
-          color: labelColor,
           fontFamily: "var(--font-family)",
         }}
       >
         {step.label}
       </span>
+
+      {underlineColor && (
+        <div className={`absolute bottom-0 left-0 right-0 h-[2px] rounded-t-full ${underlineColor}`} />
+      )}
     </button>
   );
 }
