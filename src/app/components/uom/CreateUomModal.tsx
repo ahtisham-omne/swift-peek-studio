@@ -119,7 +119,7 @@ function StepTab({
         padding: "12px 18px",
         marginBottom: -1,
         cursor: disabled ? "default" : "pointer",
-        opacity: disabled ? 0.7 : 1,
+        opacity: 1,
         fontFamily: "var(--font-family)",
         transition: "all 0.2s ease",
       }}
