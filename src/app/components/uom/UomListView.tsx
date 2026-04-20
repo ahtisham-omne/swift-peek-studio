@@ -738,7 +738,8 @@ export function UomListView({
           units={allUnits}
         />
 
-        <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip flex-col">
+        <div className="border border-border rounded-xl bg-card flex flex-1 min-h-0 overflow-clip">
+        <div className="flex-1 min-w-0 flex flex-col overflow-clip">
         {/* ── ROW 1 — Unified toolbar: Search + Filters | Count + Columns + Density ── */}
         <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2 shrink-0">
           {/* Left — Search + Filters button */}
@@ -912,9 +913,9 @@ export function UomListView({
             onCardClick={(u) => navigate(`/unit/${u.id}`)}
           />
         ) : (
-        <div className="flex min-h-0 overflow-auto flex-1">
+        <div className="flex min-h-0 flex-1 overflow-clip">
           {/* Table content */}
-          <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex-1 min-w-0 flex flex-col overflow-clip">
             {/* ── Notion-style filter bar ── */}
             <UomNotionFilterBar
               columns={columns}
@@ -1128,18 +1129,19 @@ export function UomListView({
               </div>
             </div>
           </div>
-
-          {/* ── COLUMNS SIDE PANEL ── */}
-          <ColumnsSidePanel
-            columns={columns}
-            setColumns={setColumns}
-            columnOrder={columnOrder}
-            setColumnOrder={setColumnOrder}
-            open={columnsPanelOpen}
-            onOpenChange={setColumnsPanelOpen}
-          />
         </div>
         )}
+        </div>
+
+        {/* ── COLUMNS SIDE PANEL — sibling of full content column, pushes header + table ── */}
+        <ColumnsSidePanel
+          columns={columns}
+          setColumns={setColumns}
+          columnOrder={columnOrder}
+          setColumnOrder={setColumnOrder}
+          open={columnsPanelOpen}
+          onOpenChange={setColumnsPanelOpen}
+        />
         </div>
         </div>
       </div>
