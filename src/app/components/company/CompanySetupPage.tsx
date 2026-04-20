@@ -11,6 +11,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Input } from "../ui/input";
 import {
   Building2,
   Factory,
@@ -21,6 +22,7 @@ import {
   ArrowUpRight,
   ArrowRight,
   RotateCcw,
+  Search,
   type LucideIcon,
 } from "lucide-react";
 
@@ -294,6 +296,38 @@ export function CompanySetupPage() {
 
   return (
     <div style={{ backgroundColor: "var(--background)", minHeight: "100%" }}>
+      {/* ══════════════════════════════════════════════
+          TOP NAV BAR — breadcrumb + search + user (matches Partners)
+         ══════════════════════════════════════════════ */}
+      <div className="flex items-center justify-between px-6 lg:px-8 h-12 border-b border-border bg-card shrink-0 sticky top-0 z-30">
+        <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
+          <span className="text-foreground" style={{ fontWeight: 500 }}>
+            Company Setup
+          </span>
+        </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="relative hidden md:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
+            <Input
+              placeholder="Search..."
+              className="pl-9 w-[260px] h-8 bg-white border-border/60 text-[13px] placeholder:text-muted-foreground/50"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "var(--accent)" }}
+            >
+              <span className="text-[11px]" style={{ fontWeight: 600, color: "var(--primary)" }}>AA</span>
+            </div>
+            <div className="hidden sm:block">
+              <p className="text-[13px]" style={{ fontWeight: 500 }}>Ahtisham Ahmad</p>
+              <p className="text-[11px] text-muted-foreground leading-tight">Senior Product Designer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ── CONTENT AREA ── */}
       <div
         className="mx-auto"
