@@ -875,14 +875,12 @@ export function UomListView({
           <FilterPill
             label="In Use"
             count={inUseCount}
-            dot="var(--accent)"
             active={filters.inUse === true}
             onClick={() => toggleInUse(true)}
           />
           <FilterPill
             label="Unused"
             count={unusedCount}
-            dot="var(--text-subtle)"
             active={filters.inUse === false}
             onClick={() => toggleInUse(false)}
           />
