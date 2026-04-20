@@ -36,6 +36,13 @@
   --destructive: rgba(255, 69, 58, 1);
   /* The default color for text or elements that appear on top of destructive colored elements. */
   --destructive-foreground: rgba(255, 255, 255, 1);
+  /* Semantic status tokens — matches Figma DS v2.0 base/success, base/warning, base/violet */
+  --success: rgba(5, 150, 105, 1);            /* #059669 */
+  --success-foreground: rgba(255, 255, 255, 1);
+  --warning: rgba(217, 119, 6, 1);            /* #D97706 */
+  --warning-foreground: rgba(255, 255, 255, 1);
+  --violet: rgba(124, 58, 237, 1);            /* #7C3AED */
+  --violet-foreground: rgba(255, 255, 255, 1);
   /* The default border color for elements such as inputs, buttons, and other containers. */
   --border: rgba(226, 232, 240, 1);
   /* The default background color for input fields once the text has been filled. Should be either transparent or match the input-background. */
@@ -277,6 +284,12 @@
   --accent-foreground: rgba(255, 255, 255, 1);
   --destructive: rgba(255, 69, 58, 1);
   --destructive-foreground: rgba(255, 255, 255, 1);
+  --success: rgba(5, 150, 105, 1);
+  --success-foreground: rgba(255, 255, 255, 1);
+  --warning: rgba(217, 119, 6, 1);
+  --warning-foreground: rgba(255, 255, 255, 1);
+  --violet: rgba(124, 58, 237, 1);
+  --violet-foreground: rgba(255, 255, 255, 1);
   --border: rgba(39, 39, 42, 1);
   --input: rgba(39, 39, 42, 1);
   --ring: rgba(10, 119, 255, 1);
@@ -350,6 +363,12 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-violet: var(--violet);
+  --color-violet-foreground: var(--violet-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-input-background: var(--input-background);
