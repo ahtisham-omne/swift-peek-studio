@@ -911,6 +911,7 @@ export function UomListView({
           <UomCardGrid
             units={pagedUnits}
             searchQuery={filters.search}
+            cardSize={cardSize}
             onCardClick={(u) => navigate(`/unit/${u.id}`)}
           />
         ) : (
