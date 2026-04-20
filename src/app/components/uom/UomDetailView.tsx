@@ -47,6 +47,8 @@ import {
   MapPin,
   Building2,
   Search,
+  Tag,
+  ShoppingCart,
 } from "lucide-react";
 
 const ARCHIVE_BLOCKING_REFERENCES = [
@@ -188,9 +190,9 @@ const DETAIL_TABS_TEMPLATE: DetailTab[] = [
 ];
 
 const WHERE_USED_SUB_TABS = [
-  { id: "items", label: "Items they sell", count: 4 },
-  { id: "vendors", label: "Items they purchase", count: WHERE_USED_VENDORS.length },
-];
+  { id: "items", label: "Items They Sell", count: 4, icon: Tag, color: "#1E40AF", bg: "#EFF6FF", border: "#BFDBFE", hoverBg: "#DBEAFE" },
+  { id: "vendors", label: "Items They Purchase", count: WHERE_USED_VENDORS.length, icon: ShoppingCart, color: "#5B21B6", bg: "#F5F3FF", border: "#DDD6FE", hoverBg: "#EDE9FE" },
+] as const;
 
 
 
@@ -1359,70 +1361,59 @@ export function UomDetailView() {
               {/* ──── WHERE USED TAB ──── */}
               {activeTab === "whereUsed" && (
                 <div>
-                  {/* Segment control */}
-                  <div
-                    className="inline-flex items-center overflow-x-auto no-scrollbar"
-                    style={{
-                      gap: 2,
-                      marginBottom: 16,
-                      padding: 3,
-                      borderRadius: "var(--radius-lg)",
-                      backgroundColor: "var(--secondary)",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: "var(--border-subtle)",
-                    }}
-                  >
-                    {WHERE_USED_SUB_TABS.map((tab) => {
-                      const isSubActive = tab.id === whereUsedSubTab;
-                      return (
-                        <button
-                          key={tab.id}
-                          type="button"
-                          onClick={() => setWhereUsedSubTab(tab.id)}
-                          className="inline-flex items-center gap-[5px] cursor-pointer border-none outline-none whitespace-nowrap shrink-0"
-                          style={{
-                            padding: "7px 14px",
-                            borderRadius: "var(--radius-md)",
-                            backgroundColor: isSubActive ? "var(--card)" : "rgba(0,0,0,0)",
-                            color: isSubActive ? "var(--foreground)" : "var(--text-muted)",
-                            fontSize: "var(--text-label)",
-                            fontWeight: isSubActive ? ("var(--font-weight-medium)" as any) : ("var(--font-weight-normal)" as any),
-                            lineHeight: "1",
-                            transition: "all 0.15s ease",
-                            boxShadow: isSubActive ? "var(--elevation-xs)" : "none",
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isSubActive) {
-                              e.currentTarget.style.backgroundColor = "var(--surface-hover)";
-                              e.currentTarget.style.color = "var(--text-strong)";
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isSubActive) {
-                              e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
-                              e.currentTarget.style.color = "var(--text-muted)";
-                            }
-                          }}
-                        >
-                          {tab.label}
-                          <span
-                            className="inline-flex items-center justify-center"
+                  {/* Sub-tabs row — pill tabs (left) + tinted Add CTA (right), matches Partners */}
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div className="inline-flex items-center rounded-lg bg-muted p-0.5">
+                      {WHERE_USED_SUB_TABS.map((tab) => {
+                        const isSubActive = tab.id === whereUsedSubTab;
+                        const Icon = tab.icon;
+                        return (
+                          <button
+                            key={tab.id}
+                            type="button"
+                            onClick={() => setWhereUsedSubTab(tab.id)}
+                            className={`inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-md text-[13px] transition-all cursor-pointer ${
+                              isSubActive
+                                ? "bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)]"
+                                : "text-slate-500 hover:text-slate-700"
+                            }`}
                             style={{
-                              fontSize: 10,
-                              lineHeight: "1",
-                              padding: "1px 6px",
-                              borderRadius: 4,
-                              backgroundColor: isSubActive ? "var(--primary-surface)" : "rgba(0,0,0,0)",
-                              color: isSubActive ? "var(--primary)" : "var(--text-subtle)",
-                              fontWeight: "var(--font-weight-medium)" as any,
+                              fontWeight: isSubActive ? 600 : 500,
+                              color: isSubActive ? tab.color : undefined,
                             }}
                           >
-                            {tab.count}
-                          </span>
+                            <Icon
+                              className="w-3.5 h-3.5"
+                              style={{ color: isSubActive ? tab.color : "#94A3B8" }}
+                            />
+                            {tab.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Tinted Add CTA matching active sub-tab */}
+                    {(() => {
+                      const active = WHERE_USED_SUB_TABS.find((t) => t.id === whereUsedSubTab)!;
+                      return (
+                        <button
+                          type="button"
+                          onClick={() => showToast("info", `Add ${active.label}`)}
+                          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border text-[13px] transition-colors cursor-pointer"
+                          style={{
+                            fontWeight: 600,
+                            backgroundColor: active.bg,
+                            borderColor: active.border,
+                            color: active.color,
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = active.hoverBg; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = active.bg; }}
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Add {active.label}</span>
                         </button>
                       );
-                    })}
+                    })()}
                   </div>
 
                   {whereUsedSubTab === "items" && (
