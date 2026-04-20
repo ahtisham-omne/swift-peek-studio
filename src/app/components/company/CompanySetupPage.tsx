@@ -11,6 +11,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Input } from "../ui/input";
 import {
   Building2,
   Factory,
@@ -21,6 +22,7 @@ import {
   ArrowUpRight,
   ArrowRight,
   RotateCcw,
+  Search,
   type LucideIcon,
 } from "lucide-react";
 
