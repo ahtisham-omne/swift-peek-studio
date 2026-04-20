@@ -1740,17 +1740,12 @@ function DraggableUomKpiCard({
         <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-all duration-150 flex items-center bg-muted rounded-md p-1 z-10 pointer-events-none">
           <GripVertical className="w-3.5 h-3.5 text-slate-500" />
         </div>
-        {/* Label row: label + icon */}
+        {/* Label row: label + icon (matches Partners listing — neutral grey icon, no tile) */}
         <div className="flex items-center justify-between gap-1 mb-1">
           <div className="flex items-center gap-1 min-w-0">
             <p className="text-[10.5px] text-slate-500 whitespace-nowrap" style={{ fontWeight: 500 }}>{label}</p>
           </div>
-          <div
-            className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center"
-            style={{ backgroundColor: iconBg, color: iconColor }}
-          >
-            <UomKpiIconSmall name={iconName} />
-          </div>
+          <UomKpiIconInline name={iconName} />
         </div>
         {/* Value */}
         <div className="flex items-baseline gap-1.5">
