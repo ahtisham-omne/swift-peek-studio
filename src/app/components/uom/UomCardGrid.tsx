@@ -41,17 +41,28 @@ const CATEGORY_ICON_MAP: Record<string, React.ReactNode> = {
 /* ── Consistent icon tile background ── */
 const ICON_BG = "var(--accent)";
 
+type CardSize = "small" | "medium" | "large";
+
 interface UomCardGridProps {
   units: UomUnit[];
   searchQuery?: string;
   onCardClick?: (unit: UomUnit) => void;
+  cardSize?: CardSize;
 }
 
 export function UomCardGrid({
   units,
   searchQuery = "",
   onCardClick,
+  cardSize = "medium",
 }: UomCardGridProps) {
+  const gridCols =
+    cardSize === "large"
+      ? "grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2"
+      : cardSize === "small"
+      ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+
   return (
     <div className="p-4">
       {units.length === 0 ? (
@@ -60,12 +71,13 @@ export function UomCardGrid({
           <p className="text-sm">No units match your filters.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className={`grid gap-4 ${gridCols}`}>
           {units.map((unit) => (
             <UomCard
               key={unit.id}
               unit={unit}
               searchQuery={searchQuery}
+              cardSize={cardSize}
               onClick={() => onCardClick?.(unit)}
             />
           ))}
@@ -81,30 +93,49 @@ interface UomCardProps {
   unit: UomUnit;
   searchQuery?: string;
   onClick?: () => void;
+  cardSize?: CardSize;
 }
 
-function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
+function UomCard({ unit, searchQuery = "", onClick, cardSize = "medium" }: UomCardProps) {
   const icon = CATEGORY_ICON_MAP[unit.category] || <Atom size={16} />;
+
+  // Scale paddings, icon tile size, and typography based on cardSize (matches Partners scaling).
+  const padding = cardSize === "large" ? "p-5" : cardSize === "small" ? "p-3" : "p-4";
+  const tileClasses =
+    cardSize === "large"
+      ? "w-11 h-11"
+      : cardSize === "small"
+      ? "w-8 h-8"
+      : "w-9 h-9";
+  const tileIconSize = cardSize === "large" ? 18 : cardSize === "small" ? 14 : 16;
+  const nameTextClass = cardSize === "small" ? "text-xs" : "text-sm";
+  const symbolTextClass = cardSize === "small" ? "text-[10px]" : "text-xs";
+  const kpiTextClass = cardSize === "small" ? "text-[11px]" : "text-xs";
+  const sectionGap = cardSize === "large" ? "mb-4" : cardSize === "small" ? "mb-2" : "mb-3";
+
+  const scaledIcon = React.isValidElement(icon)
+    ? React.cloneElement(icon as React.ReactElement<{ size?: number }>, { size: tileIconSize })
+    : icon;
 
   return (
     <div
-      className="bg-card border border-border rounded-xl p-4 cursor-pointer hover:shadow-md hover:border-primary/20 transition-all"
+      className={`bg-card border border-border rounded-xl ${padding} cursor-pointer hover:shadow-md hover:border-primary/20 transition-all`}
       onClick={onClick}
     >
       {/* Card header: icon tile + name/symbol + actions menu */}
-      <div className="flex items-start justify-between mb-3">
+      <div className={`flex items-start justify-between ${sectionGap}`}>
         <div className="flex items-center gap-3 min-w-0">
           <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0"
+            className={`${tileClasses} rounded-lg flex items-center justify-center text-sm shrink-0`}
             style={{ backgroundColor: ICON_BG, color: "var(--primary)" }}
           >
-            {icon}
+            {scaledIcon}
           </div>
           <div className="min-w-0">
-            <p className="text-sm truncate" style={{ fontWeight: 500 }}>
+            <p className={`${nameTextClass} truncate`} style={{ fontWeight: 500 }}>
               <HighlightText text={unit.name} query={searchQuery} />
             </p>
-            <p className="text-xs text-muted-foreground">{unit.symbol}</p>
+            <p className={`${symbolTextClass} text-muted-foreground`}>{unit.symbol}</p>
           </div>
         </div>
         {/* Actions dropdown */}
@@ -126,33 +157,35 @@ function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
       </div>
 
       {/* Badges row */}
-      <div className="flex items-center gap-1.5 mb-3 flex-wrap">
+      <div className={`flex items-center gap-1.5 ${sectionGap} flex-wrap`}>
         <CategoryBadge category={unit.category} />
         <TypeLabel type={unit.type} />
         <InUseBadge inUse={unit.inUse} count={unit.inUseCount} />
       </div>
 
-      {/* KPI rows: label left, value right */}
-      <div className="space-y-1.5 text-xs text-muted-foreground">
-        <div className="flex justify-between">
-          <span>Category</span>
-          <span className="text-foreground" style={{ fontWeight: 500 }}>
-            {unit.category}
-          </span>
+      {/* KPI rows: label left, value right — hide details in small mode for cleaner look */}
+      {cardSize !== "small" && (
+        <div className={`space-y-1.5 ${kpiTextClass} text-muted-foreground`}>
+          <div className="flex justify-between">
+            <span>Category</span>
+            <span className="text-foreground" style={{ fontWeight: 500 }}>
+              {unit.category}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>Type</span>
+            <span className="text-foreground">
+              {unit.type}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>Description</span>
+            <span className="text-foreground truncate max-w-[140px]" title={unit.description}>
+              {unit.description || "—"}
+            </span>
+          </div>
         </div>
-        <div className="flex justify-between">
-          <span>Type</span>
-          <span className="text-foreground">
-            {unit.type}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span>Description</span>
-          <span className="text-foreground truncate max-w-[140px]" title={unit.description}>
-            {unit.description || "—"}
-          </span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
