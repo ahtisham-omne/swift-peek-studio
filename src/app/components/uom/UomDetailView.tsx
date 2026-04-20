@@ -697,7 +697,7 @@ export function UomDetailView() {
 
           {/* Content area */}
           <div className="bg-white border border-border rounded-xl overflow-hidden shadow-sm">
-            <div style={{ padding: activeTab === "conversions" ? 0 : 20 }}>
+            <div style={{ padding: 20 }}>
               {/* ──── CONVERSIONS TAB ──── */}
               {activeTab === "conversions" && (() => {
                 const activeRows = conversionSection === "same" ? sameCatConversions : crossCatConversions;
@@ -706,126 +706,120 @@ export function UomDetailView() {
                 const safePage = Math.min(conversionPage, totalPages);
                 const startIdx = (safePage - 1) * conversionPerPage;
                 const pageRows = activeRows.slice(startIdx, startIdx + conversionPerPage);
-                const sectionTitle = conversionSection === "same" ? "Same Category Conversions" : "Cross Category Conversions";
 
-                const CONV_NAV_ITEMS = [
-                  { id: "same" as const, label: "Same Category Conversions", count: sameCatConversions.length },
-                  { id: "cross" as const, label: "Cross Category Conversions", count: crossCatConversions.length },
+                const CONV_SUB_TABS = [
+                  {
+                    id: "same" as const,
+                    label: "Same Category Conversions",
+                    count: sameCatConversions.length,
+                    icon: ArrowRightLeft,
+                    color: "#1E40AF",
+                    bg: "#EFF6FF",
+                    border: "#BFDBFE",
+                    hoverBg: "#DBEAFE",
+                  },
+                  {
+                    id: "cross" as const,
+                    label: "Cross Category Conversions",
+                    count: crossCatConversions.length,
+                    icon: Layers,
+                    color: "#5B21B6",
+                    bg: "#F5F3FF",
+                    border: "#DDD6FE",
+                    hoverBg: "#EDE9FE",
+                  },
                 ];
 
+                const activeSub = CONV_SUB_TABS.find((t) => t.id === conversionSection)!;
+                const addDisabled =
+                  (conversionSection === "same" && sameCatConversions.length >= 1) ||
+                  (conversionSection === "cross" && crossCatConversions.length >= 1) ||
+                  isAddingConversion;
+
                 return (
-                  <div className="flex flex-col md:flex-row" style={{ gap: 0, minHeight: 520 }}>
-                    {/* ── Left sidebar nav ── */}
-                    <div
-                      className="shrink-0 md:w-[220px]"
-                      style={{
-                        borderColor: "var(--border)",
-                        borderRightWidth: 1,
-                        borderRightStyle: "solid",
-                        backgroundColor: "var(--card)",
-                      }}
-                    >
-                      <div className="flex flex-row md:flex-col" style={{ padding: "8px 8px 0" }}>
-                        {CONV_NAV_ITEMS.map((nav) => {
-                          const isNavActive = nav.id === conversionSection;
+                  <div className="flex flex-col" style={{ gap: 16, minHeight: 520 }}>
+                    {/* ── Sub-tabs row — pill tabs (left) + tinted Add CTA (right), matches Where Used ── */}
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="inline-flex items-center rounded-lg bg-muted p-0.5">
+                        {CONV_SUB_TABS.map((tab) => {
+                          const isSubActive = tab.id === conversionSection;
+                          const Icon = tab.icon;
                           return (
                             <button
-                              key={nav.id}
+                              key={tab.id}
                               type="button"
-                              onClick={() => { setConversionSection(nav.id); setConversionPage(1); resetNewConvForm(); }}
-                              className="flex items-center gap-2 w-full cursor-pointer border-none outline-none text-left"
+                              onClick={() => { setConversionSection(tab.id); setConversionPage(1); resetNewConvForm(); }}
+                              className={`inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-md text-[13px] transition-all cursor-pointer ${
+                                isSubActive
+                                  ? "bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)]"
+                                  : "text-slate-500 hover:text-slate-700"
+                              }`}
                               style={{
-                                padding: "10px 12px",
-                                borderRadius: "var(--radius)",
-                                backgroundColor: isNavActive ? "var(--primary-surface)" : "rgba(0,0,0,0)",
-                                color: isNavActive ? "var(--primary)" : "var(--text-muted)",
-                                fontSize: "var(--text-label)",
-                                fontWeight: "var(--font-weight-medium)" as any,
-                                lineHeight: "1.3",
-                                transition: "all 0.15s ease",
-                                marginBottom: 2,
-                              }}
-                              onMouseEnter={(e) => {
-                                if (!isNavActive) e.currentTarget.style.backgroundColor = "var(--surface-hover)";
-                              }}
-                              onMouseLeave={(e) => {
-                                if (!isNavActive) e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
+                                fontWeight: isSubActive ? 600 : 500,
+                                color: isSubActive ? tab.color : undefined,
                               }}
                             >
-                              {isNavActive && (
-                                <div style={{
-                                  width: 3,
-                                  height: 16,
-                                  borderRadius: 2,
-                                  backgroundColor: "var(--primary)",
-                                  flexShrink: 0,
-                                }} />
-                              )}
-                              <span className="flex-1">{nav.label}</span>
+                              <Icon
+                                className="w-3.5 h-3.5"
+                                style={{ color: isSubActive ? tab.color : "#94A3B8" }}
+                              />
+                              {tab.label}
                               <span
-                                className="inline-flex items-center justify-center"
+                                className="inline-flex items-center justify-center ml-1"
                                 style={{
-                                  fontSize: 11,
-                                  padding: "2px 6px",
+                                  fontSize: 10,
+                                  lineHeight: 1,
+                                  padding: "1px 6px",
                                   borderRadius: 4,
-                                  backgroundColor: isNavActive ? "var(--primary-surface-strong)" : "var(--surface-raised)",
-                                  color: isNavActive ? "var(--primary)" : "var(--text-subtle)",
-                                  fontWeight: "var(--font-weight-medium)" as any,
-                                  lineHeight: "1",
+                                  backgroundColor: isSubActive ? tab.bg : "transparent",
+                                  color: isSubActive ? tab.color : "#94A3B8",
+                                  fontWeight: 600,
                                 }}
                               >
-                                {nav.count}
+                                {tab.count}
                               </span>
                             </button>
                           );
                         })}
                       </div>
+
+                      {/* Tinted Add CTA matching active sub-tab */}
+                      <button
+                        type="button"
+                        disabled={addDisabled}
+                        onClick={() => {
+                          setIsAddingConversion(true);
+                          const total = conversionSection === "same" ? sameCatConversions.length : crossCatConversions.length;
+                          const lastPage = Math.max(1, Math.ceil((total + 1) / conversionPerPage));
+                          setConversionPage(lastPage);
+                        }}
+                        className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border text-[13px] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                          fontWeight: 600,
+                          backgroundColor: activeSub.bg,
+                          borderColor: activeSub.border,
+                          color: activeSub.color,
+                        }}
+                        onMouseEnter={(e) => { if (!addDisabled) e.currentTarget.style.backgroundColor = activeSub.hoverBg; }}
+                        onMouseLeave={(e) => { if (!addDisabled) e.currentTarget.style.backgroundColor = activeSub.bg; }}
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Add Conversion</span>
+                      </button>
                     </div>
 
-                    {/* ── Right content area ── */}
-                    <div className="flex-1 min-w-0 flex flex-col" style={{ padding: "20px 24px" }}>
-                      {/* Section title + Add button */}
-                      <div className="flex items-start justify-between" style={{ marginBottom: 16, gap: 12 }}>
-                        <div>
-                          <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
-                            <span style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-medium)" as any, color: "var(--foreground)", lineHeight: "1.2" }}>
-                              {sectionTitle}
-                            </span>
-                          </div>
-                          <span style={{ fontSize: "var(--text-label)", color: "var(--text-subtle)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.3" }}>
-                            {conversionSection === "same"
-                              ? `Only one same-category conversion is allowed. This applies to all units in the ${unit?.category || "this"} category.`
-                              : `Define how ${displaySymbol} converts to a unit in another category.`
-                            }
-                          </span>
-                        </div>
-                        {!isAddingConversion && !(conversionSection === "same" && sameCatConversions.length >= 1) && !(conversionSection === "cross" && crossCatConversions.length >= 1) && (
-                          <motion.button
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            whileHover={{ opacity: 0.8 }}
-                            whileTap={{ scale: 0.97 }}
-                            type="button"
-                            onClick={() => {
-                              setIsAddingConversion(true);
-                              const total = conversionSection === "same" ? sameCatConversions.length : crossCatConversions.length;
-                              const lastPage = Math.max(1, Math.ceil((total + 1) / conversionPerPage));
-                              setConversionPage(lastPage);
-                            }}
-                            className="inline-flex items-center gap-[5px] cursor-pointer border-none shrink-0"
-                            style={{
-                              padding: 0,
-                              backgroundColor: "rgba(0,0,0,0)",
-                              color: "var(--primary)",
-                              fontSize: "var(--text-label)",
-                              fontWeight: "var(--font-weight-medium)" as any,
-                              lineHeight: "1",
-                            }}
-                          >
-                            <Plus size={13} strokeWidth={2} /> Add Conversion
-                          </motion.button>
-                        )}
-                      </div>
+                    {/* ── Section description ── */}
+                    <div>
+                      <span style={{ fontSize: "var(--text-label)", color: "var(--text-subtle)", fontWeight: "var(--font-weight-normal)" as any, lineHeight: "1.4" }}>
+                        {conversionSection === "same"
+                          ? `Only one same-category conversion is allowed. This applies to all units in the ${unit?.category || "this"} category.`
+                          : `Define how ${displaySymbol} converts to a unit in another category.`
+                        }
+                      </span>
+                    </div>
+
+                    {/* ── Content area (stacked vertically below tabs) ── */}
+                    <div className="flex-1 min-w-0 flex flex-col">
 
                       {/* ── Prominent single conversion result ── */}
                       {conversionSection === "same" && sameCatConversions.length > 0 && (
