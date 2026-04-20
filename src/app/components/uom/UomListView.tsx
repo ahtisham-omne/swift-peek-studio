@@ -605,15 +605,15 @@ export function UomListView({
         <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
           <button
             type="button"
-            onClick={() => navigate("/items")}
+            onClick={() => navigate("/")}
             className="hover:text-foreground transition-colors cursor-pointer"
             style={{ fontWeight: 500 }}
           >
-            Items & Inventory
+            Company Setup
           </button>
           <span className="text-muted-foreground">/</span>
           <span className="text-foreground" style={{ fontWeight: 500 }}>
-            Unit of Measure
+            Units of Measure
           </span>
         </div>
 

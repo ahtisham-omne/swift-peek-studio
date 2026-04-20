@@ -363,11 +363,11 @@ export function UomDetailView() {
         <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
           <button
             type="button"
-            onClick={() => navigate("/items")}
+            onClick={() => navigate("/")}
             className="hover:text-foreground transition-colors cursor-pointer"
             style={{ fontWeight: 500 }}
           >
-            Items & Inventory
+            Company Setup
           </button>
           <span className="text-muted-foreground">/</span>
           <button
@@ -376,7 +376,7 @@ export function UomDetailView() {
             className="hover:text-foreground transition-colors cursor-pointer"
             style={{ fontWeight: 500 }}
           >
-            Unit of Measure
+            Units of Measure
           </button>
           <span className="text-muted-foreground">/</span>
           <span className="text-foreground truncate max-w-[260px]" style={{ fontWeight: 500 }}>
