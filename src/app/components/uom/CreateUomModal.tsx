@@ -89,17 +89,15 @@ function StepTab({
   // Match Partners CreatePartnerModal stepper exactly:
   // - completed → emerald check on emerald background, emerald label + underline
   // - active    → primary number on primary background, primary label + underline
-  // - default   → white circle with subtle border, slate label
+  // - default / upcoming → white circle with subtle slate border, slate-700 label
+  //   (NOTE: upcoming steps use the same default style whether enabled or disabled —
+  //    matching Partners. Disabled only affects cursor/click, not color.)
   let dotClasses = "border-[1.5px] border-slate-300 text-slate-500 bg-white";
   let labelColor = "text-slate-700";
   let labelWeight = 500;
   let underlineColor: string | null = null;
 
-  if (disabled) {
-    dotClasses = "border-[1.5px] border-slate-200 text-slate-300 bg-white";
-    labelColor = "text-slate-400";
-    labelWeight = 400;
-  } else if (isDone) {
+  if (isDone) {
     dotClasses = "bg-emerald-500 text-white";
     labelColor = "text-emerald-500";
     labelWeight = 600;
@@ -121,7 +119,7 @@ function StepTab({
         padding: "12px 18px",
         marginBottom: -1,
         cursor: disabled ? "default" : "pointer",
-        opacity: disabled ? 0.7 : 1,
+        opacity: 1,
         fontFamily: "var(--font-family)",
         transition: "all 0.2s ease",
       }}
