@@ -354,6 +354,56 @@ export function UomDetailView() {
   return (
     <>
     <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50">
+      {/* ══════════════════════════════════════════════
+          TOP NAV BAR — breadcrumb + search + user (matches Partners)
+         ══════════════════════════════════════════════ */}
+      <div className="flex items-center justify-between px-6 lg:px-8 h-12 border-b border-border bg-card shrink-0 sticky top-0 z-30">
+        <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
+          <button
+            type="button"
+            onClick={() => navigate("/items")}
+            className="hover:text-foreground transition-colors cursor-pointer"
+            style={{ fontWeight: 500 }}
+          >
+            Items & Inventory
+          </button>
+          <span className="text-muted-foreground">/</span>
+          <button
+            type="button"
+            onClick={() => navigate("/uom")}
+            className="hover:text-foreground transition-colors cursor-pointer"
+            style={{ fontWeight: 500 }}
+          >
+            Unit of Measure
+          </button>
+          <span className="text-muted-foreground">/</span>
+          <span className="text-foreground truncate max-w-[260px]" style={{ fontWeight: 500 }}>
+            {displayName}
+          </span>
+        </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="relative hidden md:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
+            <Input
+              placeholder="Search..."
+              className="pl-9 w-[260px] h-8 bg-white border-border/60 text-[13px] placeholder:text-muted-foreground/50"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "var(--accent)" }}
+            >
+              <span className="text-[11px]" style={{ fontWeight: 600, color: "var(--primary)" }}>AA</span>
+            </div>
+            <div className="hidden sm:block">
+              <p className="text-[13px]" style={{ fontWeight: 500 }}>Ahtisham Ahmad</p>
+              <p className="text-[11px] text-muted-foreground leading-tight">Senior Product Designer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ═══════════════════════════════════════
          HEADER CARD — rounded card matching vendor detail
          ═══════════════════════════════════════ */}

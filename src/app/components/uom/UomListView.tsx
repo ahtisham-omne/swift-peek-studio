@@ -598,7 +598,10 @@ export function UomListView({
 
   return (
     <div className="flex flex-col h-full bg-background">
-      <div className="flex items-center justify-between px-6 lg:px-8 h-12 border-b border-border bg-card shrink-0">
+      {/* ══════════════════════════════════════════════
+          TOP NAV BAR — breadcrumb + search + user (matches Partners)
+         ══════════════════════════════════════════════ */}
+      <div className="flex items-center justify-between px-6 lg:px-8 h-12 border-b border-border bg-card shrink-0 sticky top-0 z-30">
         <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
           <button
             type="button"
@@ -625,12 +628,15 @@ export function UomListView({
             />
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary-surface">
-              <span className="text-[11px] text-primary" style={{ fontWeight: 600 }}>AA</span>
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "var(--accent)" }}
+            >
+              <span className="text-[11px]" style={{ fontWeight: 600, color: "var(--primary)" }}>AA</span>
             </div>
             <div className="hidden sm:block">
-              <p className="text-[13px] text-foreground" style={{ fontWeight: 500 }}>Ahtisham Ahmad</p>
-              <p className="text-[11px] text-muted-foreground leading-tight">Product Designer</p>
+              <p className="text-[13px]" style={{ fontWeight: 500 }}>Ahtisham Ahmad</p>
+              <p className="text-[11px] text-muted-foreground leading-tight">Senior Product Designer</p>
             </div>
           </div>
         </div>
