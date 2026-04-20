@@ -325,7 +325,7 @@ export function TableHeaderRow({
         {/* ── Checkbox cell (select-all) ── */}
         {onSelectAll && (
             <TableHead
-              className="sticky left-0 z-20 bg-[#f8fafc] w-[40px] min-w-[40px] max-w-[40px] !pl-2 !pr-0"
+              className="sticky left-0 z-20 bg-slate-50 w-[40px] min-w-[40px] max-w-[40px] !pl-2 !pr-0"
             >
               <Checkbox
                 checked={allSelected ? true : someSelected ? "indeterminate" : false}
@@ -386,7 +386,7 @@ export function TableHeaderRow({
             >
               {/* Blue accent bar on top edge of dragged column header */}
               {isDragged && (
-                <div className="absolute top-0 left-0 right-0 h-[2px] rounded-b-full" style={{ backgroundColor: "#0A77FF" }} />
+                <div className="absolute top-0 left-0 right-0 h-[2px] rounded-b-full" style={{ backgroundColor: "var(--primary)" }} />
               )}
               <div
                 className={`flex items-center gap-1 h-full px-4 py-2.5 ${
@@ -400,7 +400,7 @@ export function TableHeaderRow({
 
                 <span
                   className="leading-none text-[13px]"
-                  style={isActive ? { fontWeight: 500, color: "#0A77FF" } : { fontWeight: 500 }}
+                  style={isActive ? { fontWeight: 500, color: "var(--primary)" } : { fontWeight: 500 }}
                 >
                   {hdr.label}
                 </span>
@@ -409,8 +409,8 @@ export function TableHeaderRow({
                 {isSortable && isActive && (
                   <span className="leading-none text-primary">
                     {activeSort!.direction === "asc"
-                      ? <ArrowUp className="w-3 h-3 shrink-0" style={{ color: "#0A77FF" }} />
-                      : <ArrowDown className="w-3 h-3 shrink-0" style={{ color: "#0A77FF" }} />}
+                      ? <ArrowUp className="w-3 h-3 shrink-0" style={{ color: "var(--primary)" }} />
+                      : <ArrowDown className="w-3 h-3 shrink-0" style={{ color: "var(--primary)" }} />}
                   </span>
                 )}
                 {isSortable && !isActive && (

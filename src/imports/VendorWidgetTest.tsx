@@ -72,7 +72,7 @@ function Wrapper7({ children, additionalClassNames = "" }: React.PropsWithChildr
 function Wrapper6({ children }: React.PropsWithChildren<{}>) {
   return (
     <div className="absolute h-[19.5px] left-[15px] top-[53px] w-[297px]">
-      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[19.5px] left-0 not-italic text-[#0f172a] text-[13px] top-px whitespace-nowrap">{children}</p>
+      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[19.5px] left-0 not-italic text-foreground text-[13px] top-px whitespace-nowrap">{children}</p>
     </div>
   );
 }
@@ -128,7 +128,7 @@ function Wrapper1({ children }: React.PropsWithChildren<{}>) {
 function Container1({ children }: React.PropsWithChildren<{}>) {
   return (
     <div className="h-[40.5px] relative shrink-0 w-full">
-      <div aria-hidden="true" className="absolute border-[#e2e8f0] border-b border-solid inset-0 pointer-events-none" />
+      <div aria-hidden="true" className="absolute border-border border-b border-solid inset-0 pointer-events-none" />
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex gap-[10px] items-center pb-px px-[14px] relative size-full">{children}</div>
       </div>
@@ -142,7 +142,7 @@ type ButtonProps = {
 function Button({ children, additionalClassNames = "" }: React.PropsWithChildren<ButtonProps>) {
   return (
     <div className={clsx("bg-white justify-self-stretch relative rounded-[12px] self-stretch shrink-0", additionalClassNames)}>
-      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex gap-[12px] items-center pl-[15px] pr-px py-px relative size-full">{children}</div>
       </div>
@@ -173,7 +173,7 @@ type SpanText1Props = {
 function SpanText1({ text, additionalClassNames = "" }: SpanText1Props) {
   return (
     <Wrapper5 additionalClassNames={clsx("h-[16.5px] relative shrink-0", additionalClassNames)}>
-      <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[16.5px] left-0 not-italic text-[#475569] text-[11px] top-[0.5px] whitespace-nowrap">{text}</p>
+      <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[16.5px] left-0 not-italic text-muted-foreground text-[11px] top-[0.5px] whitespace-nowrap">{text}</p>
     </Wrapper5>
   );
 }
@@ -185,7 +185,7 @@ function SpanText({ text }: SpanTextProps) {
   return (
     <div className="flex-[1_0_0] h-[19.5px] min-h-px min-w-px relative">
       <div className="bg-clip-padding border-0 border-[transparent] border-solid overflow-clip relative rounded-[inherit] size-full">
-        <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[19.5px] left-0 not-italic text-[#0f172a] text-[13px] top-px whitespace-nowrap">{text}</p>
+        <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[19.5px] left-0 not-italic text-foreground text-[13px] top-px whitespace-nowrap">{text}</p>
       </div>
     </div>
   );
@@ -197,7 +197,7 @@ type PText1Props = {
 function PText1({ text }: PText1Props) {
   return (
     <div className="h-[16.5px] relative shrink-0 w-full">
-      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[16.5px] left-0 not-italic text-[#475569] text-[11px] top-[0.5px] whitespace-nowrap">{text}</p>
+      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[16.5px] left-0 not-italic text-muted-foreground text-[11px] top-[0.5px] whitespace-nowrap">{text}</p>
     </div>
   );
 }
@@ -220,7 +220,7 @@ type PTextProps = {
 function PText({ text }: PTextProps) {
   return (
     <div className="absolute h-[17.875px] left-[15px] top-[74.5px] w-[297px]">
-      <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[17.875px] left-0 not-italic text-[#475569] text-[11px] top-0 whitespace-nowrap">{text}</p>
+      <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[17.875px] left-0 not-italic text-muted-foreground text-[11px] top-0 whitespace-nowrap">{text}</p>
     </div>
   );
 }
@@ -231,7 +231,7 @@ type Text2Props = {
 function Text2({ text }: Text2Props) {
   return (
     <div className="h-[20px] relative shrink-0 w-full">
-      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-0 not-italic text-[#475569] text-[14px] top-[0.5px] tracking-[-0.14px] whitespace-nowrap">{text}</p>
+      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-0 not-italic text-muted-foreground text-[14px] top-[0.5px] tracking-[-0.14px] whitespace-nowrap">{text}</p>
     </div>
   );
 }
@@ -242,7 +242,7 @@ type Text1Props = {
 function Text1({ text }: Text1Props) {
   return (
     <div className="h-[19.5px] relative shrink-0 w-full">
-      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[19.5px] left-0 not-italic text-[#0f172a] text-[13px] top-px whitespace-nowrap">{text}</p>
+      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[19.5px] left-0 not-italic text-foreground text-[13px] top-px whitespace-nowrap">{text}</p>
     </div>
   );
 }
@@ -259,10 +259,10 @@ type ContainerProps = {
 
 function Container({ additionalClassNames = "" }: ContainerProps) {
   return (
-    <div className={clsx("bg-[#edf4ff] relative rounded-[16777200px] shrink-0", additionalClassNames)}>
+    <div className={clsx("bg-accent relative rounded-[16777200px] shrink-0", additionalClassNames)}>
       <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-center justify-center relative size-full">
         <Wrapper3 additionalClassNames="h-[16.5px] w-[16.172px]">
-          <p className="absolute font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[16.5px] left-0 not-italic text-[#0a77ff] text-[11px] top-[0.5px] whitespace-nowrap">{"AA"}</p>
+          <p className="absolute font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[16.5px] left-0 not-italic text-primary text-[11px] top-[0.5px] whitespace-nowrap">{"AA"}</p>
         </Wrapper3>
       </div>
     </div>
@@ -274,11 +274,11 @@ export default function VendorWidgetTest() {
     <div className="bg-[#f7f8fa] relative size-full" data-name="Vendor - Widget test">
       <div className="absolute h-[862px] left-[1109px] top-0 w-0" data-name="Section" />
       <div className="absolute bg-white content-stretch flex flex-col h-[862px] items-center left-0 pr-px top-0 w-[60px]" data-name="aside">
-        <div aria-hidden="true" className="absolute border-[#e2e8f0] border-r border-solid inset-0 pointer-events-none" />
+        <div aria-hidden="true" className="absolute border-border border-r border-solid inset-0 pointer-events-none" />
         <div className="h-[48px] relative shrink-0 w-[59px]" data-name="div">
-          <div aria-hidden="true" className="absolute border-[#e2e8f0] border-b border-solid inset-0 pointer-events-none" />
+          <div aria-hidden="true" className="absolute border-border border-b border-solid inset-0 pointer-events-none" />
           <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-center justify-center pb-px relative size-full">
-            <div className="bg-[#0a77ff] relative rounded-[8px] shrink-0 size-[36px]" data-name="button">
+            <div className="bg-primary relative rounded-[8px] shrink-0 size-[36px]" data-name="button">
               <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-center justify-center pr-[0.008px] relative size-full">
                 <Wrapper3 additionalClassNames="h-[20px] w-[10.508px]">
                   <p className="-translate-x-1/2 absolute font-['Inter:Bold',sans-serif] font-bold leading-[20px] left-[5.5px] not-italic text-[14px] text-center text-white top-[0.5px] tracking-[-0.28px] whitespace-nowrap">O</p>
@@ -398,7 +398,7 @@ export default function VendorWidgetTest() {
           </div>
         </div>
         <div className="h-[151px] relative shrink-0 w-[59px]" data-name="div">
-          <div aria-hidden="true" className="absolute border-[#e2e8f0] border-solid border-t inset-0 pointer-events-none" />
+          <div aria-hidden="true" className="absolute border-border border-solid border-t inset-0 pointer-events-none" />
           <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start pt-px relative size-full">
             <div className="content-stretch flex flex-col gap-[2px] h-[98px] items-center py-[8px] relative shrink-0 w-full" data-name="Container">
               <Wrapper7 additionalClassNames="size-[40px]">
@@ -427,16 +427,16 @@ export default function VendorWidgetTest() {
       <div className="absolute content-stretch flex flex-col h-[862px] items-start left-[60px] overflow-clip top-0 w-[1049px]" data-name="main">
         <Wrapper10 additionalClassNames="w-[1049px]">
           <div className="bg-white h-[48px] relative shrink-0 w-[1049px]" data-name="Container">
-            <div aria-hidden="true" className="absolute border-[#e2e8f0] border-b border-solid inset-0 pointer-events-none" />
+            <div aria-hidden="true" className="absolute border-border border-b border-solid inset-0 pointer-events-none" />
             <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-center justify-between pb-px px-[24px] relative size-full">
               <Container2 additionalClassNames="h-[19.5px] w-[137.844px]">
                 <Wrapper4 additionalClassNames="h-[19.5px]">
-                  <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[19.5px] left-0 not-italic text-[#0f172a] text-[13px] top-px whitespace-nowrap">Partners Management</p>
+                  <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[19.5px] left-0 not-italic text-foreground text-[13px] top-px whitespace-nowrap">Partners Management</p>
                 </Wrapper4>
               </Container2>
               <Wrapper3 additionalClassNames="h-[36px] w-[401.961px]">
                 <div className="absolute bg-[#f7f8fa] content-stretch flex items-center justify-center left-0 p-px rounded-[6px] size-[32px] top-[2px]" data-name="Button">
-                  <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[6px]" />
+                  <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[6px]" />
                   <Wrapper2 additionalClassNames="relative shrink-0">
                     <g id="Plus">
                       <path d="M3.33333 8H12.6667" id="Vector" stroke="var(--stroke-0, #0F172A)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -449,14 +449,14 @@ export default function VendorWidgetTest() {
                   <Wrapper10 additionalClassNames="h-[33.25px]">
                     <Text1 text="Ahtisham Ahmad" />
                     <div className="content-stretch flex h-[13.75px] items-start relative shrink-0 w-full" data-name="p">
-                      <p className="flex-[1_0_0] font-['Inter:Regular',sans-serif] font-normal leading-[13.75px] min-h-px min-w-px not-italic relative text-[#475569] text-[11px]">Product Designer</p>
+                      <p className="flex-[1_0_0] font-['Inter:Regular',sans-serif] font-normal leading-[13.75px] min-h-px min-w-px not-italic relative text-muted-foreground text-[11px]">Product Designer</p>
                     </div>
                   </Wrapper10>
                 </div>
                 <div className="absolute h-[36px] left-[44px] top-0 w-[200px]" data-name="Container">
-                  <div className="absolute bg-[#f8fafc] h-[36px] left-0 rounded-[6px] top-0 w-[200px]" data-name="Input">
+                  <div className="absolute bg-slate-50 h-[36px] left-0 rounded-[6px] top-0 w-[200px]" data-name="Input">
                     <div className="content-stretch flex items-center overflow-clip pl-[36px] pr-[12px] py-[4px] relative rounded-[inherit] size-full">
-                      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[#475569] text-[14px] whitespace-nowrap">Search</p>
+                      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-muted-foreground text-[14px] whitespace-nowrap">Search</p>
                     </div>
                     <div aria-hidden="true" className="absolute border border-[rgba(0,0,0,0)] border-solid inset-0 pointer-events-none rounded-[6px]" />
                   </div>
@@ -476,11 +476,11 @@ export default function VendorWidgetTest() {
                 <div className="absolute content-stretch flex flex-col gap-[2px] h-[54px] items-start left-[24px] top-[16px] w-[1001px]" data-name="Container">
                   <div className="content-stretch flex h-[32px] items-center justify-between relative shrink-0 w-full" data-name="Container">
                     <Wrapper3 additionalClassNames="h-[32px] w-[242.172px]">
-                      <p className="absolute font-['Inter:Bold',sans-serif] font-bold leading-[32px] left-0 not-italic text-[#0f172a] text-[24px] top-[-1px] tracking-[-0.6px] whitespace-nowrap">Partners Management</p>
+                      <p className="absolute font-['Inter:Bold',sans-serif] font-bold leading-[32px] left-0 not-italic text-foreground text-[24px] top-[-1px] tracking-[-0.6px] whitespace-nowrap">Partners Management</p>
                     </Wrapper3>
                     <Container2 additionalClassNames="h-[30px] w-[72.25px]">
                       <div className="flex-[1_0_0] h-[30px] min-h-px min-w-px relative rounded-[8px]" data-name="button">
-                        <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[8px]" />
+                        <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[8px]" />
                         <div className="flex flex-row items-center size-full">
                           <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[6px] items-center px-[11px] py-px relative size-full">
                             <Wrapper12 additionalClassNames="relative shrink-0">
@@ -490,7 +490,7 @@ export default function VendorWidgetTest() {
                               </g>
                             </Wrapper12>
                             <Wrapper4 additionalClassNames="h-[16px]">
-                              <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[16px] left-[16.5px] not-italic text-[#475569] text-[12px] text-center top-[0.5px] whitespace-nowrap">Reset</p>
+                              <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[16px] left-[16.5px] not-italic text-muted-foreground text-[12px] text-center top-[0.5px] whitespace-nowrap">Reset</p>
                             </Wrapper4>
                           </div>
                         </div>
@@ -498,9 +498,9 @@ export default function VendorWidgetTest() {
                     </Container2>
                   </div>
                   <div className="h-[20px] relative shrink-0 w-full" data-name="p">
-                    <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-[#475569] text-[14px] top-[0.5px] whitespace-nowrap">{`Manage your vendors, customers, and partner operations. `}</p>
+                    <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-muted-foreground text-[14px] top-[0.5px] whitespace-nowrap">{`Manage your vendors, customers, and partner operations. `}</p>
                     <div className="absolute h-[20px] left-[389.17px] top-0 w-[92.227px]" data-name="button">
-                      <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-[38px] not-italic text-[#0a77ff] text-[14px] text-center top-[0.5px] whitespace-nowrap">Learn more</p>
+                      <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-[38px] not-italic text-primary text-[14px] text-center top-[0.5px] whitespace-nowrap">Learn more</p>
                       <Wrapper12 additionalClassNames="absolute left-[80.23px] top-[4px]">
                         <g id="ExternalLink">
                           <path d="M7.5 1.5H10.5V4.5" id="Vector" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" />
@@ -515,8 +515,8 @@ export default function VendorWidgetTest() {
                   <Text2 text="Modules" />
                   <div className="gap-x-[10px] gap-y-[10px] grid grid-cols-[repeat(3,minmax(0,1fr))] grid-rows-[repeat(3,minmax(0,1fr))] h-[336.125px] relative shrink-0 w-full" data-name="Container">
                     <div className="bg-white col-1 justify-self-stretch relative rounded-[12px] row-1 self-stretch shrink-0" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
-                      <div className="absolute bg-[#edf4ff] content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div className="absolute bg-accent content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
                         <Wrapper>
                           <path d={svgPaths.p32887f80} id="Vector" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
                           <path d={svgPaths.p3694d280} id="Vector_2" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -528,7 +528,7 @@ export default function VendorWidgetTest() {
                       <PText text="Manage vendors, customers, and partner details." />
                     </div>
                     <div className="bg-white col-2 justify-self-stretch relative rounded-[12px] row-1 self-stretch shrink-0" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
                       <div className="absolute bg-[#fff7ed] content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
                         <Icon />
                       </div>
@@ -536,8 +536,8 @@ export default function VendorWidgetTest() {
                       <PText text="Organize partners into groups and classes." />
                     </div>
                     <div className="bg-white col-3 justify-self-stretch relative rounded-[12px] row-1 self-stretch shrink-0" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
-                      <div className="absolute bg-[#f5f3ff] content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div className="absolute bg-violet-50 content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
                         <Wrapper>
                           <path d="M10.6667 1.33333V2.66667" id="Vector" stroke="var(--stroke-0, #7C3AED)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
                           <path d={svgPaths.p15fc5300} id="Vector_2" stroke="var(--stroke-0, #7C3AED)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -550,8 +550,8 @@ export default function VendorWidgetTest() {
                       <PText text="Browse contacts across all organizations." />
                     </div>
                     <div className="bg-white col-1 justify-self-stretch relative rounded-[12px] row-2 self-stretch shrink-0" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
-                      <div className="absolute bg-[#ecfdf5] content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div className="absolute bg-emerald-50 content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
                         <Wrapper>
                           <path d={svgPaths.p35993080} id="Vector" stroke="var(--stroke-0, #059669)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
                           <path d="M1.33333 6.66667H14.6667" id="Vector_2" stroke="var(--stroke-0, #059669)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -561,7 +561,7 @@ export default function VendorWidgetTest() {
                       <PText text="Monitor credit limits and balance usage." />
                     </div>
                     <div className="bg-white col-2 justify-self-stretch relative rounded-[12px] row-2 self-stretch shrink-0" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
                       <div className="absolute bg-[#ecfeff] content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
                         <Wrapper>
                           <path d={svgPaths.p264a0480} id="Vector" stroke="var(--stroke-0, #0891B2)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -575,7 +575,7 @@ export default function VendorWidgetTest() {
                       <PText text="Configure carriers and shipping methods." />
                     </div>
                     <div className="bg-white col-3 justify-self-stretch relative rounded-[12px] row-2 self-stretch shrink-0" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
                       <div className="absolute bg-[#fff1f2] content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
                         <Wrapper>
                           <path d={svgPaths.p14548f00} id="Vector" stroke="var(--stroke-0, #E11D48)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -586,8 +586,8 @@ export default function VendorWidgetTest() {
                       <PText text="Manage locations, warehouses, and sites." />
                     </div>
                     <div className="bg-white col-1 justify-self-stretch relative rounded-[12px] row-3 self-stretch shrink-0" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
-                      <div className="absolute bg-[#ecfdf5] content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div className="absolute bg-emerald-50 content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
                         <Wrapper>
                           <path d={svgPaths.p37f49070} id="Vector" stroke="var(--stroke-0, #059669)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
                           <path d={svgPaths.p17134c00} id="Vector_2" stroke="var(--stroke-0, #059669)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -597,8 +597,8 @@ export default function VendorWidgetTest() {
                       <PText text="Track approved vendors and lead times." />
                     </div>
                     <div className="bg-white col-2 justify-self-stretch relative rounded-[12px] row-3 self-stretch shrink-0" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
-                      <div className="absolute bg-[#edf4ff] content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div className="absolute bg-accent content-stretch flex items-center justify-center left-[15px] rounded-[8px] size-[32px] top-[13px]" data-name="Container">
                         <Wrapper>
                           <path d={svgPaths.pea6a680} id="Vector" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
                           <path d={svgPaths.p3155f180} id="Vector_2" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -614,7 +614,7 @@ export default function VendorWidgetTest() {
                     <Text2 text="Recommended Actions" />
                     <div className="gap-x-[10px] gap-y-[10px] grid grid-cols-[repeat(2,minmax(0,1fr))] grid-rows-[repeat(2,minmax(0,1fr))] h-[134px] relative shrink-0 w-full" data-name="Container">
                       <Button additionalClassNames="col-1 row-1">
-                        <Wrapper7 additionalClassNames="bg-[#edf4ff] size-[32px]">
+                        <Wrapper7 additionalClassNames="bg-accent size-[32px]">
                           <Wrapper>
                             <path d="M3.33333 8H12.6667" id="Vector" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
                             <path d="M8 3.33333V12.6667" id="Vector_2" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -626,7 +626,7 @@ export default function VendorWidgetTest() {
                         </Wrapper9>
                       </Button>
                       <Button additionalClassNames="col-2 opacity-60 row-1">
-                        <Wrapper7 additionalClassNames="bg-[#f5f3ff] size-[32px]">
+                        <Wrapper7 additionalClassNames="bg-violet-50 size-[32px]">
                           <Wrapper>
                             <path d={svgPaths.p23ad1400} id="Vector" stroke="var(--stroke-0, #7C3AED)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
                             <path d={svgPaths.p26e09a00} id="Vector_2" stroke="var(--stroke-0, #7C3AED)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
@@ -652,32 +652,32 @@ export default function VendorWidgetTest() {
                   <div className="absolute content-stretch flex flex-col gap-[10px] h-[233.5px] items-start left-[674px] top-0 w-[327px]" data-name="Container">
                     <div className="content-stretch flex h-[20px] items-center justify-between relative shrink-0 w-full" data-name="Container">
                       <Wrapper3 additionalClassNames="h-[20px] w-[99.07px]">
-                        <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-0 not-italic text-[#475569] text-[14px] top-[0.5px] tracking-[-0.14px] whitespace-nowrap">Recent Activity</p>
+                        <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-0 not-italic text-muted-foreground text-[14px] top-[0.5px] tracking-[-0.14px] whitespace-nowrap">Recent Activity</p>
                       </Wrapper3>
                       <Wrapper3 additionalClassNames="h-[16px] w-[60.891px]">
-                        <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[16px] left-[30.5px] not-italic text-[#0a77ff] text-[12px] text-center top-[0.5px] whitespace-nowrap">View more</p>
+                        <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[16px] left-[30.5px] not-italic text-primary text-[12px] text-center top-[0.5px] whitespace-nowrap">View more</p>
                       </Wrapper3>
                     </div>
                     <div className="bg-white h-[203.5px] relative rounded-[12px] shrink-0 w-full" data-name="Container">
-                      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+                      <div aria-hidden="true" className="absolute border border-border border-solid inset-0 pointer-events-none rounded-[12px]" />
                       <div className="content-stretch flex flex-col items-start p-px relative size-full">
                         <Container1>
-                          <div className="bg-[#0a77ff] rounded-[16777200px] shrink-0 size-[6px]" data-name="span" />
+                          <div className="bg-primary rounded-[16777200px] shrink-0 size-[6px]" data-name="span" />
                           <SpanText text="New Partner: Toyota International" />
                           <SpanText1 text="2h ago" additionalClassNames="w-[35.828px]" />
                         </Container1>
                         <Container1>
-                          <div className="bg-[#059669] rounded-[16777200px] shrink-0 size-[6px]" data-name="span" />
+                          <div className="bg-success rounded-[16777200px] shrink-0 size-[6px]" data-name="span" />
                           <SpanText text="Credit Updated: UPS Corp" />
                           <SpanText1 text="4h ago" additionalClassNames="w-[36.227px]" />
                         </Container1>
                         <Container1>
-                          <div className="bg-[#475569] rounded-[16777200px] shrink-0 size-[6px]" data-name="span" />
+                          <div className="bg-muted-foreground rounded-[16777200px] shrink-0 size-[6px]" data-name="span" />
                           <SpanText text="Partner Archived: Nissan NA" />
                           <SpanText1 text="1d ago" additionalClassNames="w-[33.828px]" />
                         </Container1>
                         <Container1>
-                          <div className="bg-[#7c3aed] rounded-[16777200px] shrink-0 size-[6px]" data-name="span" />
+                          <div className="bg-violet rounded-[16777200px] shrink-0 size-[6px]" data-name="span" />
                           <SpanText text="New Contact: Tanya Bailey" />
                           <SpanText1 text="1d ago" additionalClassNames="w-[33.828px]" />
                         </Container1>

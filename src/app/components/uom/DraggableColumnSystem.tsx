@@ -414,8 +414,8 @@ export function ColumnDragPreview({ dragState, previewElRef, renderPreview }: Co
             boxShadow: "0 1px 3px rgba(10,119,255,0.08), 0 6px 20px rgba(0,0,0,0.10)",
           }}
         >
-          <GripVertical className="w-3 h-3 shrink-0" style={{ color: "#0A77FF" }} />
-          <span className="text-[13px]" style={{ color: "#0A77FF", fontWeight: 500 }}>
+          <GripVertical className="w-3 h-3 shrink-0" style={{ color: "var(--primary)" }} />
+          <span className="text-[13px]" style={{ color: "var(--primary)", fontWeight: 500 }}>
             {dragState.label}
           </span>
         </div>

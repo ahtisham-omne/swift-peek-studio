@@ -295,7 +295,7 @@ type SpanProps = {
 
 function Span({ children, additionalClassNames = "" }: React.PropsWithChildren<SpanProps>) {
   return (
-    <div className={clsx("bg-[#ecfdf5] h-[14px] relative rounded-[6px] shrink-0", additionalClassNames)}>
+    <div className={clsx("bg-emerald-50 h-[14px] relative rounded-[6px] shrink-0", additionalClassNames)}>
       <div className="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
         <Wrapper13 additionalClassNames="absolute left-[6px] top-[2px]">
           <g clipPath="url(#clip0_4098_1321)" id="Tag">
@@ -308,7 +308,7 @@ function Span({ children, additionalClassNames = "" }: React.PropsWithChildren<S
             </clipPath>
           </defs>
         </Wrapper13>
-        <p className="absolute font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[10px] left-[18px] not-italic text-[#059669] text-[10px] top-[2px] whitespace-nowrap">{children}</p>
+        <p className="absolute font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[10px] left-[18px] not-italic text-success text-[10px] top-[2px] whitespace-nowrap">{children}</p>
       </div>
     </div>
   );
@@ -663,9 +663,9 @@ export default function PurchaseOrders() {
                     <Wrapper4 additionalClassNames="h-[13px]">
                       <p className="-translate-x-1/2 absolute font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[13px] left-[17.5px] not-italic text-[13px] text-black text-center top-[0.5px] whitespace-nowrap">Items</p>
                     </Wrapper4>
-                    <div className="bg-[#edf4ff] h-[16px] relative rounded-[4px] shrink-0 w-[18px]" data-name="span">
+                    <div className="bg-accent h-[16px] relative rounded-[4px] shrink-0 w-[18px]" data-name="span">
                       <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-center justify-center px-[4px] relative size-full">
-                        <p className="font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[11px] not-italic relative shrink-0 text-[#0a77ff] text-[11px] text-center whitespace-nowrap">6</p>
+                        <p className="font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[11px] not-italic relative shrink-0 text-primary text-[11px] text-center whitespace-nowrap">6</p>
                       </div>
                     </div>
                   </div>
@@ -792,7 +792,7 @@ export default function PurchaseOrders() {
                                         <path d="M6 2.5V9.5" id="Vector_2" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" />
                                       </g>
                                     </Wrapper3>
-                                    <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[16.2px] left-[56.5px] not-italic text-[#0a77ff] text-[12px] text-center top-[6.4px] whitespace-nowrap">Add Items</p>
+                                    <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[16.2px] left-[56.5px] not-italic text-primary text-[12px] text-center top-[6.4px] whitespace-nowrap">Add Items</p>
                                   </div>
                                 </div>
                               </div>
@@ -1117,7 +1117,7 @@ export default function PurchaseOrders() {
                                 <Wrapper10 additionalClassNames="bg-[rgba(10,119,255,0.12)] rounded-[16777200px] shadow-[0px_0px_0px_0px_rgba(10,119,255,0.15)]">
                                   <div className="h-[10px] relative shrink-0 w-[13.359px]" data-name="span">
                                     <div className="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                                      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[10px] left-0 not-italic text-[#0a77ff] text-[10px] top-0 whitespace-nowrap">RK</p>
+                                      <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[10px] left-0 not-italic text-primary text-[10px] top-0 whitespace-nowrap">RK</p>
                                     </div>
                                   </div>
                                 </Wrapper10>
@@ -1287,7 +1287,7 @@ export default function PurchaseOrders() {
                               </Wrapper14>
                               <Wrapper14 additionalClassNames="h-[14px] w-[51.203px]">
                                 <Wrapper4 additionalClassNames="h-[14px]">
-                                  <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[14px] left-[15.5px] not-italic text-[#0a77ff] text-[10px] text-center top-0 whitespace-nowrap">12.5%</p>
+                                  <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[14px] left-[15.5px] not-italic text-primary text-[10px] text-center top-0 whitespace-nowrap">12.5%</p>
                                 </Wrapper4>
                                 <div className="flex items-center justify-center relative shrink-0">
                                   <div className="flex-none rotate-180">
@@ -1308,7 +1308,7 @@ export default function PurchaseOrders() {
                                 <Container5 additionalClassNames="h-[18.195px] shrink-0">
                                   <SpanText8 text="This PO" additionalClassNames="w-[40.609px]" />
                                   <Wrapper6 additionalClassNames="w-[66.844px]">
-                                    <p className="absolute font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[18.2px] left-0 not-italic text-[#0a77ff] text-[13px] top-0 whitespace-nowrap">$15580.36</p>
+                                    <p className="absolute font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[18.2px] left-0 not-italic text-primary text-[13px] top-0 whitespace-nowrap">$15580.36</p>
                                   </Wrapper6>
                                 </Container5>
                                 <Container5 additionalClassNames="flex-[1_0_0] min-h-px min-w-px">
@@ -1320,11 +1320,11 @@ export default function PurchaseOrders() {
                               </div>
                               <div className="absolute content-stretch flex flex-col gap-[8px] h-[30px] items-start left-[16px] top-0 w-[282.336px]" data-name="Container">
                                 <div className="bg-[#eaebf0] content-stretch flex flex-col h-[8px] items-start overflow-clip pl-[-247.145px] pr-[247.145px] relative rounded-[16777200px] shrink-0 w-full" data-name="Progress">
-                                  <div className="bg-[#0a77ff] h-[8px] shrink-0 w-full" data-name="ProgressPrimitive.Indicator" />
+                                  <div className="bg-primary h-[8px] shrink-0 w-full" data-name="ProgressPrimitive.Indicator" />
                                 </div>
                                 <div className="content-stretch flex h-[14px] items-center justify-between relative shrink-0 w-full" data-name="Container">
                                   <Wrapper5 additionalClassNames="w-[61.547px]">
-                                    <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[14px] left-0 not-italic text-[#0a77ff] text-[10px] top-0 whitespace-nowrap">$15580 used</p>
+                                    <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[14px] left-0 not-italic text-primary text-[10px] top-0 whitespace-nowrap">$15580 used</p>
                                   </Wrapper5>
                                   <Wrapper5 additionalClassNames="w-[92.578px]">
                                     <p className="absolute font-['Inter:Medium',sans-serif] font-medium leading-[14px] left-0 not-italic text-[#27b973] text-[10px] top-0 whitespace-nowrap">$109420 remaining</p>
@@ -1555,7 +1555,7 @@ export default function PurchaseOrders() {
                               </Wrapper4>
                             </Wrapper12>
                             <div className="bg-[#eaebf0] h-[20px] shrink-0 w-px" data-name="Container" />
-                            <Wrapper10 additionalClassNames="bg-[#edf4ff] rounded-[10px]">
+                            <Wrapper10 additionalClassNames="bg-accent rounded-[10px]">
                               <div className="relative shrink-0 size-[16px]" data-name="FileText">
                                 <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
                                   <g id="FileText">
@@ -1630,7 +1630,7 @@ export default function PurchaseOrders() {
                               </Wrapper16>
                             </div>
                             <div className="absolute bg-[#eaebf0] h-[20px] left-[154px] top-[6px] w-px" data-name="Container" />
-                            <div className="absolute bg-[#0a77ff] h-[32px] left-[163px] rounded-[8px] top-0 w-[126.43px]" data-name="Button">
+                            <div className="absolute bg-primary h-[32px] left-[163px] rounded-[8px] top-0 w-[126.43px]" data-name="Button">
                               <Wrapper7 additionalClassNames="absolute left-[10px] top-[9px]">
                                 <g id="Check">
                                   <path d={svgPaths.p3de7e600} id="Vector" stroke="var(--stroke-0, white)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.16667" />
@@ -1800,7 +1800,7 @@ export default function PurchaseOrders() {
             <div className="h-[48px] relative shrink-0 w-[55px]" data-name="header">
               <div aria-hidden="true" className="absolute border-[#eaebf0] border-b border-solid inset-0 pointer-events-none" />
               <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-center pb-px pl-[12px] relative size-full">
-                <Wrapper15 additionalClassNames="bg-[#0a77ff] rounded-[10px] size-[32px]">
+                <Wrapper15 additionalClassNames="bg-primary rounded-[10px] size-[32px]">
                   <div className="h-[13px] relative shrink-0 w-[9.992px]" data-name="span">
                     <div className="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
                       <p className="-translate-x-1/2 absolute font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[13px] left-[5.5px] not-italic text-[13px] text-center text-white top-[0.5px] whitespace-nowrap">O</p>
@@ -1830,7 +1830,7 @@ export default function PurchaseOrders() {
                     </Icon2>
                   </div>
                   <div className="bg-[rgba(10,119,255,0.1)] content-stretch flex h-[40px] items-center justify-center relative rounded-[8px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_0px_rgba(0,0,0,0.1)] shrink-0 w-full" data-name="button">
-                    <Wrapper11 additionalClassNames="bg-[#edf4ff]">
+                    <Wrapper11 additionalClassNames="bg-accent">
                       <Icon2>
                         <path d={svgPaths.pb9add80} id="Vector" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.125" />
                         <path d="M11.25 13.5H6.75" id="Vector_2" stroke="var(--stroke-0, #0A77FF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.125" />

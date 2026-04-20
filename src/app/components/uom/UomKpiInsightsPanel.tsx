@@ -50,8 +50,8 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     label: "Total Units",
     category: "Overview",
     iconName: "Package",
-    iconBg: "#EDF4FF",
-    iconColor: "#0A77FF",
+    iconBg: "var(--accent)",
+    iconColor: "var(--primary)",
     subtitle: "All units in system",
   },
   {
@@ -69,7 +69,7 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     category: "Overview",
     iconName: "Layers",
     iconBg: "#F5F3FF",
-    iconColor: "#7C3AED",
+    iconColor: "var(--violet)",
     subtitle: "User-created units",
   },
   // Usage
@@ -106,8 +106,8 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     label: "Length Units",
     category: "Categories",
     iconName: "Ruler",
-    iconBg: "#EDF4FF",
-    iconColor: "#0A77FF",
+    iconBg: "var(--accent)",
+    iconColor: "var(--primary)",
     subtitle: "Length & distance",
   },
   {
@@ -116,7 +116,7 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     category: "Categories",
     iconName: "Scale",
     iconBg: "#ECFDF5",
-    iconColor: "#059669",
+    iconColor: "var(--success)",
     subtitle: "Mass & weight",
   },
   {
@@ -125,7 +125,7 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     category: "Categories",
     iconName: "Boxes",
     iconBg: "#F5F3FF",
-    iconColor: "#7C3AED",
+    iconColor: "var(--violet)",
     subtitle: "Volume & capacity",
   },
   {
@@ -134,7 +134,7 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     category: "Categories",
     iconName: "Tags",
     iconBg: "#FFFBEB",
-    iconColor: "#D97706",
+    iconColor: "var(--warning)",
     subtitle: "Count & quantity",
   },
   {
@@ -143,7 +143,7 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     category: "Categories",
     iconName: "Layers",
     iconBg: "#FEF2F2",
-    iconColor: "#DC2626",
+    iconColor: "var(--destructive)",
     subtitle: "Area & surface",
   },
   {
@@ -161,8 +161,8 @@ export const ALL_UOM_KPI_DEFINITIONS: UomKpiDefinition[] = [
     label: "Total Conversions",
     category: "Conversions",
     iconName: "ArrowLeftRight",
-    iconBg: "#EDF4FF",
-    iconColor: "#0A77FF",
+    iconBg: "var(--accent)",
+    iconColor: "var(--primary)",
     subtitle: "Defined conversion rules",
   },
   {
@@ -347,9 +347,9 @@ export function UomKpiInsightsPanel({
             <div className="flex items-start gap-3">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                style={{ backgroundColor: "#EDF4FF" }}
+                style={{ backgroundColor: "var(--accent)" }}
               >
-                <Sliders className="w-5 h-5" style={{ color: "#0A77FF" }} />
+                <Sliders className="w-5 h-5" style={{ color: "var(--primary)" }} />
               </div>
               <div>
                 <h2 className="text-base text-foreground" style={{ fontWeight: 600 }}>
@@ -384,16 +384,16 @@ export function UomKpiInsightsPanel({
               }}
               className={`flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
                 ALL_UOM_KPI_DEFINITIONS.every(k => activeKpis.includes(k.key))
-                  ? "bg-[#EBF3FF] border-[#0A77FF]/25 text-[#0A77FF] hover:bg-[#DCEAFF] hover:border-[#0A77FF]/40 shadow-sm shadow-[#0A77FF]/10"
+                  ? "bg-[#EBF3FF] border-primary/25 text-primary hover:bg-[#DCEAFF] hover:border-primary/40 shadow-sm shadow-primary/10"
                   : activeKpis.length === 0
-                  ? "bg-[#F8FAFC] border-[#E2E8F0] text-[#94A3B8] hover:bg-[#F1F5F9] hover:border-[#CBD5E1] hover:text-[#64748B]"
-                  : "bg-[#F8FAFC] border-[#E2E8F0] text-[#64748B] hover:bg-[#EBF3FF] hover:border-[#0A77FF]/25 hover:text-[#0A77FF]"
+                  ? "bg-slate-50 border-border text-slate-400 hover:bg-muted hover:border-slate-300 hover:text-slate-500"
+                  : "bg-slate-50 border-border text-slate-500 hover:bg-[#EBF3FF] hover:border-primary/25 hover:text-primary"
               }`}
               style={{ fontWeight: 600 }}
             >
               {ALL_UOM_KPI_DEFINITIONS.every(k => activeKpis.includes(k.key)) ? (
                 <>
-                  <ToggleRight className="w-4 h-4 text-[#0A77FF]" />
+                  <ToggleRight className="w-4 h-4 text-primary" />
                   <span>All On</span>
                 </>
               ) : activeKpis.length === 0 ? (
@@ -425,7 +425,7 @@ export function UomKpiInsightsPanel({
         </div>
 
         {/* Separator */}
-        <div className="border-b border-[#F1F5F9] mt-3 shrink-0" />
+        <div className="border-b border-muted mt-3 shrink-0" />
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-4 pb-4 scrollbar-hide">
@@ -461,7 +461,7 @@ export function UomKpiInsightsPanel({
                       onClick={() => onToggleKpi(kpi.key)}
                       className={`relative text-left rounded-lg border px-3 py-2.5 transition-all duration-150 cursor-pointer group ${
                         isActive
-                          ? "border-[#0A77FF]/25 bg-[#0A77FF]/[0.04] shadow-[0_0_0_1px_rgba(10,119,255,0.08)]"
+                          ? "border-primary/25 bg-primary/[0.04] shadow-[0_0_0_1px_rgba(10,119,255,0.08)]"
                           : "border-border/60 bg-white hover:border-border hover:bg-muted/20 hover:shadow-sm"
                       }`}
                     >
@@ -469,7 +469,7 @@ export function UomKpiInsightsPanel({
                       <div className="flex items-center justify-between gap-1">
                         <span
                           className={`text-[11.5px] truncate transition-colors ${
-                            isActive ? "text-[#0A77FF]" : "text-muted-foreground/70"
+                            isActive ? "text-primary" : "text-muted-foreground/70"
                           }`}
                           style={{ fontWeight: 500 }}
                           title={kpi.label}
@@ -478,7 +478,7 @@ export function UomKpiInsightsPanel({
                         </span>
                         <div className="shrink-0">
                           {isActive ? (
-                            <Check className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                            <Check className="w-3.5 h-3.5" style={{ color: "var(--primary)" }} />
                           ) : (
                             <Plus className="w-3.5 h-3.5 text-muted-foreground/25 group-hover:text-muted-foreground/50 transition-colors" />
                           )}

@@ -172,7 +172,7 @@ export function ColumnsDropdown({
         </span>
         <span
           className="inline-flex items-center justify-center h-5 px-1.5 rounded-full text-[11px]"
-          style={{ backgroundColor: "#EDF4FF", color: "#0A77FF", fontWeight: 600 }}
+          style={{ backgroundColor: "var(--accent)", color: "var(--primary)", fontWeight: 600 }}
         >
           {visibleCount}
         </span>
@@ -444,16 +444,16 @@ export function ColumnsSidePanel({
             <div className="flex items-center gap-2">
               <div
                 className="w-6 h-6 rounded-md flex items-center justify-center"
-                style={{ backgroundColor: "#EDF4FF" }}
+                style={{ backgroundColor: "var(--accent)" }}
               >
-                <Columns3 className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                <Columns3 className="w-3.5 h-3.5" style={{ color: "var(--primary)" }} />
               </div>
               <span className="text-[13px] text-foreground" style={{ fontWeight: 600 }}>
                 Columns
               </span>
               <span
                 className="inline-flex items-center text-[11px] tabular-nums px-2 py-[2px] rounded-full"
-                style={{ fontWeight: 600, color: "#0A77FF", backgroundColor: "#EDF4FF" }}
+                style={{ fontWeight: 600, color: "var(--primary)", backgroundColor: "var(--accent)" }}
               >
                 {visibleCount}/{totalCount}
               </span>
@@ -489,8 +489,8 @@ export function ColumnsSidePanel({
           <div className="flex items-center gap-1">
             <button
               onClick={selectAll}
-              className="inline-flex items-center gap-1 text-[11px] px-2 py-[3px] rounded-md hover:bg-[#EDF4FF] transition-colors cursor-pointer"
-              style={{ fontWeight: 500, color: "#0A77FF" }}
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-[3px] rounded-md hover:bg-accent transition-colors cursor-pointer"
+              style={{ fontWeight: 500, color: "var(--primary)" }}
             >
               <Eye className="w-3 h-3" />
               Show All
@@ -535,9 +535,9 @@ export function ColumnsSidePanel({
                 >
                   <div
                     title="Pinned column — always visible"
-                    className="shrink-0 w-6 h-6 rounded-md flex items-center justify-center bg-[#EDF4FF]"
+                    className="shrink-0 w-6 h-6 rounded-md flex items-center justify-center bg-accent"
                   >
-                    <Eye className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                    <Eye className="w-3.5 h-3.5" style={{ color: "var(--primary)" }} />
                   </div>
                   <span
                     className="flex-1 text-[12.5px] text-foreground truncate"
@@ -589,7 +589,7 @@ export function ColumnsSidePanel({
                 <div
                   className={`group/item flex items-center gap-2 px-2 py-[7px] rounded-md transition-all duration-150 ${
                     isDragging
-                      ? "bg-[#0A77FF]/[0.04] border border-dashed border-[#0A77FF]/25 opacity-40 scale-[0.97]"
+                      ? "bg-primary/[0.04] border border-dashed border-primary/25 opacity-40 scale-[0.97]"
                       : "hover:bg-muted/30 border border-transparent"
                   }`}
                 >
@@ -614,12 +614,12 @@ export function ColumnsSidePanel({
                     title={isVisible ? "Hide column" : "Show column"}
                     className={`shrink-0 w-6 h-6 rounded-md flex items-center justify-center transition-colors cursor-pointer ${
                       isVisible
-                        ? "bg-[#EDF4FF] hover:bg-[#DBEAFE]"
+                        ? "bg-accent hover:bg-blue-100"
                         : "bg-muted/40 hover:bg-muted/60"
                     }`}
                   >
                     {isVisible ? (
-                      <Eye className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                      <Eye className="w-3.5 h-3.5" style={{ color: "var(--primary)" }} />
                     ) : (
                       <EyeOff className="w-3.5 h-3.5 text-muted-foreground/50" />
                     )}

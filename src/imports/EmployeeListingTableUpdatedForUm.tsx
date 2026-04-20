@@ -183,7 +183,7 @@ function QuickFilters() {
       </div>
       <button className="bg-[#ecf4fc] content-stretch cursor-pointer flex gap-[6px] h-[30px] items-center justify-center px-[12px] py-[6px] relative rounded-[100px] shrink-0" data-name="Tag">
         <div aria-hidden="true" className="absolute border border-[#0e69e2] border-solid inset-0 pointer-events-none rounded-[100px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
-        <p className="font-['Figtree:Regular',sans-serif] font-normal leading-[normal] relative shrink-0 text-[#0a77ff] text-[14px] text-left">Show All</p>
+        <p className="font-['Figtree:Regular',sans-serif] font-normal leading-[normal] relative shrink-0 text-primary text-[14px] text-left">Show All</p>
       </button>
       <div className="bg-white content-stretch flex gap-[6px] h-[30px] items-center justify-center pl-[12px] pr-[6px] py-[6px] relative rounded-[100px] shrink-0" data-name="Tag">
         <div aria-hidden="true" className="absolute border border-[#eaebf0] border-solid inset-0 pointer-events-none rounded-[100px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
@@ -3282,7 +3282,7 @@ function Frame1() {
         </div>
         <p className="font-['Figtree:Medium',sans-serif] font-medium leading-[normal] relative shrink-0 text-[#68727d] text-[14px]">Prev</p>
       </div>
-      <div className="bg-[#0a77ff] content-stretch flex flex-col items-center justify-center relative rounded-[1px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] shrink-0 size-[40px]" data-name=".Pagination base">
+      <div className="bg-primary content-stretch flex flex-col items-center justify-center relative rounded-[1px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] shrink-0 size-[40px]" data-name=".Pagination base">
         <p className="font-['Figtree:Medium',sans-serif] font-medium leading-[normal] relative shrink-0 text-[14px] text-white">1</p>
       </div>
       <div className="content-stretch flex items-center justify-center relative rounded-[1px] shrink-0 size-[40px]" data-name=".Pagination base">

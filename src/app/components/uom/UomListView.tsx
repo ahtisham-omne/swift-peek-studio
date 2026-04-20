@@ -680,7 +680,7 @@ export function UomListView({
                     >
                       <span className="text-sm">{opt.label}</span>
                       {insightsDateRange === opt.key && (
-                        <Check className="w-3.5 h-3.5" style={{ color: "#0A77FF" }} />
+                        <Check className="w-3.5 h-3.5" style={{ color: "var(--primary)" }} />
                       )}
                     </DropdownMenuItem>
                   ))}
@@ -691,7 +691,7 @@ export function UomListView({
               type="button"
               onClick={() => setInsightsPanelOpen(true)}
               className="inline-flex items-center gap-1 text-[11px] hover:bg-muted/50 px-2 py-0.5 rounded-md transition-colors cursor-pointer"
-              style={{ fontWeight: 500, color: "#0A77FF" }}
+              style={{ fontWeight: 500, color: "var(--primary)" }}
             >
               <Plus className="w-3 h-3" />
               Add Insights
@@ -1717,7 +1717,7 @@ function DraggableUomKpiCard({
     return (
       <div
         ref={ref}
-        className="rounded-lg border border-dashed border-[#0A77FF]/20 bg-[#0A77FF]/[0.02] min-h-[52px] pointer-events-none"
+        className="rounded-lg border border-dashed border-primary/20 bg-primary/[0.02] min-h-[52px] pointer-events-none"
       />
     );
   }
@@ -1727,23 +1727,23 @@ function DraggableUomKpiCard({
       ref={ref}
       className={`border rounded-lg bg-white group relative min-w-0 transition-all duration-200 select-none overflow-hidden cursor-grab active:cursor-grabbing ${
         isOver
-          ? "border-[#0A77FF]/30 bg-[#0A77FF]/[0.03] shadow-[0_0_0_2px_rgba(10,119,255,0.08)] scale-[1.02]"
-          : "border-[#E2E8F0] hover:-translate-y-[1px] hover:border-[#93B8F7] hover:shadow-[0_2px_8px_-3px_rgba(10,119,255,0.06)]"
+          ? "border-primary/30 bg-primary/[0.03] shadow-[0_0_0_2px_rgba(10,119,255,0.08)] scale-[1.02]"
+          : "border-border hover:-translate-y-[1px] hover:border-[#93B8F7] hover:shadow-[0_2px_8px_-3px_rgba(10,119,255,0.06)]"
       }`}
     >
       {/* Drop zone overlay */}
       {isOver && (
-        <div className="absolute inset-0 rounded-lg bg-[#0A77FF]/[0.02] pointer-events-none" />
+        <div className="absolute inset-0 rounded-lg bg-primary/[0.02] pointer-events-none" />
       )}
       <div className="px-3 py-2">
         {/* Drag handle — top-right pill */}
-        <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-all duration-150 flex items-center bg-[#F1F5F9] rounded-md p-1 z-10 pointer-events-none">
-          <GripVertical className="w-3.5 h-3.5 text-[#64748B]" />
+        <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-all duration-150 flex items-center bg-muted rounded-md p-1 z-10 pointer-events-none">
+          <GripVertical className="w-3.5 h-3.5 text-slate-500" />
         </div>
         {/* Label row: label + icon */}
         <div className="flex items-center justify-between gap-1 mb-1">
           <div className="flex items-center gap-1 min-w-0">
-            <p className="text-[10.5px] text-[#64748B] whitespace-nowrap" style={{ fontWeight: 500 }}>{label}</p>
+            <p className="text-[10.5px] text-slate-500 whitespace-nowrap" style={{ fontWeight: 500 }}>{label}</p>
           </div>
           <div
             className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center"
@@ -1754,7 +1754,7 @@ function DraggableUomKpiCard({
         </div>
         {/* Value */}
         <div className="flex items-baseline gap-1.5">
-          <p className="text-[15px] text-[#334155] tracking-tight whitespace-nowrap" style={{ fontWeight: 600, lineHeight: 1.2 }}>{value}</p>
+          <p className="text-[15px] text-slate-700 tracking-tight whitespace-nowrap" style={{ fontWeight: 600, lineHeight: 1.2 }}>{value}</p>
         </div>
       </div>
       {/* Remove button — bottom-right on hover */}
@@ -1764,7 +1764,7 @@ function DraggableUomKpiCard({
           className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-all duration-150 p-1 rounded cursor-pointer hover:bg-red-50 z-10"
           title={`Remove ${label}`}
         >
-          <Trash2 className="w-3 h-3 text-[#94A3B8] hover:text-[#EF4444]" />
+          <Trash2 className="w-3 h-3 text-slate-400 hover:text-red-500" />
         </button>
       )}
     </div>

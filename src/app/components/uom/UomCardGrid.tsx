@@ -39,7 +39,7 @@ const CATEGORY_ICON_MAP: Record<string, React.ReactNode> = {
 };
 
 /* ── Consistent icon tile background ── */
-const ICON_BG = "#EDF4FF";
+const ICON_BG = "var(--accent)";
 
 interface UomCardGridProps {
   units: UomUnit[];
@@ -96,7 +96,7 @@ function UomCard({ unit, searchQuery = "", onClick }: UomCardProps) {
         <div className="flex items-center gap-3 min-w-0">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0"
-            style={{ backgroundColor: ICON_BG, color: "#0A77FF" }}
+            style={{ backgroundColor: ICON_BG, color: "var(--primary)" }}
           >
             {icon}
           </div>

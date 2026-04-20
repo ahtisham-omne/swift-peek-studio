@@ -353,7 +353,7 @@ export function UomDetailView() {
 
   return (
     <>
-    <div className="flex-1 flex flex-col overflow-y-auto bg-[#F8FAFC]">
+    <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50">
       {/* ═══════════════════════════════════════
          HEADER CARD — rounded card matching vendor detail
          ═══════════════════════════════════════ */}
@@ -362,7 +362,7 @@ export function UomDetailView() {
         style={{ maxWidth: 1440, paddingTop: 12, paddingBottom: 0 }}
       >
         <div
-          className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-sm"
+          className="bg-white border border-border rounded-xl overflow-hidden shadow-sm"
         >
           {/* ── Row 1: Back + Icon + Name/Desc + Actions ── */}
           <div
@@ -374,18 +374,18 @@ export function UomDetailView() {
               {/* Back button — square like vendor */}
               <button
                 onClick={() => navigate("/uom")}
-                className="rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] flex items-center justify-center shrink-0 cursor-pointer shadow-[0_1px_3px_0_rgba(0,0,0,0.04),0_1px_2px_-1px_rgba(0,0,0,0.03)] transition-all duration-250"
+                className="rounded-xl border border-border bg-white hover:bg-slate-50 flex items-center justify-center shrink-0 cursor-pointer shadow-[0_1px_3px_0_rgba(0,0,0,0.04),0_1px_2px_-1px_rgba(0,0,0,0.03)] transition-all duration-250"
                 style={{ width: 44, height: 44 }}
               >
-                <ChevronLeft className="text-[#94A3B8]" style={{ width: 20, height: 20 }} />
+                <ChevronLeft className="text-slate-400" style={{ width: 20, height: 20 }} />
               </button>
 
               {/* Icon badge */}
               <div
-                className="rounded-xl flex items-center justify-center shrink-0 border border-[#E2E8F0] shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]"
-                style={{ width: 44, height: 44, backgroundColor: "#EDF4FF" }}
+                className="rounded-xl flex items-center justify-center shrink-0 border border-border shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]"
+                style={{ width: 44, height: 44, backgroundColor: "var(--accent)" }}
               >
-                <Layers size={18} style={{ color: "#0A77FF" }} strokeWidth={1.6} />
+                <Layers size={18} style={{ color: "var(--primary)" }} strokeWidth={1.6} />
               </div>
 
               {/* Name + description stacked */}
@@ -396,13 +396,13 @@ export function UomDetailView() {
                       type="text"
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
-                      className="outline-none rounded-lg border border-[#0A77FF] h-9 px-3 text-[16px]"
-                      style={{ fontWeight: 700, color: "#0F172A", minWidth: 200, lineHeight: "22px" }}
+                      className="outline-none rounded-lg border border-primary h-9 px-3 text-[16px]"
+                      style={{ fontWeight: 700, color: "var(--foreground)", minWidth: 200, lineHeight: "22px" }}
                       autoFocus
                     />
                   ) : (
                     <div className="flex items-center flex-wrap gap-2">
-                      <h1 className="text-[#0F172A] truncate" style={{ fontSize: 16, fontWeight: 600, lineHeight: "22px" }}>
+                      <h1 className="text-foreground truncate" style={{ fontSize: 16, fontWeight: 600, lineHeight: "22px" }}>
                         {displayName}
                       </h1>
 
@@ -413,9 +413,9 @@ export function UomDetailView() {
                           padding: "2px 8px",
                           fontSize: 11,
                           fontWeight: 500,
-                          backgroundColor: displayType === "Standard" ? "#DBEAFE" : "#F1F5F9",
-                          borderColor: displayType === "Standard" ? "#BFDBFE" : "#E2E8F0",
-                          color: displayType === "Standard" ? "#2563EB" : "#475569",
+                          backgroundColor: displayType === "Standard" ? "#DBEAFE" : "var(--muted)",
+                          borderColor: displayType === "Standard" ? "#BFDBFE" : "var(--border)",
+                          color: displayType === "Standard" ? "#2563EB" : "var(--muted-foreground)",
                         }}
                       >
                         {displayType}
@@ -423,7 +423,7 @@ export function UomDetailView() {
 
                       {/* Category badge - blue */}
                       <span
-                        className="inline-flex items-center rounded-md border border-[#BFDBFE] bg-[#DBEAFE] text-[#2563EB]"
+                        className="inline-flex items-center rounded-md border border-blue-200 bg-blue-100 text-[#2563EB]"
                         style={{ padding: "2px 8px", fontSize: 11, fontWeight: 500 }}
                       >
                         {displayCategory}
@@ -431,7 +431,7 @@ export function UomDetailView() {
 
                       {/* Symbol tag */}
                       <span
-                        className="inline-flex items-center rounded-md border border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
+                        className="inline-flex items-center rounded-md border border-border bg-slate-50 text-slate-500"
                         style={{ padding: "2px 8px", fontSize: 11, fontWeight: 500 }}
                       >
                         Symbol: {displaySymbol}
@@ -447,11 +447,11 @@ export function UomDetailView() {
                       type="text"
                       value={editDescription}
                       onChange={(e) => setEditDescription(e.target.value)}
-                      className="outline-none w-full rounded-lg border border-[#0A77FF] h-8 px-3 text-[12px] text-[#64748B]"
+                      className="outline-none w-full rounded-lg border border-primary h-8 px-3 text-[12px] text-slate-500"
                       style={{ maxWidth: 500 }}
                     />
                   ) : (
-                    <p className="text-[12px] text-[#94A3B8] leading-[1.6]">
+                    <p className="text-[12px] text-slate-400 leading-[1.6]">
                       {displayDescription}
                     </p>
                   )}
@@ -465,14 +465,14 @@ export function UomDetailView() {
                 <>
                   <button
                     onClick={handleEditSave}
-                    className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
+                    className="rounded-lg bg-primary hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
                     style={{ fontWeight: 500 }}
                   >
                     <Check size={14} /> Save
                   </button>
                   <button
                     onClick={handleEditCancel}
-                    className="rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[#334155] inline-flex items-center gap-1.5 h-9 px-3.5 text-[13px] transition-all duration-200 cursor-pointer shadow-sm"
+                    className="rounded-lg border border-border bg-white hover:bg-slate-50 text-slate-700 inline-flex items-center gap-1.5 h-9 px-3.5 text-[13px] transition-all duration-200 cursor-pointer shadow-sm"
                     style={{ fontWeight: 400 }}
                   >
                     Cancel
@@ -488,18 +488,18 @@ export function UomDetailView() {
                       key={label}
                       aria-label={label}
                       title={label}
-                      className="rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] flex items-center justify-center cursor-pointer shadow-sm transition-all duration-200"
+                      className="rounded-lg border border-border bg-white hover:bg-slate-50 flex items-center justify-center cursor-pointer shadow-sm transition-all duration-200"
                       style={{ width: 36, height: 36 }}
                       onClick={handler}
                     >
-                      <BtnIcon className="text-[#64748B]" style={{ width: 16, height: 16 }} />
+                      <BtnIcon className="text-slate-500" style={{ width: 16, height: 16 }} />
                     </button>
                   ))}
 
                   {isCustom && !isInUse && (
                     <button
                       onClick={() => setEditModalOpen(true)}
-                      className="rounded-lg bg-[#0A77FF] hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
+                      className="rounded-lg bg-primary hover:bg-[#0862D0] text-white inline-flex items-center gap-1.5 h-9 px-4 text-[13px] transition-all duration-200 cursor-pointer shadow-sm border-0"
                       style={{ fontWeight: 500 }}
                     >
                       <Pencil className="w-3.5 h-3.5" />
@@ -513,7 +513,7 @@ export function UomDetailView() {
 
           {/* In-use notice */}
           {isInUse && (
-            <div className="border-t border-[#F1F5F9] px-4 lg:px-5 py-2.5">
+            <div className="border-t border-muted px-4 lg:px-5 py-2.5">
               <span
                 className="inline-flex items-center"
                 style={{
@@ -581,7 +581,7 @@ export function UomDetailView() {
             )}
           </AnimatePresence>
           {/* Tab bar — inside header card bottom */}
-          <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide border-t border-[#F1F5F9] px-4 lg:px-5">
+          <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide border-t border-muted px-4 lg:px-5">
             {DETAIL_TABS.map((tab) => {
               const isActive = tab.id === activeTab;
               return (
@@ -591,8 +591,8 @@ export function UomDetailView() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-1.5 px-3.5 border-b-2 transition-all duration-200 whitespace-nowrap cursor-pointer outline-none border-0 ${
                     isActive
-                      ? "border-[#0A77FF] text-[#0A77FF]"
-                      : "border-transparent text-[#64748B] hover:text-[#334155] hover:border-[#CBD5E1]"
+                      ? "border-primary text-primary"
+                      : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
                   }`}
                   style={{
                     padding: "10px 14px",
@@ -613,8 +613,8 @@ export function UomDetailView() {
                         fontSize: 11,
                         padding: "2px 6px",
                         borderRadius: 4,
-                        backgroundColor: isActive ? "#EDF4FF" : "#F1F5F9",
-                        color: isActive ? "#0A77FF" : "#64748B",
+                        backgroundColor: isActive ? "var(--accent)" : "var(--muted)",
+                        color: isActive ? "var(--primary)" : "#64748B",
                         fontWeight: 500,
                         lineHeight: "1",
                       }}
@@ -636,7 +636,7 @@ export function UomDetailView() {
         <div className="mx-auto px-4 lg:px-6 xl:px-8 pt-4 pb-8 w-full" style={{ maxWidth: 1440 }}>
 
           {/* Content area */}
-          <div className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden shadow-sm">
+          <div className="bg-white border border-border rounded-xl overflow-hidden shadow-sm">
             <div style={{ padding: activeTab === "conversions" ? 0 : 20 }}>
               {/* ──── CONVERSIONS TAB ──── */}
               {activeTab === "conversions" && (() => {
@@ -972,7 +972,7 @@ export function UomDetailView() {
                           <ShadcnTableRow
                             key={`conv-${startIdx + idx}`}
                             className={`group transition-colors hover:bg-[#F0F7FF] ${
-                              isBaseConversion ? "!bg-[#EDF4FF]" : ""
+                              isBaseConversion ? "!bg-accent" : ""
                             }`}
                           >
                             {/* Conversion Factor */}
@@ -994,7 +994,7 @@ export function UomDetailView() {
                                 </span>
                                 {isBaseConversion && (
                                   <span
-                                    className="text-[10px] px-1.5 py-0.5 rounded bg-[#0A77FF] text-white"
+                                    className="text-[10px] px-1.5 py-0.5 rounded bg-primary text-white"
                                     style={{ fontWeight: 500, lineHeight: 1 }}
                                   >
                                     Defined
@@ -1400,8 +1400,8 @@ export function UomDetailView() {
                                   className="inline-flex items-center text-[11px] px-2 py-0.5 rounded-md border"
                                   style={{
                                     fontWeight: 500,
-                                    backgroundColor: item.status === "Active" ? "#ECFDF5" : "#F1F5F9",
-                                    borderColor: item.status === "Active" ? "#A7F3D0" : "#E2E8F0",
+                                    backgroundColor: item.status === "Active" ? "#ECFDF5" : "var(--muted)",
+                                    borderColor: item.status === "Active" ? "#A7F3D0" : "var(--border)",
                                     color: item.status === "Active" ? "#065F46" : "#64748B",
                                   }}
                                 >
@@ -1708,10 +1708,10 @@ export function UomDetailView() {
               {activeTab === "activity" && (
                 <div>
                   <div className="flex items-center gap-2" style={{ marginBottom: 12 }}>
-                    <span className="text-sm text-[#334155]" style={{ fontWeight: 500 }}>
+                    <span className="text-sm text-slate-700" style={{ fontWeight: 500 }}>
                       Recent Activity
                     </span>
-                    <span className="inline-flex items-center justify-center text-[11px] px-1.5 py-0.5 rounded bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]" style={{ fontWeight: 500 }}>
+                    <span className="inline-flex items-center justify-center text-[11px] px-1.5 py-0.5 rounded bg-muted text-slate-500 border border-border" style={{ fontWeight: 500 }}>
                       {RECENT_ACTIVITY.length}
                     </span>
                   </div>
@@ -1735,28 +1735,28 @@ export function UomDetailView() {
                               <div className="flex items-center gap-2.5">
                                 <span
                                   className="inline-flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
-                                  style={{ backgroundColor: "#EDF4FF", color: "#0A77FF", fontSize: 9, fontWeight: 500 }}
+                                  style={{ backgroundColor: "var(--accent)", color: "var(--primary)", fontSize: 9, fontWeight: 500 }}
                                 >
                                   {item.userInitials}
                                 </span>
                                 <div>
-                                  <span className="text-[12px] text-[#334155] block" style={{ fontWeight: 500 }}>{item.action}</span>
-                                  <span className="text-[11px] text-[#94A3B8]">{item.user}</span>
+                                  <span className="text-[12px] text-slate-700 block" style={{ fontWeight: 500 }}>{item.action}</span>
+                                  <span className="text-[11px] text-slate-400">{item.user}</span>
                                 </div>
                               </div>
                             </TableCell>
                             <TableCell>
                               {item.detail && (
-                                <span className="text-[12px] text-[#64748B]">{item.detail}</span>
+                                <span className="text-[12px] text-slate-500">{item.detail}</span>
                               )}
                               {item.field && item.value && (
                                 <div className="flex items-center gap-1.5 mt-0.5">
-                                  <span className="text-[11px] text-[#64748B] bg-[#F1F5F9] px-1.5 py-0.5 rounded" style={{ fontWeight: 500 }}>{item.field}</span>
-                                  <span className="text-[11px] text-[#94A3B8]">{item.value}</span>
+                                  <span className="text-[11px] text-slate-500 bg-muted px-1.5 py-0.5 rounded" style={{ fontWeight: 500 }}>{item.field}</span>
+                                  <span className="text-[11px] text-slate-400">{item.value}</span>
                                 </div>
                               )}
                             </TableCell>
-                            <TableCell className="text-[12px] text-[#94A3B8]">{item.date}</TableCell>
+                            <TableCell className="text-[12px] text-slate-400">{item.date}</TableCell>
                           </ShadcnTableRow>
                         ))}
                       </TableBody>
@@ -1813,10 +1813,10 @@ export function UomDetailView() {
           >
             {/* Top red gradient banner with warning icon */}
             <div className="flex flex-col items-center pt-8 pb-4 px-6" style={{ background: "linear-gradient(180deg, #FEF2F2 0%, #FFFFFF 100%)" }}>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white border border-[#FECACA] shadow-sm mb-4">
-                <AlertTriangle size={26} strokeWidth={2} className="text-[#DC2626]" />
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white border border-red-200 shadow-sm mb-4">
+                <AlertTriangle size={26} strokeWidth={2} className="text-destructive" />
               </div>
-              <span className="text-[11px] tracking-[1.5px] uppercase text-[#DC2626] mb-2" style={{ fontWeight: 600 }}>Archive</span>
+              <span className="text-[11px] tracking-[1.5px] uppercase text-destructive mb-2" style={{ fontWeight: 600 }}>Archive</span>
               <h3 className="text-[17px] text-foreground text-center m-0 leading-snug" style={{ fontWeight: 600 }}>
                 Archive this unit?
               </h3>
@@ -1834,7 +1834,7 @@ export function UomDetailView() {
                   "Once associations are cleared, archiving will become available again",
                 ].map((text) => (
                   <li key={text} className="flex items-start gap-2 text-[12px] text-muted-foreground leading-[1.5]" style={{ fontWeight: 400 }}>
-                    <span className="w-1 h-1 rounded-full bg-[#CBD5E1] mt-[7px] shrink-0" />
+                    <span className="w-1 h-1 rounded-full bg-slate-300 mt-[7px] shrink-0" />
                     {text}
                   </li>
                 ))}
@@ -1842,8 +1842,8 @@ export function UomDetailView() {
             </div>
 
             {/* Warning banner */}
-            <div className="mx-6 mb-3 p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA]">
-              <div className="flex items-center gap-2 text-[12px] text-[#DC2626]" style={{ fontWeight: 500 }}>
+            <div className="mx-6 mb-3 p-3 rounded-lg bg-red-50 border border-red-200">
+              <div className="flex items-center gap-2 text-[12px] text-destructive" style={{ fontWeight: 500 }}>
                 <AlertTriangle size={13} strokeWidth={2} />
                 Archiving is unavailable until these active references are removed
               </div>
@@ -1870,7 +1870,7 @@ export function UomDetailView() {
                 type="button"
                 disabled
                 aria-disabled="true"
-                className="w-full h-11 rounded-lg bg-[#F1F5F9] text-[14px] text-muted-foreground cursor-not-allowed border-none shadow-sm flex items-center justify-center gap-1.5"
+                className="w-full h-11 rounded-lg bg-muted text-[14px] text-muted-foreground cursor-not-allowed border-none shadow-sm flex items-center justify-center gap-1.5"
                 style={{ fontWeight: 500 }}
               >
                 <Archive size={14} />

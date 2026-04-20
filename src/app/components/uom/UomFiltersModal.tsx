@@ -237,7 +237,7 @@ export function UomFiltersModal({
             {activeCount > 0 && (
               <span
                 className="ml-2 min-w-[20px] h-5 rounded-full text-[11px] flex items-center justify-center px-1.5 text-white"
-                style={{ backgroundColor: "#0A77FF", fontWeight: 600 }}
+                style={{ backgroundColor: "var(--primary)", fontWeight: 600 }}
               >
                 {activeCount}
               </span>
@@ -360,7 +360,7 @@ export function UomFiltersModal({
               type="button"
               onClick={applyAndClose}
               className="inline-flex items-center justify-center h-9 px-5 rounded-lg text-white text-[13px] cursor-pointer transition-colors hover:opacity-90"
-              style={{ backgroundColor: "#0A77FF", fontWeight: 600 }}
+              style={{ backgroundColor: "var(--primary)", fontWeight: 600 }}
             >
               Show {draftFilteredCount.toLocaleString()} unit{draftFilteredCount !== 1 ? "s" : ""}
             </button>
@@ -427,7 +427,7 @@ function SegmentedControl({
         }`}
         style={{
           fontWeight: 500,
-          backgroundColor: allSelected ? "#EDF4FF" : undefined,
+          backgroundColor: allSelected ? "var(--accent)" : undefined,
         }}
       >
         Any
@@ -454,7 +454,7 @@ function SegmentedControl({
             }`}
             style={{
               fontWeight: 500,
-              backgroundColor: isSelected ? "#EDF4FF" : undefined,
+              backgroundColor: isSelected ? "var(--accent)" : undefined,
             }}
           >
             {opt.label}
@@ -488,7 +488,7 @@ function Pill({
       }`}
       style={{
         fontWeight: selected ? 500 : 400,
-        backgroundColor: selected ? "#EDF4FF" : undefined,
+        backgroundColor: selected ? "var(--accent)" : undefined,
       }}
     >
       <span>{label}</span>
@@ -541,7 +541,7 @@ function PillSection({
           type="button"
           onClick={() => setShowAll(!showAll)}
           className="inline-flex items-center gap-1 mt-2.5 text-[13px] cursor-pointer transition-colors hover:text-primary"
-          style={{ fontWeight: 500, color: "#0A77FF" }}
+          style={{ fontWeight: 500, color: "var(--primary)" }}
         >
           {showAll ? "Show less" : `Show all ${options.length}`}
           {showAll ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}

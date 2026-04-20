@@ -4,7 +4,7 @@
  * Matches Partner Management FilterPills exactly:
  *   Default:  border-border, text-muted-foreground
  *   Hover:    bg-muted/60, text-foreground
- *   Active:   border-primary, bg-[#EDF4FF], text-primary (#0A77FF)
+ *   Active:   border-primary, bg-accent, text-primary (#0A77FF)
  */
 
 import type { ReactNode } from "react";
