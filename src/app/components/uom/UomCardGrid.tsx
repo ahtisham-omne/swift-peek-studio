@@ -41,17 +41,28 @@ const CATEGORY_ICON_MAP: Record<string, React.ReactNode> = {
 /* ── Consistent icon tile background ── */
 const ICON_BG = "var(--accent)";
 
+type CardSize = "small" | "medium" | "large";
+
 interface UomCardGridProps {
   units: UomUnit[];
   searchQuery?: string;
   onCardClick?: (unit: UomUnit) => void;
+  cardSize?: CardSize;
 }
 
 export function UomCardGrid({
   units,
   searchQuery = "",
   onCardClick,
+  cardSize = "medium",
 }: UomCardGridProps) {
+  const gridCols =
+    cardSize === "large"
+      ? "grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2"
+      : cardSize === "small"
+      ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+
   return (
     <div className="p-4">
       {units.length === 0 ? (
@@ -60,12 +71,13 @@ export function UomCardGrid({
           <p className="text-sm">No units match your filters.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className={`grid gap-4 ${gridCols}`}>
           {units.map((unit) => (
             <UomCard
               key={unit.id}
               unit={unit}
               searchQuery={searchQuery}
+              cardSize={cardSize}
               onClick={() => onCardClick?.(unit)}
             />
           ))}
