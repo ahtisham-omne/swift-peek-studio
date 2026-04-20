@@ -532,21 +532,27 @@ export function UomDetailView() {
                 </>
               ) : (
                 <>
-                  {[
-                    { icon: Copy, label: "Duplicate", handler: handleDuplicate },
-                    { icon: Archive, label: "Archive", handler: () => setArchiveModalOpen(true) },
-                  ].map(({ icon: BtnIcon, label, handler }) => (
-                    <button
-                      key={label}
-                      aria-label={label}
-                      title={label}
-                      className="rounded-lg border border-border bg-white hover:bg-slate-50 flex items-center justify-center cursor-pointer shadow-sm transition-all duration-200"
-                      style={{ width: 36, height: 36 }}
-                      onClick={handler}
-                    >
-                      <BtnIcon className="text-slate-500" style={{ width: 16, height: 16 }} />
-                    </button>
-                  ))}
+                  {/* Duplicate — neutral icon button */}
+                  <button
+                    aria-label="Duplicate"
+                    title="Duplicate"
+                    className="rounded-lg border border-border bg-white hover:bg-slate-50 flex items-center justify-center cursor-pointer shadow-sm transition-all duration-200"
+                    style={{ width: 36, height: 36 }}
+                    onClick={handleDuplicate}
+                  >
+                    <Copy className="text-slate-500" style={{ width: 16, height: 16 }} />
+                  </button>
+
+                  {/* Archive — destructive (error) variant */}
+                  <button
+                    aria-label="Archive"
+                    title="Archive"
+                    className="rounded-lg border border-destructive/30 bg-destructive/5 hover:bg-destructive/10 hover:border-destructive/50 text-destructive flex items-center justify-center cursor-pointer shadow-sm transition-all duration-200"
+                    style={{ width: 36, height: 36 }}
+                    onClick={() => setArchiveModalOpen(true)}
+                  >
+                    <Archive style={{ width: 16, height: 16 }} />
+                  </button>
 
                   {isCustom && !isInUse && (
                     <button
