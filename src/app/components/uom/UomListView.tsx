@@ -44,7 +44,7 @@ import { SAMPLE_UNITS, type UomUnit } from "./sample-data";
 import { CreateUomModal } from "./CreateUomModal";
 import { ImportUomModal } from "./ImportUomModal";
 import { useToast } from "./Toast";
-import { DensityDropdown, type DensityMode } from "./DensityDropdown";
+import { DensityDropdown, type DensityMode, type CardSize } from "./DensityDropdown";
 import { UomColumnHeaderMenu } from "./UomColumnHeaderMenu";
 import { UomNotionFilterBar, type ColumnFilterMap } from "./UomNotionFilterBar";
 import {
@@ -176,6 +176,7 @@ export function UomListView({
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [columnsPanelOpen, setColumnsPanelOpen] = useState(false);
   const [density, setDensity] = useState<DensityMode>("condensed");
+  const [cardSize, setCardSize] = useState<CardSize>("medium");
   const [topBarSearch, setTopBarSearch] = useState("");
 
   /* ── KPI Insights state ── */
@@ -829,6 +830,8 @@ export function UomListView({
             <DensityDropdown
               density={density}
               onDensityChange={setDensity}
+              cardSize={cardSize}
+              onCardSizeChange={setCardSize}
             />
 
             <ColumnsDropdown
