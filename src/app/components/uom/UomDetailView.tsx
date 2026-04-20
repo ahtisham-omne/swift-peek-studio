@@ -664,24 +664,8 @@ export function UomDetailView() {
                     borderRightWidth: 0,
                   }}
                 >
-                  {/* Icon removed — Partners detail tabs are text-only */}
+                  {/* Icon and count removed — Partners detail tabs are text-only */}
                   {tab.label}
-                  {tab.count !== null && (
-                    <span
-                      className="inline-flex items-center justify-center"
-                      style={{
-                        fontSize: 11,
-                        padding: "2px 6px",
-                        borderRadius: 4,
-                        backgroundColor: isActive ? "var(--accent)" : "var(--muted)",
-                        color: isActive ? "var(--primary)" : "#64748B",
-                        fontWeight: 500,
-                        lineHeight: "1",
-                      }}
-                    >
-                      {tab.count}
-                    </span>
-                  )}
                 </button>
               );
             })}
@@ -1386,28 +1370,6 @@ export function UomDetailView() {
                       })}
                     </div>
 
-                    {/* Tinted Add CTA matching active sub-tab */}
-                    {(() => {
-                      const active = WHERE_USED_SUB_TABS.find((t) => t.id === whereUsedSubTab)!;
-                      return (
-                        <button
-                          type="button"
-                          onClick={() => showToast("info", `Add ${active.label}`)}
-                          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border text-[13px] transition-colors cursor-pointer"
-                          style={{
-                            fontWeight: 600,
-                            backgroundColor: active.bg,
-                            borderColor: active.border,
-                            color: active.color,
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = active.hoverBg; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = active.bg; }}
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Add {active.label}</span>
-                        </button>
-                      );
-                    })()}
                   </div>
 
                   {whereUsedSubTab === "items" && (
