@@ -9,6 +9,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { AlignJustify, List, LayoutGrid, Check, ChevronDown } from "lucide-react";
 
 export type DensityMode = "condensed" | "comfort" | "card";
+export type CardSize = "small" | "medium" | "large";
 
 interface DensityOption {
   mode: DensityMode;
@@ -41,9 +42,16 @@ const DENSITY_OPTIONS: DensityOption[] = [
 export interface DensityDropdownProps {
   density: DensityMode;
   onDensityChange: (mode: DensityMode) => void;
+  cardSize?: CardSize;
+  onCardSizeChange?: (size: CardSize) => void;
 }
 
-export function DensityDropdown({ density, onDensityChange }: DensityDropdownProps) {
+export function DensityDropdown({
+  density,
+  onDensityChange,
+  cardSize = "medium",
+  onCardSizeChange,
+}: DensityDropdownProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -109,6 +117,38 @@ export function DensityDropdown({ density, onDensityChange }: DensityDropdownPro
               </button>
             );
           })}
+
+          {/* Card size options — only when card view is active (matches Partners) */}
+          {density === "card" && onCardSizeChange && (
+            <>
+              <div className="mx-2 my-1.5 border-t border-muted" />
+              <div className="px-3 py-1.5">
+                <p
+                  className="text-[10px] text-slate-400 uppercase tracking-wide mb-2"
+                  style={{ fontWeight: 600 }}
+                >
+                  Card Size
+                </p>
+                <div className="flex items-center gap-1.5">
+                  {(["large", "medium", "small"] as const).map((size) => (
+                    <button
+                      key={size}
+                      type="button"
+                      onClick={() => onCardSizeChange(size)}
+                      className={`flex-1 py-1.5 rounded-md text-[11px] text-center transition-all cursor-pointer border-none ${
+                        cardSize === size
+                          ? "bg-primary text-white shadow-sm"
+                          : "bg-muted text-slate-500 hover:bg-border"
+                      }`}
+                      style={{ fontWeight: cardSize === size ? 600 : 500 }}
+                    >
+                      {size === "large" ? "Large" : size === "medium" ? "Medium" : "Small"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
