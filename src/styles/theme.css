@@ -43,6 +43,12 @@
   --warning-foreground: rgba(255, 255, 255, 1);
   --violet: rgba(124, 58, 237, 1);            /* #7C3AED */
   --violet-foreground: rgba(255, 255, 255, 1);
+  --orange: rgba(219, 101, 20, 1);            /* #DB6514 */
+  --orange-foreground: rgba(255, 255, 255, 1);
+  --purple: rgba(82, 75, 224, 1);             /* #524BE0 */
+  --purple-foreground: rgba(255, 255, 255, 1);
+  --fuchsia: rgba(192, 38, 211, 1);           /* #C026D3 */
+  --fuchsia-foreground: rgba(255, 255, 255, 1);
   /* The default border color for elements such as inputs, buttons, and other containers. */
   --border: rgba(226, 232, 240, 1);
   /* The default background color for input fields once the text has been filled. Should be either transparent or match the input-background. */
@@ -290,6 +296,12 @@
   --warning-foreground: rgba(255, 255, 255, 1);
   --violet: rgba(124, 58, 237, 1);
   --violet-foreground: rgba(255, 255, 255, 1);
+  --orange: rgba(255, 133, 61, 1);
+  --orange-foreground: rgba(255, 255, 255, 1);
+  --purple: rgba(124, 115, 250, 1);
+  --purple-foreground: rgba(255, 255, 255, 1);
+  --fuchsia: rgba(232, 121, 249, 1);
+  --fuchsia-foreground: rgba(255, 255, 255, 1);
   --border: rgba(39, 39, 42, 1);
   --input: rgba(39, 39, 42, 1);
   --ring: rgba(10, 119, 255, 1);
@@ -369,6 +381,12 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-violet: var(--violet);
   --color-violet-foreground: var(--violet-foreground);
+  --color-orange: var(--orange);
+  --color-orange-foreground: var(--orange-foreground);
+  --color-purple: var(--purple);
+  --color-purple-foreground: var(--purple-foreground);
+  --color-fuchsia: var(--fuchsia);
+  --color-fuchsia-foreground: var(--fuchsia-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-input-background: var(--input-background);
